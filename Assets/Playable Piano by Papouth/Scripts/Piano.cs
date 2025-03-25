@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using temp;
 
 [RequireComponent(typeof(AudioSource))]
-public class Piano : MonoBehaviour
+public class Piano : Interactable
 {
     #region Variables
     [Header("Music Sheets")]
@@ -16,6 +17,7 @@ public class Piano : MonoBehaviour
     private int actualSheet;
     [SerializeField] private GameObject personalSheet;
     private bool state2;
+    private bool isPianoActive = false;
 
     [Header("Notes Particles")]
     [Tooltip("Particles emitted by pressing keys")]
@@ -29,6 +31,7 @@ public class Piano : MonoBehaviour
     [SerializeField] private GameObject[] keys;
 
     private AudioSource audioSource;
+    private PlayerCharacterController playerCharacterController;
     #endregion
 
 
@@ -46,14 +49,64 @@ public class Piano : MonoBehaviour
         actualVolume = 0.5f;
     }
 
+    #region Interaction Implementation
+    public override void Interact()
+    {
+        if (!isPianoActive)
+        {
+            ActivatePiano();
+        }
+        else
+        {
+            DeactivatePiano();
+        }
+    }
+
+    private void ActivatePiano()
+    {
+        isPianoActive = true;
+        baseSheet.SetActive(true);
+        Debug.Log("Piano activated! Press ESC to exit.");
+
+        // Disable player movement while playing
+        if (playerCharacterController == null)
+        {
+            playerCharacterController = FindObjectOfType<PlayerCharacterController>();
+        }
+
+        /* if (playerCharacterController != null)
+        {
+            playerCharacterController.DisableMovement();
+        } */
+    }
+
+    private void DeactivatePiano()
+    {
+        isPianoActive = false;
+        baseSheet.SetActive(false);
+        Debug.Log("Piano deactivated!");
+
+        // Enable player movement
+        /* if (playerCharacterController != null)
+        {
+            playerCharacterController.EnableMovement();
+        } */ 
+    }
+
     private void Update()
     {
-        // If player is near piano, activate GUI and make player stand still until they hit a button to leave the piano state 
+        if (isPianoActive)
+        {
+            PianoInputs();
+            // SheetDisplay();
+            Volume();
+            Particle();
 
-        PianoInputs();
-        // SheetDisplay();
-        Volume();
-        Particle();
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                DeactivatePiano();
+            }
+        }
     }
     #endregion
 
@@ -512,11 +565,11 @@ public class Piano : MonoBehaviour
         }
 
         // Key F
-        if (Input.GetKeyDown(KeyCode.F))
+        /* if (Input.GetKeyDown(KeyCode.F))
         {
             audioSource.PlayOneShot(notes[26]);
             keys[57].GetComponent<Animator>().Play("WhiteRight");
-        }
+        } */
 
         // Key K
         if (Input.GetKeyDown(KeyCode.K))
@@ -552,7 +605,7 @@ public class Piano : MonoBehaviour
     /// <summary>
     /// Sheets Displaying Management
     /// </summary>
-    private void SheetDisplay()
+    /*private void SheetDisplay()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -573,12 +626,12 @@ public class Piano : MonoBehaviour
             personalSheet.SetActive(!state2);
             state2 = !state2;
         }
-    }
+    }*/
 
     /// <summary>
     /// Go to next music sheet
     /// </summary>
-    public void NextSheet()
+    /*public void NextSheet()
     {
         if (actualSheet < sheets.Length - 1)
         {
@@ -596,12 +649,12 @@ public class Piano : MonoBehaviour
 
             baseSheet.GetComponentInChildren<Image>().sprite = sheets[actualSheet];
         }
-    }
+    }*/
 
     /// <summary>
     /// Go to previous music sheet
     /// </summary>
-    public void PreviousSheet()
+    /*public void PreviousSheet()
     {
         if (actualSheet > 0)
         {
@@ -619,11 +672,13 @@ public class Piano : MonoBehaviour
 
             baseSheet.GetComponentInChildren<Image>().sprite = sheets[actualSheet];
         }
-    }
+    }*/
 
     /// <summary>
-    /// Increase or decrease pinao volume
+    /// Increase or decrease piano volume
     /// </summary>
+    
+    // Set piano vol after testing
     private void Volume()
     {
         audioSource.volume = actualVolume;
@@ -648,10 +703,10 @@ public class Piano : MonoBehaviour
     /// <summary>
     /// Access to an online music sheets library
     /// </summary>
-    public void LibrarySheet()
+    /*public void LibrarySheet()
     {
         Application.OpenURL("https://virtualpiano.net/music-sheets/");
-    }
+    }*/
 
     /// <summary>
     /// Display particle when keys are pressed
@@ -671,3 +726,5 @@ public class Piano : MonoBehaviour
 
     #endregion
 }
+
+#endregion
