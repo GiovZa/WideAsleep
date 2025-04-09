@@ -11,13 +11,14 @@ public interface IState
 
 public class NurseAI : MonoBehaviour
 {
-    private IState currentState;
+    public IState currentState;
 
     public PatrolState patrolState;
     public AlertState alertState;
     public ChaseState chaseState;
     public KillState killState;
 
+    public Search search;
 
     public float killRange = 1.5f;
 
@@ -27,6 +28,8 @@ public class NurseAI : MonoBehaviour
         alertState = new AlertState(this);
         chaseState = new ChaseState(this);
         killState = new KillState(this);
+
+        search = GetComponent<Search>();
 
         TransitionToState(patrolState);
     }

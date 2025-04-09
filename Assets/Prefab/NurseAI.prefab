@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: -9027961733179979455}
   - component: {fileID: 7637493776038670509}
   - component: {fileID: -1218699379273505202}
+  - component: {fileID: 2399091793158627440}
+  - component: {fileID: 9145219157080788147}
   m_Layer: 0
   m_Name: NurseAI
   m_TagString: Enemy
@@ -87,7 +89,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52c49eff02a7057448d18ff969470f03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  searchDuration: 2
+  searchDuration: 1.5
   arriveThreshold: 1
 --- !u!114 &-9027961733179979455
 MonoBehaviour:
@@ -134,6 +136,40 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   killRange: 1.5
+--- !u!114 &2399091793158627440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132019245134952174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b587d5463ccf4f42b4ebf74f5acc916, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxSearchPointDistance: 6
+  minSearchPointDistance: 4
+  maxSearchAttempts: 10
+  searchDurationAtPoint: 1
+  angleSpread: 30
+  numPointsToTry: 2
+--- !u!114 &9145219157080788147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132019245134952174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab01aa8bd336a2041ae8c7a614007727, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hearingRadius: 5
+  playerMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1001 &1093227996863080988
 PrefabInstance:
   m_ObjectHideFlags: 0
