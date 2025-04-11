@@ -9,14 +9,9 @@ using temp;
 public class Piano : Interactable
 {
     #region Variables
-    [Header("Music Sheets")]
-    [Tooltip("Sheets music that can be played")]
-    [SerializeField] private Sprite[] sheets;
     [SerializeField] private GameObject baseSheet;
-    private bool state;
     private int actualSheet;
     [SerializeField] private GameObject personalSheet;
-    private bool state2;
     private bool isPianoActive = false;
 
     [Header("Notes Particles")]
@@ -32,6 +27,20 @@ public class Piano : Interactable
 
     private AudioSource audioSource;
     private PlayerCharacterController playerCharacterController;
+
+    [SerializeField] private GameObject keyboard;
+
+    private List<KeyCode> recordedKeys = new List<KeyCode>();
+
+    [SerializeField] private List<KeyCode> solutionKeys = new List<KeyCode>
+    {
+        KeyCode.I,
+        KeyCode.O,
+        KeyCode.D,
+        KeyCode.T,
+        KeyCode.D
+    };
+
     #endregion
 
 
@@ -40,13 +49,23 @@ public class Piano : Interactable
     {
         audioSource = GetComponent<AudioSource>();
 
-        personalSheet.SetActive(state2);
-        baseSheet.SetActive(state);
+        personalSheet.SetActive(isPianoActive);
+        baseSheet.SetActive(isPianoActive);
         actualSheet = 0;
 
-        baseSheet.GetComponentInChildren<Image>().sprite = sheets[actualSheet];
+        // baseSheet.GetComponentInChildren<Image>().sprite = sheets[actualSheet];
 
         actualVolume = 0.5f;
+
+        keyboard = GameObject.Find("Keyboard");
+        if (keyboard != null)
+        {
+            keyboard.SetActive(false);
+        }
+        else
+        {
+            Debug.LogWarning("Keyboard UI not found!");
+        }
     }
 
     #region Interaction Implementation
@@ -68,29 +87,42 @@ public class Piano : Interactable
         baseSheet.SetActive(true);
         Debug.Log("Piano activated! Press ESC to exit.");
 
+        if (keyboard != null)
+        {
+            keyboard.SetActive(true);
+        }
+
         // Disable player movement while playing
         if (playerCharacterController == null)
         {
             playerCharacterController = FindObjectOfType<PlayerCharacterController>();
         }
 
-        /* if (playerCharacterController != null)
+        if (playerCharacterController != null)
         {
             playerCharacterController.DisableMovement();
-        } */
+        }
     }
 
     private void DeactivatePiano()
     {
         isPianoActive = false;
         baseSheet.SetActive(false);
-        Debug.Log("Piano deactivated!");
+
+        if (keyboard != null)
+        {
+            keyboard.SetActive(false);
+        }
+
+        recordedKeys.Clear();
 
         // Enable player movement
-        /* if (playerCharacterController != null)
+        if (playerCharacterController != null)
         {
             playerCharacterController.EnableMovement();
-        } */ 
+        }
+
+        Debug.Log("Piano deactivated!");
     }
 
     private void Update()
@@ -99,7 +131,7 @@ public class Piano : Interactable
         {
             PianoInputs();
             // SheetDisplay();
-            Volume();
+            // Volume();
             Particle();
 
             if (Input.GetKeyDown(KeyCode.Escape))
@@ -115,56 +147,39 @@ public class Piano : Interactable
     /// Piano Inputs Management
     /// </summary>
 
-    // Delete keys as needed
-    // Commented out WASD keystrokes for now
     private void PianoInputs()
     {
         #region Whites and Blacks Keys
         // Key 1 and 1 UP / !
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                audioSource.PlayOneShot(notes[2]);
-                keys[35].GetComponent<Animator>().Play("BlackLeft");
-            }
+            PlayKey(2, 35, "BlackLeft", KeyCode.Alpha1);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            audioSource.PlayOneShot(notes[1]);
-            keys[39].GetComponent<Animator>().Play("WhiteLeft");
+            PlayKey(1, 39, "WhiteLeft", KeyCode.Alpha1);
         }
 
 
         // Key 2 and 2 UP / @
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                audioSource.PlayOneShot(notes[4]);
-                keys[36].GetComponent<Animator>().Play("BlackMid");
-            }
+            PlayKey(4, 36, "BlackMid", KeyCode.Alpha2);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            audioSource.PlayOneShot(notes[3]);
-            keys[38].GetComponent<Animator>().Play("WhiteMidLeft");
+            PlayKey(3, 38, "WhiteMidLeft", KeyCode.Alpha2);
         }
 
 
         // Key 4 and 4 UP / $
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            if (Input.GetKeyDown(KeyCode.Alpha4))
-            {
-                audioSource.PlayOneShot(notes[7]);
-                keys[0].GetComponent<Animator>().Play("BlackLeft");
-            }
+            PlayKey(7, 0, "BlackLeft", KeyCode.Alpha4);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            audioSource.PlayOneShot(notes[6]);
-            keys[6].GetComponent<Animator>().Play("WhiteLeft");
+            PlayKey(6, 6, "WhiteLeft", KeyCode.Alpha4);
         }
 
 
@@ -173,14 +188,12 @@ public class Piano : Interactable
         {
             if (Input.GetKeyDown(KeyCode.Alpha5))
             {
-                audioSource.PlayOneShot(notes[9]);
-                keys[1].GetComponent<Animator>().Play("BlackMid");
+                PlayKey(9, 1, "BlackMid", KeyCode.Alpha5);
             }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha5))
         {
-            audioSource.PlayOneShot(notes[8]);
-            keys[4].GetComponent<Animator>().Play("WhiteMidLeft");
+            PlayKey(8, 4, "WhiteMidLeft", KeyCode.Alpha5);
         }
 
 
@@ -189,14 +202,12 @@ public class Piano : Interactable
         {
             if (Input.GetKeyDown(KeyCode.Alpha6))
             {
-                audioSource.PlayOneShot(notes[11]);
-                keys[2].GetComponent<Animator>().Play("BlackRight");
+                PlayKey(11, 2, "BlackRight", KeyCode.Alpha6);
             }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha6))
         {
-            audioSource.PlayOneShot(notes[10]);
-            keys[5].GetComponent<Animator>().Play("WhiteMidRight");
+            PlayKey(10, 5, "WhiteMidRight", KeyCode.Alpha6);
         }
 
 
@@ -205,14 +216,12 @@ public class Piano : Interactable
         {
             if (Input.GetKeyDown(KeyCode.Alpha8))
             {
-                audioSource.PlayOneShot(notes[14]);
-                keys[50].GetComponent<Animator>().Play("BlackLeft");
+                PlayKey(14, 50, "BlackLeft", KeyCode.Alpha8);
             }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha8))
         {
-            audioSource.PlayOneShot(notes[13]);
-            keys[54].GetComponent<Animator>().Play("WhiteLeft");
+            PlayKey(13, 54, "WhiteLeft", KeyCode.Alpha8);
         }
 
 
@@ -221,31 +230,27 @@ public class Piano : Interactable
         {
             if (Input.GetKeyDown(KeyCode.Alpha9))
             {
-                audioSource.PlayOneShot(notes[16]);
-                keys[51].GetComponent<Animator>().Play("BlackRight");
+                PlayKey(16, 51, "BlackRight", KeyCode.Alpha9);
             }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha9))
         {
-            audioSource.PlayOneShot(notes[15]);
-            keys[53].GetComponent<Animator>().Play("WhiteMid");
+            PlayKey(15, 53, "WhiteMid", KeyCode.Alpha9);
         }
 
 
-        /*// Key A and A UP -
+        // Key A and A UP -
         if (Input.GetKey(KeyCode.LeftShift))
         {
             if (Input.GetKeyDown(KeyCode.A))
             {
-                audioSource.PlayOneShot(notes[45]);
-                keys[21].GetComponent<Animator>().Play("BlackLeft");
+                PlayKey(45, 21, "BlackLeft", KeyCode.A);
             }
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {
-            audioSource.PlayOneShot(notes[44]);
-            keys[27].GetComponent<Animator>().Play("WhiteLeft");
-        }*/
+            PlayKey(44, 27, "WhiteLeft", KeyCode.A);
+        }
 
 
         // Key Z and Z UP -
@@ -253,14 +258,12 @@ public class Piano : Interactable
         {
             if (Input.GetKeyDown(KeyCode.Z))
             {
-                audioSource.PlayOneShot(notes[55]);
-                keys[22].GetComponent<Animator>().Play("BlackMid");
+                PlayKey(55, 22, "BlackMid", KeyCode.Z);
             }
         }
         else if (Input.GetKeyDown(KeyCode.Z))
         {
-            audioSource.PlayOneShot(notes[54]);
-            keys[25].GetComponent<Animator>().Play("WhiteMidLeft");
+            PlayKey(54, 25, "WhiteMidLeft", KeyCode.Z);
         }
 
 
@@ -269,30 +272,26 @@ public class Piano : Interactable
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
-                audioSource.PlayOneShot(notes[25]);
-                keys[23].GetComponent<Animator>().Play("BlackRight");
+                PlayKey(25, 23, "BlackRight", KeyCode.E);
             }
         }
         else if (Input.GetKeyDown(KeyCode.E))
         {
-            audioSource.PlayOneShot(notes[24]);
-            keys[26].GetComponent<Animator>().Play("WhiteMidRight");
+            PlayKey(24, 26, "WhiteMidRight", KeyCode.E);
         }
 
-
+        // SOLUTION
         // Key T and T UP
         if (Input.GetKey(KeyCode.LeftShift))
         {
             if (Input.GetKeyDown(KeyCode.T))
             {
-                audioSource.PlayOneShot(notes[50]);
-                keys[45].GetComponent<Animator>().Play("BlackLeft");
+                PlayKey(50, 45, "BlackLeft", KeyCode.T);
             }
         }
         else if (Input.GetKeyDown(KeyCode.T))
         {
-            audioSource.PlayOneShot(notes[49]);
-            keys[49].GetComponent<Animator>().Play("WhiteLeft");
+            PlayKey(49, 49, "WhiteLeft", KeyCode.T);
         }
 
 
@@ -301,46 +300,40 @@ public class Piano : Interactable
         {
             if (Input.GetKeyDown(KeyCode.Y))
             {
-                audioSource.PlayOneShot(notes[58]);
-                keys[46].GetComponent<Animator>().Play("BlackMid");
+                PlayKey(58, 46, "BlackMid", KeyCode.Y);
             }
         }
         else if (Input.GetKeyDown(KeyCode.Y))
         {
-            audioSource.PlayOneShot(notes[57]);
-            keys[48].GetComponent<Animator>().Play("WhiteMidLeft");
+            PlayKey(57, 48, "WhiteMidLeft", KeyCode.Y);
         }
 
-
+        // SOLUTION
         // Key I and I UP
         if (Input.GetKey(KeyCode.LeftShift))
         {
             if (Input.GetKeyDown(KeyCode.I))
             {
-                audioSource.PlayOneShot(notes[32]);
-                keys[14].GetComponent<Animator>().Play("BlackLeft");
+                PlayKey(32, 14, "BlackLeft", KeyCode.I);
             }
         }
         else if (Input.GetKeyDown(KeyCode.I))
         {
-            audioSource.PlayOneShot(notes[31]);
-            keys[20].GetComponent<Animator>().Play("WhiteLeft");
+            PlayKey(31, 20, "WhiteLeft", KeyCode.I);
         }
 
-
+        // SOLUTION
         // Key O and O UP
         if (Input.GetKey(KeyCode.LeftShift))
         {
             if (Input.GetKeyDown(KeyCode.O))
             {
-                audioSource.PlayOneShot(notes[41]);
-                keys[15].GetComponent<Animator>().Play("BlackMid");
+                PlayKey(41, 15, "BlackMid", KeyCode.O);
             }
         }
         else if (Input.GetKeyDown(KeyCode.O))
         {
-            audioSource.PlayOneShot(notes[40]);
-            keys[18].GetComponent<Animator>().Play("WhiteMidLeft");
+            PlayKey(40, 18, "WhiteMidLeft", KeyCode.O);
         }
 
 
@@ -349,47 +342,41 @@ public class Piano : Interactable
         {
             if (Input.GetKeyDown(KeyCode.P))
             {
-                audioSource.PlayOneShot(notes[43]);
-                keys[16].GetComponent<Animator>().Play("BlackRight");
+                PlayKey(43, 16, "BlackRight", KeyCode.P);
             }
         }
         else if (Input.GetKeyDown(KeyCode.P))
         {
-            audioSource.PlayOneShot(notes[42]);
-            keys[19].GetComponent<Animator>().Play("WhiteMidRight");
+            PlayKey(42, 19, "WhiteMidRight", KeyCode.P);
         }
 
 
-        /*// Key S and S UP
+        // Key S and S UP
         if (Input.GetKey(KeyCode.LeftShift))
         {
             if (Input.GetKeyDown(KeyCode.S))
             {
-                audioSource.PlayOneShot(notes[48]);
-                keys[55].GetComponent<Animator>().Play("BlackLeft");
+                PlayKey(48, 55, "BlackLeft", KeyCode.S);
             }
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
-            audioSource.PlayOneShot(notes[47]);
-            keys[59].GetComponent<Animator>().Play("WhiteLeft");
+            PlayKey(47, 59, "WhiteLeft", KeyCode.S);
         }
 
-
+        // SOLUTION
         // Key D and D UP
         if (Input.GetKey(KeyCode.LeftShift))
         {
             if (Input.GetKeyDown(KeyCode.D))
             {
-                audioSource.PlayOneShot(notes[23]);
-                keys[56].GetComponent<Animator>().Play("BlackMid");
+                PlayKey(23, 56, "BlackMid", KeyCode.D);
             }
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
-            audioSource.PlayOneShot(notes[22]);
-            keys[58].GetComponent<Animator>().Play("WhiteMidLeft");
-        }*/
+            PlayKey(22, 58, "WhiteMidLeft", KeyCode.D);
+        }
 
 
         // Key G and G UP
@@ -397,14 +384,12 @@ public class Piano : Interactable
         {
             if (Input.GetKeyDown(KeyCode.G))
             {
-                audioSource.PlayOneShot(notes[28]);
-                keys[28].GetComponent<Animator>().Play("BlackLeft");
+                PlayKey(28, 28, "BlackLeft", KeyCode.G);
             }
         }
         else if (Input.GetKeyDown(KeyCode.G))
         {
-            audioSource.PlayOneShot(notes[27]);
-            keys[34].GetComponent<Animator>().Play("WhiteLeft");
+            PlayKey(27, 34, "WhiteLeft", KeyCode.G);
         }
 
 
@@ -413,14 +398,12 @@ public class Piano : Interactable
         {
             if (Input.GetKeyDown(KeyCode.H))
             {
-                audioSource.PlayOneShot(notes[30]);
-                keys[29].GetComponent<Animator>().Play("BlackMid");
+                PlayKey(30, 29, "BlackMid", KeyCode.H);
             }
         }
         else if (Input.GetKeyDown(KeyCode.H))
         {
-            audioSource.PlayOneShot(notes[29]);
-            keys[32].GetComponent<Animator>().Play("WhiteMidLeft");
+            PlayKey(29, 32, "WhiteMidLeft", KeyCode.H);
         }
 
 
@@ -429,14 +412,12 @@ public class Piano : Interactable
         {
             if (Input.GetKeyDown(KeyCode.J))
             {
-                audioSource.PlayOneShot(notes[34]);
-                keys[30].GetComponent<Animator>().Play("BlackRight");
+                PlayKey(34, 30, "BlackRight", KeyCode.J);
             }
         }
         else if (Input.GetKeyDown(KeyCode.J))
         {
-            audioSource.PlayOneShot(notes[33]);
-            keys[33].GetComponent<Animator>().Play("WhiteMidRight");
+            PlayKey(33, 33, "WhiteMidRight", KeyCode.J);
         }
 
 
@@ -445,31 +426,27 @@ public class Piano : Interactable
         {
             if (Input.GetKeyDown(KeyCode.L))
             {
-                audioSource.PlayOneShot(notes[37]);
-                keys[40].GetComponent<Animator>().Play("BlackLeft");
+                PlayKey(37, 40, "BlackLeft", KeyCode.L);
             }
         }
         else if (Input.GetKeyDown(KeyCode.L))
         {
-            audioSource.PlayOneShot(notes[36]);
-            keys[44].GetComponent<Animator>().Play("WhiteLeft");
+            PlayKey(36, 44, "WhiteLeft", KeyCode.L);
         }
 
 
-        /*// Key W and W UP -
+        // Key W and W UP -
         if (Input.GetKey(KeyCode.LeftShift))
         {
             if (Input.GetKeyDown(KeyCode.W))
             {
-                audioSource.PlayOneShot(notes[60]);
-                keys[41].GetComponent<Animator>().Play("BlackMid");
+                PlayKey(60, 41, "BlackMid", KeyCode.W);
             }
         }
         else if (Input.GetKeyDown(KeyCode.W))
         {
-            audioSource.PlayOneShot(notes[59]);
-            keys[43].GetComponent<Animator>().Play("WhiteMidLeft");
-        }*/
+            PlayKey(59, 43, "WhiteMidLeft", KeyCode.W);
+        }
 
 
         // Key C and C UP
@@ -477,14 +454,12 @@ public class Piano : Interactable
         {
             if (Input.GetKeyDown(KeyCode.C))
             {
-                audioSource.PlayOneShot(notes[21]);
-                keys[7].GetComponent<Animator>().Play("BlackLeft");
+                PlayKey(21, 7, "BlackLeft", KeyCode.C);
             }
         }
         else if (Input.GetKeyDown(KeyCode.C))
         {
-            audioSource.PlayOneShot(notes[20]);
-            keys[13].GetComponent<Animator>().Play("WhiteLeft");
+            PlayKey(20, 13, "WhiteLeft", KeyCode.C);
         }
 
 
@@ -493,14 +468,12 @@ public class Piano : Interactable
         {
             if (Input.GetKeyDown(KeyCode.V))
             {
-                audioSource.PlayOneShot(notes[53]);
-                keys[8].GetComponent<Animator>().Play("BlackMid");
+                PlayKey(53, 8, "BlackMid", KeyCode.V);
             }
         }
         else if (Input.GetKeyDown(KeyCode.V))
         {
-            audioSource.PlayOneShot(notes[52]);
-            keys[11].GetComponent<Animator>().Play("WhiteMidLeft");
+            PlayKey(52, 11, "WhiteMidLeft", KeyCode.V);
         }
 
 
@@ -509,14 +482,12 @@ public class Piano : Interactable
         {
             if (Input.GetKeyDown(KeyCode.B))
             {
-                audioSource.PlayOneShot(notes[19]);
-                keys[9].GetComponent<Animator>().Play("BlackRight");
+                PlayKey(19, 9, "BlackRight", KeyCode.B);
             }
         }
         else if (Input.GetKeyDown(KeyCode.B))
         {
-            audioSource.PlayOneShot(notes[18]);
-            keys[12].GetComponent<Animator>().Play("WhiteMidRight");
+            PlayKey(18, 12, "WhiteMidRight", KeyCode.B);
         }
 
         #endregion
@@ -525,81 +496,119 @@ public class Piano : Interactable
         // Key 3
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            audioSource.PlayOneShot(notes[5]);
-            keys[37].GetComponent<Animator>().Play("WhiteRight");
+            PlayKey(5, 37, "WhiteRight", KeyCode.Alpha3);
         }
 
         // Key 7
         if (Input.GetKeyDown(KeyCode.Alpha7))
         {
-            audioSource.PlayOneShot(notes[12]);
-            keys[3].GetComponent<Animator>().Play("WhiteRight");
+            PlayKey(12, 3, "WhiteRight", KeyCode.Alpha7);
         }
 
         // Key 0
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
-            audioSource.PlayOneShot(notes[0]);
-            keys[52].GetComponent<Animator>().Play("WhiteRight");
+            PlayKey(0, 52, "WhiteRight", KeyCode.Alpha0);
         }
 
         // Key R
         if (Input.GetKeyDown(KeyCode.R))
         {
-            audioSource.PlayOneShot(notes[46]);
-            keys[24].GetComponent<Animator>().Play("WhiteRight");
+            PlayKey(46, 24, "WhiteRight", KeyCode.R);
         }
 
+        // SOLUTION
         // Key U
         if (Input.GetKeyDown(KeyCode.U))
         {
-            audioSource.PlayOneShot(notes[51]);
-            keys[47].GetComponent<Animator>().Play("WhiteRight");
+            PlayKey(51, 47, "WhiteRight", KeyCode.U);
         }
 
         // Key Q -
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            audioSource.PlayOneShot(notes[17]);
-            keys[17].GetComponent<Animator>().Play("WhiteRight");
+            PlayKey(17, 17, "WhiteRight", KeyCode.Q);
         }
 
         // Key F
-        /* if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.F))
         {
-            audioSource.PlayOneShot(notes[26]);
-            keys[57].GetComponent<Animator>().Play("WhiteRight");
-        } */
+            PlayKey(26, 57, "WhiteRight", KeyCode.F);
+        }
 
         // Key K
         if (Input.GetKeyDown(KeyCode.K))
         {
-            audioSource.PlayOneShot(notes[35]);
-            keys[31].GetComponent<Animator>().Play("WhiteRight");
+            PlayKey(35, 31, "WhiteRight", KeyCode.K);
         }
 
         // Key X
         if (Input.GetKeyDown(KeyCode.X))
         {
-            audioSource.PlayOneShot(notes[56]);
-            keys[42].GetComponent<Animator>().Play("WhiteRight");
+            PlayKey(56, 42, "WhiteRight", KeyCode.X);
         }
 
         // Key N
         if (Input.GetKeyDown(KeyCode.N))
         {
-            audioSource.PlayOneShot(notes[39]);
-            keys[10].GetComponent<Animator>().Play("WhiteRight");
+            PlayKey(39, 10, "WhiteRight", KeyCode.N);
         }
 
         // Key M
         if (Input.GetKeyDown(KeyCode.M))
         {
-            audioSource.PlayOneShot(notes[38]);
-            keys[60].GetComponent<Animator>().Play("White");
+            PlayKey(38, 60, "White", KeyCode.M);
         }
 
         #endregion
+    }
+
+    private void PlayKey(int noteIndex, int keyIndex, string animation, KeyCode key)
+    {
+        audioSource.PlayOneShot(notes[noteIndex]);
+        keys[keyIndex].GetComponent<Animator>().Play(animation);
+        RecordKey(key);
+    }
+
+    private void RecordKey(KeyCode key)
+    {
+        recordedKeys.Add(key);
+        Debug.Log("Recorded: " + key);
+
+        if (recordedKeys.Count == 5)
+        {
+            CheckPuzzleSolution();
+
+            recordedKeys.Clear(); // Clear and record next 5
+            Debug.Log("Cleared sequence!");
+        }
+
+        return;
+    }
+
+    private void CheckPuzzleSolution()
+    {
+        if (recordedKeys.Count < solutionKeys.Count)
+        {
+            return;
+        }
+
+        for (int i = 0; i < solutionKeys.Count; i++)
+        {
+            if (recordedKeys[i] != solutionKeys[i])
+            {
+                Debug.Log("Incorrect sequence!");
+                return;
+            }
+        }
+
+        Debug.Log("Correct sequence!");
+        OnPuzzleSolved();
+    }
+
+    private void OnPuzzleSolved()
+    {
+        Debug.Log("Puzzle Solved!");
     }
 
     /// <summary>
@@ -677,9 +686,9 @@ public class Piano : Interactable
     /// <summary>
     /// Increase or decrease piano volume
     /// </summary>
-    
+
     // Set piano vol after testing
-    private void Volume()
+    /*private void Volume()
     {
         audioSource.volume = actualVolume;
 
@@ -698,7 +707,7 @@ public class Piano : Interactable
         {
             if (actualVolume >= 0.1f) actualVolume -= 0.1f;
         }
-    }
+    }*/
 
     /// <summary>
     /// Access to an online music sheets library
@@ -711,7 +720,7 @@ public class Piano : Interactable
     /// <summary>
     /// Display particle when keys are pressed
     /// </summary>
-    
+
     // Change to when certain keys are pressed
     private void Particle()
     {

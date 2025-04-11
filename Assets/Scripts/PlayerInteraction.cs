@@ -8,6 +8,7 @@ public class PlayerInteraction : MonoBehaviour
     public float playerReach = 3f;
     public Camera PlayerCamera;
     Interactable currentInteractable;
+    bool isInteracting = false;
 
     void Start()
     {
@@ -21,12 +22,29 @@ public class PlayerInteraction : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        CheckInteraction();
 
-        if (Input.GetKeyDown(KeyCode.F) && currentInteractable != null)
+        if (!isInteracting)
         {
-            currentInteractable.Interact();
+            CheckInteraction();
+
+            if (Input.GetKeyDown(KeyCode.F) && currentInteractable != null)
+            {
+                currentInteractable.Interact();
+                isInteracting = true;
+            }
         }
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                ExitInteraction();
+            }
+        }
+    }
+
+    void ExitInteraction()
+    {
+        isInteracting = false;
     }
 
     void CheckInteraction()
