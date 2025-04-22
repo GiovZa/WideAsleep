@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Audio;
+using SoundSystem;
 
 public class AudioManager : MonoBehaviour
 {
@@ -26,5 +27,8 @@ public class AudioManager : MonoBehaviour
         source.Play();
 
         Destroy(tempGO, clip.length);
+
+        float soundRadius = volume * 5f; // tweak this multiplier
+        SoundEvents.EmitSound(position, soundRadius);        
     }
 }

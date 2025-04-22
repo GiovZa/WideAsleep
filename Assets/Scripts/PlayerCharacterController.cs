@@ -1,8 +1,9 @@
 using System;
 using UnityEngine;
 using UnityEngine.Events;
+using SoundSystem;
 
-namespace temp
+namespace playerChar
 {
     [RequireComponent(typeof(CharacterController), typeof(AudioSource))]
     public class PlayerCharacterController : MonoBehaviour
@@ -11,7 +12,7 @@ namespace temp
         public Camera PlayerCamera;
 
         [Tooltip("Audio source for footsteps, jump, etc...")]
-        public AudioSource AudioSource;
+        public AudioSource audioSource;
 
         [Header("General")] [Tooltip("Force applied downward when in the air")]
         public float GravityDownForce = 20f;
@@ -78,8 +79,15 @@ namespace temp
         [Tooltip("Sound played for footsteps")]
         public AudioClip FootstepSfx;
 
+        public float noiseMeter = 10f;
+
         [Tooltip("Sound played when jumping")] public AudioClip JumpSfx;
         [Tooltip("Sound played when landing")] public AudioClip LandSfx;
+
+        [Header("Headbob")]
+        [Tooltip("How tall the bounce of head bobs are when walking")] public float HeadbobAmountWalk = 0.08f;
+        [Tooltip("How tall the bounce of head bobs are when sprinting")] public float HeadbobAmountSprint = 0.05f;
+        [Tooltip("How fast the bounce loops")] public float HeadbobSpeed = 1f;
 
         public UnityAction<bool> OnStanceChanged;
 
@@ -105,6 +113,7 @@ namespace temp
         {
             // fetch components on the same gameObject
             m_Controller = GetComponent<CharacterController>();
+            audioSource = GetComponent<AudioSource>();
 
             m_Controller.enableOverlapRecovery = true;
 
@@ -134,7 +143,8 @@ namespace temp
             // landing
             if (IsGrounded && !wasGrounded)
             {
-                // AudioSource.PlayOneShot(LandSfx);
+                audioSource.PlayOneShot(LandSfx);
+                SoundEvents.EmitSound(transform.position, 0.8f * noiseMeter);
             }
 
             // crouching
@@ -154,6 +164,17 @@ namespace temp
             Debug.LogWarning("Ya Died!");
 
             // EventManager.Broadcast(Events.PlayerDeathEvent);
+        }
+
+        void HandleHeadbob(float bobAmount, float bobSpeed)
+        {
+            float bob = Mathf.Sin(Time.time * bobSpeed) * bobAmount;
+            Vector3 targetPos = new Vector3(0f, (m_Controller.height * CameraHeightRatio) + bob, 0f);
+            PlayerCamera.transform.localPosition = Vector3.Lerp(
+                PlayerCamera.transform.localPosition,
+                targetPos,
+                Time.deltaTime * 10f  // <-- smoothing speed, tweak as needed
+            );
         }
 
         void GroundCheck()
@@ -262,7 +283,8 @@ namespace temp
                             CharacterVelocity += Vector3.up * JumpForce;
 
                             // play sound
-                            // AudioSource.PlayOneShot(JumpSfx);
+                            audioSource.PlayOneShot(JumpSfx);
+                            SoundEvents.EmitSound(transform.position, 1.0f * noiseMeter);
 
                             // remember last time we jumped because we need to prevent snapping to ground for a short time
                             m_LastTimeJumped = Time.time;
@@ -275,13 +297,44 @@ namespace temp
                         }
                     }
 
-                    // footsteps sound
-                    float chosenFootstepSfxFrequency =
-                        (isSprinting ? FootstepSfxFrequencyWhileSprinting : FootstepSfxFrequency);
-                    if (m_FootstepDistanceCounter >= 1f / chosenFootstepSfxFrequency)
+                    // Footsteps and headbob only when grounded and moving
+                    if (IsGrounded && CharacterVelocity.magnitude > 0.1f)
                     {
-                        m_FootstepDistanceCounter = 0f;
-                        // AudioSource.PlayOneShot(FootstepSfx);
+                        float stepFreq = isSprinting ? FootstepSfxFrequencyWhileSprinting :
+                                        (IsCrouching ? FootstepSfxFrequency * 1.5f : FootstepSfxFrequency);
+                        m_FootstepDistanceCounter += CharacterVelocity.magnitude * Time.deltaTime;
+
+                        if (m_FootstepDistanceCounter >= 1f / stepFreq)
+                        {
+                            m_FootstepDistanceCounter = 0f;
+                            
+                            if (FootstepSfx != null)
+                            {
+                                audioSource.pitch = isSprinting ? 1.2f : 1f;
+
+                                if (IsCrouching)
+                                    audioSource.volume = 0.2f;
+                                else
+                                    audioSource.volume = isSprinting ? 1f : 0.5f;
+
+                                audioSource.PlayOneShot(FootstepSfx);
+                                SoundEvents.EmitSound(transform.position, audioSource.volume * noiseMeter);
+                            }
+
+                            // HandleHeadbob(isSprinting ? HeadbobAmountWalk : HeadbobAmountSprint, HeadbobSpeed);
+                        }
+                        
+                        // Headbob every frame while moving
+                        float bobHeight = isSprinting ? HeadbobAmountSprint :
+                                        (IsCrouching ? HeadbobAmountWalk * 0.25f : HeadbobAmountWalk);
+                        float bobSpeed = isSprinting ? HeadbobSpeed * 1.5f :
+                                        (IsCrouching ? HeadbobSpeed * 0.5f : HeadbobSpeed);
+                        HandleHeadbob(bobHeight, bobSpeed);
+
+                    }
+                    else
+                    {
+                        m_FootstepDistanceCounter = 0f; // reset when not moving or in air
                     }
 
                     // keep track of distance traveled for footsteps sound
