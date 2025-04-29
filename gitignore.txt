@@ -74,3 +74,8 @@ crashlytics-build.properties
 
 /Assets/Polyeler/ModularAbandonedHospital/Meshes/BuildingStructure.fbx
 /Assets/Polyeler/ModularAbandonedHospital/Meshes/Furniture.fbx
+/Assets/Polyeler/ModularAbandonedHospital/Meshes/BuildingStructure.fbx.meta
+/Assets/Polyeler/ModularAbandonedHospital/Meshes/Furniture.fbx.meta
+*.DS_Store
+/Users/elijahmiller/Documents/GitHub/WideAsleep/Assets/.DS_Store
+Assets/Polyeler/ModularAbandonedHospital/Meshes/BuildingStructure.fbx.meta
