@@ -7,10 +7,20 @@ public class TriggerDoor : MonoBehaviour
 {
     Animator doorAnimator;
     private bool inTriggerArea;
+    [SerializeField] bool IsOpenAtStart;
+
+    void Awake()
+    {
+        doorAnimator = GetComponent<Animator>();
+    }
 
     void Start()
     {
-        doorAnimator = GetComponent<Animator>();
+        if (IsOpenAtStart == true)
+        {
+            doorAnimator.SetTrigger("Open");
+            doorAnimator.SetBool("IsClosed", false);
+        }
     }
 
     void Update()
