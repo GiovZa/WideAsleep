@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using temp;
+using playerChar;
 
 [RequireComponent(typeof(AudioSource))]
 public class Piano : Interactable
@@ -47,20 +47,27 @@ public class Piano : Interactable
     #region Built-in Methods
     private void Awake()
     {
+        isPianoActive = false;
+
         audioSource = GetComponent<AudioSource>();
 
         personalSheet.SetActive(isPianoActive);
         baseSheet.SetActive(isPianoActive);
+
         actualSheet = 0;
 
         // baseSheet.GetComponentInChildren<Image>().sprite = sheets[actualSheet];
 
         actualVolume = 0.5f;
 
-        keyboard = GameObject.Find("Keyboard");
+        if (keyboard == null)
+        {
+            keyboard = GameObject.Find("Keyboard");
+        }
+
         if (keyboard != null)
         {
-            keyboard.SetActive(false);
+            keyboard.SetActive(isPianoActive);
         }
         else
         {
@@ -71,6 +78,12 @@ public class Piano : Interactable
     #region Interaction Implementation
     public override void Interact()
     {
+        if (!NoteManager.Instance.HasEnoughNotes())
+        {
+            Debug.Log("You need more notes to use the piano!");
+            return;
+        }
+
         if (!isPianoActive)
         {
             ActivatePiano();
@@ -84,12 +97,13 @@ public class Piano : Interactable
     private void ActivatePiano()
     {
         isPianoActive = true;
-        baseSheet.SetActive(true);
+        baseSheet.SetActive(isPianoActive);
+
         Debug.Log("Piano activated! Press ESC to exit.");
 
         if (keyboard != null)
         {
-            keyboard.SetActive(true);
+            keyboard.SetActive(isPianoActive);
         }
 
         // Disable player movement while playing
@@ -107,11 +121,11 @@ public class Piano : Interactable
     private void DeactivatePiano()
     {
         isPianoActive = false;
-        baseSheet.SetActive(false);
+        baseSheet.SetActive(isPianoActive);
 
         if (keyboard != null)
         {
-            keyboard.SetActive(false);
+            keyboard.SetActive(isPianoActive);
         }
 
         recordedKeys.Clear();
@@ -570,6 +584,7 @@ public class Piano : Interactable
         RecordKey(key);
     }
 
+    // F IS BEING RECORDED ON ACTIVATION !! FIX IT !!
     private void RecordKey(KeyCode key)
     {
         recordedKeys.Add(key);

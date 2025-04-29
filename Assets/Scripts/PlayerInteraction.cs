@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using temp;
+using playerChar;
 using UnityEngine;
 
 public class PlayerInteraction : MonoBehaviour
@@ -29,8 +29,18 @@ public class PlayerInteraction : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.F) && currentInteractable != null)
             {
+                if (currentInteractable is Piano)
+                {
+                    if (NoteManager.Instance.notesCollected == NoteManager.Instance.requiredNotes) {
+                        isInteracting = true;
+                    } else
+                    {
+                        Debug.Log("Not enough notes!");
+                        return;
+                    }
+                }
+
                 currentInteractable.Interact();
-                isInteracting = true;
             }
         }
         else
