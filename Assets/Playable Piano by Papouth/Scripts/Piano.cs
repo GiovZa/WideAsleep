@@ -32,10 +32,10 @@ public class Piano : Interactable
 
     private List<KeyCode> recordedKeys = new List<KeyCode>();
 
-    [SerializeField] private List<KeyCode> solutionKeys = new List<KeyCode>
+    private List<KeyCode> solutionKeys = new List<KeyCode>
     {
         KeyCode.I,
-        KeyCode.O,
+        KeyCode.P,
         KeyCode.D,
         KeyCode.T,
         KeyCode.D
@@ -584,7 +584,6 @@ public class Piano : Interactable
         RecordKey(key);
     }
 
-    // F IS BEING RECORDED ON ACTIVATION !! FIX IT !!
     private void RecordKey(KeyCode key)
     {
         recordedKeys.Add(key);
