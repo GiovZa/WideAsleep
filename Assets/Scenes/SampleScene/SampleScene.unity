@@ -12460,6 +12460,57 @@ Transform:
   m_Children: []
   m_Father: {fileID: 960096385}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &558454560 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3930038628237913654, guid: cb0d38bb55eaf754db3bea7c3d670afb, type: 3}
+  m_PrefabInstance: {fileID: 1125482793}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &558454569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 558454560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &558454570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 558454560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 895feb07e94664242abbd168a45b9186, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  message: Play the piano
+  onInteraction:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 558454560}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!43 &571061134
 Mesh:
   m_ObjectHideFlags: 0
@@ -23800,6 +23851,14 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 676989494354228665, guid: cb0d38bb55eaf754db3bea7c3d670afb, type: 3}
+      propertyPath: m_IgnoreReversedGraphics
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1955915204456352679, guid: cb0d38bb55eaf754db3bea7c3d670afb, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6063a1aac6d4f6a438f2a8d125ddc707, type: 3}
     - target: {fileID: 3681531178619628928, guid: cb0d38bb55eaf754db3bea7c3d670afb, type: 3}
       propertyPath: m_LocalPosition.x
       value: -32.103245
@@ -23844,10 +23903,41 @@ PrefabInstance:
       propertyPath: m_Name
       value: Playable_Piano
       objectReference: {fileID: 0}
+    - target: {fileID: 3930038628237913654, guid: cb0d38bb55eaf754db3bea7c3d670afb, type: 3}
+      propertyPath: m_TagString
+      value: Interactable
+      objectReference: {fileID: 0}
+    - target: {fileID: 4616175512037331266, guid: cb0d38bb55eaf754db3bea7c3d670afb, type: 3}
+      propertyPath: m_text
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5194410866359689170, guid: cb0d38bb55eaf754db3bea7c3d670afb, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6063a1aac6d4f6a438f2a8d125ddc707, type: 3}
+    - target: {fileID: 6735772314717458734, guid: cb0d38bb55eaf754db3bea7c3d670afb, type: 3}
+      propertyPath: m_text
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7263394490318565231, guid: cb0d38bb55eaf754db3bea7c3d670afb, type: 3}
+      propertyPath: volAmount
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 2791546874178005979, guid: cb0d38bb55eaf754db3bea7c3d670afb, type: 3}
+    - {fileID: 5236586832252747969, guid: cb0d38bb55eaf754db3bea7c3d670afb, type: 3}
+    - {fileID: 3729901651482959950, guid: cb0d38bb55eaf754db3bea7c3d670afb, type: 3}
+    - {fileID: 828932184775971667, guid: cb0d38bb55eaf754db3bea7c3d670afb, type: 3}
+    - {fileID: 6321536292717196527, guid: cb0d38bb55eaf754db3bea7c3d670afb, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3930038628237913654, guid: cb0d38bb55eaf754db3bea7c3d670afb, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 558454570}
+    - targetCorrespondingSourceObject: {fileID: 3930038628237913654, guid: cb0d38bb55eaf754db3bea7c3d670afb, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 558454569}
   m_SourcePrefab: {fileID: 100100000, guid: cb0d38bb55eaf754db3bea7c3d670afb, type: 3}
 --- !u!1 &1128572077
 GameObject:
@@ -26340,104 +26430,8 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5627215174818730747, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
-      propertyPath: JumpSfx
-      value: 
-      objectReference: {fileID: 8300000, guid: 08a39fa513ade6e49bc478057a86dc65, type: 3}
-    - target: {fileID: 5627215174818730747, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
-      propertyPath: LandSfx
-      value: 
-      objectReference: {fileID: 8300000, guid: 0297c4af354fbf94596177a5f118118d, type: 3}
-    - target: {fileID: 5627215174818730747, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
-      propertyPath: JumpForce
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5627215174818730747, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
-      propertyPath: FootstepSfx
-      value: 
-      objectReference: {fileID: 8300000, guid: 0fd5ef5132f4af646a1ea9c99df6cc62, type: 3}
-    - target: {fileID: 5627215174818730747, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
-      propertyPath: StandHeight
-      value: 1.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 5627215174818730747, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
-      propertyPath: CrouchHeight
-      value: 0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5627215174818730747, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
-      propertyPath: MaxSpeedInAir
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5627215174818730747, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
-      propertyPath: RotationSpeed
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5627215174818730747, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
-      propertyPath: GravityDownForce
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 5627215174818730747, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
-      propertyPath: MaxSpeedOnGround
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5627215174818730747, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
-      propertyPath: MouseSensitivity
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5627215174818730747, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
-      propertyPath: CameraHeightRatio
-      value: 0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5627215174818730747, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
-      propertyPath: GroundCheckDistance
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5627215174818730747, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
-      propertyPath: SprintSpeedModifier
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5627215174818730747, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
-      propertyPath: AccelerationSpeedInAir
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5627215174818730747, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
-      propertyPath: GroundCheckLayers.m_Bits
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5627215174818730747, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
-      propertyPath: MovementSharpnessOnGround
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5983470323781372672, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
-      propertyPath: m_Height
-      value: 1.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5983470323781372672, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
-      propertyPath: m_Radius
-      value: 0.35
-      objectReference: {fileID: 0}
-    - target: {fileID: 5983470323781372672, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5983470323781372672, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
-      propertyPath: m_Center.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5983470323781372672, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
-      propertyPath: m_SkinWidth
-      value: 0.001
-      objectReference: {fileID: 0}
-    - target: {fileID: 5983470323781372672, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
-      propertyPath: m_MinMoveDistance
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6700985936480113284, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
       propertyPath: m_Name
-      value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 6700985936480113284, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
-      propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 8583526281846590103, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
@@ -26484,14 +26478,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9092502506809099772, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9092502506809099772, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
-      propertyPath: m_audioClip
-      value: 
-      objectReference: {fileID: 8300000, guid: 0fd5ef5132f4af646a1ea9c99df6cc62, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
