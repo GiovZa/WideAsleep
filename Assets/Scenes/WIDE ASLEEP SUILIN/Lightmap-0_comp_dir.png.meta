@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< Updated upstream:Assets/Scenes/WIDE ASLEEP SUILIN/Lightmap-0_comp_dir.png.meta
 guid: 5f669127bcd104e709f8d51a8cb86fe7
+========
+guid: 591d30518b7a5f74ab7b2ee9dcfd7e03
+>>>>>>>> Stashed changes:Assets/Art Asset/copper-lock-hello-neighbor-alpha-1-20250501T044431Z-1-001/copper-lock-hello-neighbor-alpha-1/textures/Texture_Copper_Lock_copperlock_m_BaseColor.png.meta
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -7,7 +11,11 @@ TextureImporter:
   mipmaps:
     mipMapMode: 0
     enableMipMap: 1
+<<<<<<<< Updated upstream:Assets/Scenes/WIDE ASLEEP SUILIN/Lightmap-0_comp_dir.png.meta
     sRGBTexture: 0
+========
+    sRGBTexture: 1
+>>>>>>>> Stashed changes:Assets/Art Asset/copper-lock-hello-neighbor-alpha-1-20250501T044431Z-1-001/copper-lock-hello-neighbor-alpha-1/textures/Texture_Copper_Lock_copperlock_m_BaseColor.png.meta
     linearTexture: 0
     fadeOut: 0
     borderMipMap: 0
@@ -37,9 +45,15 @@ TextureImporter:
     filterMode: 1
     aniso: 3
     mipBias: 0
+<<<<<<<< Updated upstream:Assets/Scenes/WIDE ASLEEP SUILIN/Lightmap-0_comp_dir.png.meta
     wrapU: 1
     wrapV: 1
     wrapW: 1
+========
+    wrapU: 0
+    wrapV: 0
+    wrapW: 0
+>>>>>>>> Stashed changes:Assets/Art Asset/copper-lock-hello-neighbor-alpha-1-20250501T044431Z-1-001/copper-lock-hello-neighbor-alpha-1/textures/Texture_Copper_Lock_copperlock_m_BaseColor.png.meta
   nPOTScale: 1
   lightmap: 0
   compressionQuality: 50
@@ -54,7 +68,11 @@ TextureImporter:
   alphaUsage: 1
   alphaIsTransparency: 0
   spriteTessellationDetail: -1
+<<<<<<<< Updated upstream:Assets/Scenes/WIDE ASLEEP SUILIN/Lightmap-0_comp_dir.png.meta
   textureType: 12
+========
+  textureType: 0
+>>>>>>>> Stashed changes:Assets/Art Asset/copper-lock-hello-neighbor-alpha-1-20250501T044431Z-1-001/copper-lock-hello-neighbor-alpha-1/textures/Texture_Copper_Lock_copperlock_m_BaseColor.png.meta
   textureShape: 1
   singleChannelComponent: 0
   flipbookRows: 1
@@ -94,7 +112,11 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
+<<<<<<<< Updated upstream:Assets/Scenes/WIDE ASLEEP SUILIN/Lightmap-0_comp_dir.png.meta
     buildTarget: WebGL
+========
+    buildTarget: Standalone
+>>>>>>>> Stashed changes:Assets/Art Asset/copper-lock-hello-neighbor-alpha-1-20250501T044431Z-1-001/copper-lock-hello-neighbor-alpha-1/textures/Texture_Copper_Lock_copperlock_m_BaseColor.png.meta
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1

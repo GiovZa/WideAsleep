@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< Updated upstream:Assets/Scenes/WIDE ASLEEP SUILIN/Lightmap-0_comp_light.exr.meta
 guid: 1f9ca0962972c440daa99aeda80db50c
+========
+guid: 6063a1aac6d4f6a438f2a8d125ddc707
+>>>>>>>> Stashed changes:Assets/Playable Piano by Papouth/UI/full-solution.png.meta
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -45,7 +49,7 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 0
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
@@ -94,7 +98,11 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
+<<<<<<<< Updated upstream:Assets/Scenes/WIDE ASLEEP SUILIN/Lightmap-0_comp_light.exr.meta
     buildTarget: WebGL
+========
+    buildTarget: Standalone
+>>>>>>>> Stashed changes:Assets/Playable Piano by Papouth/UI/full-solution.png.meta
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1

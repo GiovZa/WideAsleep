@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< Updated upstream:Assets/Scenes/WIDE ASLEEP SUILIN/ReflectionProbe-0.exr.meta
 guid: dffb4eb5293c948e99b8c5d74d21ad93
+========
+guid: 4eeff4f51963b7a4f926d14c7a36c9f8
+>>>>>>>> Stashed changes:Assets/Art Asset/copper-lock-hello-neighbor-alpha-1-20250501T044431Z-1-001/copper-lock-hello-neighbor-alpha-1/textures/Texture_Copper_Lock_copperlock_m_Normal.png.meta
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -37,9 +41,15 @@ TextureImporter:
     filterMode: 2
     aniso: 0
     mipBias: 0
+<<<<<<<< Updated upstream:Assets/Scenes/WIDE ASLEEP SUILIN/ReflectionProbe-0.exr.meta
     wrapU: 1
     wrapV: 1
     wrapW: 1
+========
+    wrapU: 0
+    wrapV: 0
+    wrapW: 0
+>>>>>>>> Stashed changes:Assets/Art Asset/copper-lock-hello-neighbor-alpha-1-20250501T044431Z-1-001/copper-lock-hello-neighbor-alpha-1/textures/Texture_Copper_Lock_copperlock_m_Normal.png.meta
   nPOTScale: 1
   lightmap: 0
   compressionQuality: 50
@@ -55,7 +65,11 @@ TextureImporter:
   alphaIsTransparency: 0
   spriteTessellationDetail: -1
   textureType: 0
+<<<<<<<< Updated upstream:Assets/Scenes/WIDE ASLEEP SUILIN/ReflectionProbe-0.exr.meta
   textureShape: 2
+========
+  textureShape: 1
+>>>>>>>> Stashed changes:Assets/Art Asset/copper-lock-hello-neighbor-alpha-1-20250501T044431Z-1-001/copper-lock-hello-neighbor-alpha-1/textures/Texture_Copper_Lock_copperlock_m_Normal.png.meta
   singleChannelComponent: 0
   flipbookRows: 1
   flipbookColumns: 1
@@ -94,7 +108,11 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
+<<<<<<<< Updated upstream:Assets/Scenes/WIDE ASLEEP SUILIN/ReflectionProbe-0.exr.meta
     buildTarget: WebGL
+========
+    buildTarget: Standalone
+>>>>>>>> Stashed changes:Assets/Art Asset/copper-lock-hello-neighbor-alpha-1-20250501T044431Z-1-001/copper-lock-hello-neighbor-alpha-1/textures/Texture_Copper_Lock_copperlock_m_Normal.png.meta
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
