@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5627215174818730747}
   - component: {fileID: 5983470323781372672}
   - component: {fileID: 9092502506809099772}
+  - component: {fileID: 6023626159821768203}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -49,31 +50,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerCamera: {fileID: 6806078760192323123}
   AudioSource: {fileID: 0}
-  GravityDownForce: 20
+  GravityDownForce: 12
   GroundCheckLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
-  GroundCheckDistance: 0.05
-  MaxSpeedOnGround: 10
-  MovementSharpnessOnGround: 15
+    m_Bits: 1
+  GroundCheckDistance: 1
+  MaxSpeedOnGround: 5
+  MovementSharpnessOnGround: 5
   MaxSpeedCrouchedRatio: 0.5
-  MaxSpeedInAir: 10
-  AccelerationSpeedInAir: 25
-  SprintSpeedModifier: 2
+  MaxSpeedInAir: 2
+  AccelerationSpeedInAir: 5
+  SprintSpeedModifier: 1.5
   KillHeight: -50
   RotationSpeed: 2
   AimingRotationMultiplier: 0.4
   isInverted: 0
-  JumpForce: 7
-  CameraHeightRatio: 0.9
+  JumpForce: 5
+  CameraHeightRatio: 0.8
   CapsuleHeightStanding: 1.8
   CapsuleHeightCrouching: 0.9
   CrouchingSharpness: 10
   FootstepSfxFrequency: 1
   FootstepSfxFrequencyWhileSprinting: 1
-  FootstepSfx: {fileID: 0}
-  JumpSfx: {fileID: 0}
-  LandSfx: {fileID: 0}
+  FootstepSfx: {fileID: 8300000, guid: 0fd5ef5132f4af646a1ea9c99df6cc62, type: 3}
+  JumpSfx: {fileID: 8300000, guid: 08a39fa513ade6e49bc478057a86dc65, type: 3}
+  LandSfx: {fileID: 8300000, guid: 0297c4af354fbf94596177a5f118118d, type: 3}
 --- !u!143 &5983470323781372672
 CharacterController:
   m_ObjectHideFlags: 0
@@ -93,13 +94,13 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 2
-  m_Radius: 0.5
+  m_Height: 1.8
+  m_Radius: 0.35
   m_SlopeLimit: 45
   m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
+  m_SkinWidth: 0.001
+  m_MinMoveDistance: 0
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!82 &9092502506809099772
 AudioSource:
   m_ObjectHideFlags: 0
@@ -110,7 +111,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 0fd5ef5132f4af646a1ea9c99df6cc62, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -196,6 +197,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &6023626159821768203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6700985936480113284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 320c1502478feb54db18c1a72e771762, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerReach: 3
 --- !u!1 &8869429432111375642
 GameObject:
   m_ObjectHideFlags: 0

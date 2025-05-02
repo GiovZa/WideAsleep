@@ -97,6 +97,8 @@ namespace playerChar
         public bool IsDead { get; private set; }
         public bool IsCrouching { get; private set; }
 
+        private bool CanMove = true;
+
         CharacterController m_Controller;
         Vector3 m_GroundNormal;
         Vector3 m_CharacterVelocity;
@@ -133,6 +135,11 @@ namespace playerChar
                 // m_Health.Kill();
                 Debug.LogWarning("Death by Kill Height Not Implemented, resetting Player position");
                 transform.transform.position = new Vector3(10,0,-10);
+            }
+
+            if (!CanMove)
+            {
+                return;
             }
 
             HasJumpedThisFrame = false;
@@ -476,6 +483,21 @@ namespace playerChar
 
             IsCrouching = crouched;
             return true;
+        }
+    
+        // Movement toggle functions when interacting with objects with a separate UI (Piano)
+        public void DisableMovement()
+        {
+            CanMove = false;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = false;
+        }
+
+        public void EnableMovement()
+        {
+            CanMove = true;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
     }
 }
