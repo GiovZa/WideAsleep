@@ -12,6 +12,7 @@ public class Patrol : MonoBehaviour
     private List<Transform> waypoints = new();
     private NavMeshAgent agent;
     private Transform currentTarget;
+    private int index = 0;
 
     public bool isPatrolling = true;
 
@@ -36,6 +37,8 @@ public class Patrol : MonoBehaviour
             Debug.LogError("No waypoints found under " + waypointParent.name);
             return;
         }
+
+        waypoints.Sort();
 
         PickNewTarget();
     }
@@ -70,7 +73,15 @@ public class Patrol : MonoBehaviour
         Transform oldTarget = currentTarget;
         do
         {
-            currentTarget = waypoints[Random.Range(0, waypoints.Count)];
+            index += 1;
+            
+            if (index == waypoints.Count - 1)
+            {
+                Debug.Log("Resetting Index: " + index + " to 0 since waypoint count is: " + waypoints.Count);
+                index = 0;
+            }
+
+            currentTarget = waypoints[index];
         } while (currentTarget == oldTarget && waypoints.Count > 1);
 
         agent.SetDestination(currentTarget.position);
