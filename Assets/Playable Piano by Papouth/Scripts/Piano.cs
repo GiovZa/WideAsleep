@@ -25,6 +25,8 @@ public class Piano : Interactable
     [SerializeField] private AudioClip[] notes;
     [SerializeField] private GameObject[] keys;
 
+    [SerializeField] private GameObject locket;
+
     private AudioSource audioSource;
     private PlayerCharacterController playerCharacterController;
 
@@ -40,6 +42,8 @@ public class Piano : Interactable
         KeyCode.T,
         KeyCode.D
     };
+
+    private bool isPuzzleSolved = false;
 
     #endregion
 
@@ -71,18 +75,18 @@ public class Piano : Interactable
         }
         else
         {
-            Debug.LogWarning("Keyboard UI not found!");
+            Debug.LogWarning("[Piano] Keyboard UI not found!");
         }
     }
 
     #region Interaction Implementation
     public override void Interact()
     {
-        if (!NoteManager.Instance.HasEnoughNotes())
+        /*if (!NoteManager.Instance.HasEnoughNotes())
         {
-            Debug.Log("You need more notes to use the piano!");
+            Debug.Log("[Piano] You need more notes to use the piano!");
             return;
-        }
+        }*/
 
         if (!isPianoActive)
         {
@@ -99,7 +103,7 @@ public class Piano : Interactable
         isPianoActive = true;
         baseSheet.SetActive(isPianoActive);
 
-        Debug.Log("Piano activated! Press ESC to exit.");
+        Debug.Log("[Piano] Piano activated! Press ESC to exit.");
 
         if (keyboard != null)
         {
@@ -136,7 +140,7 @@ public class Piano : Interactable
             playerCharacterController.EnableMovement();
         }
 
-        Debug.Log("Piano deactivated!");
+        Debug.Log("[Piano] Piano deactivated!");
     }
 
     private void Update()
@@ -336,7 +340,6 @@ public class Piano : Interactable
             PlayKey(31, 20, "WhiteLeft", KeyCode.I);
         }
 
-        // SOLUTION
         // Key O and O UP
         if (Input.GetKey(KeyCode.LeftShift))
         {
@@ -350,7 +353,7 @@ public class Piano : Interactable
             PlayKey(40, 18, "WhiteMidLeft", KeyCode.O);
         }
 
-
+        // SOLUTION
         // Key P and P UP
         if (Input.GetKey(KeyCode.LeftShift))
         {
@@ -587,14 +590,14 @@ public class Piano : Interactable
     private void RecordKey(KeyCode key)
     {
         recordedKeys.Add(key);
-        Debug.Log("Recorded: " + key);
+        Debug.Log("[Piano] Recorded: " + key);
 
         if (recordedKeys.Count == 5)
         {
             CheckPuzzleSolution();
 
             recordedKeys.Clear(); // Clear and record next 5
-            Debug.Log("Cleared sequence!");
+            Debug.Log("[Piano] Cleared sequence!");
         }
 
         return;
@@ -602,6 +605,8 @@ public class Piano : Interactable
 
     private void CheckPuzzleSolution()
     {
+        if (isPuzzleSolved) return;
+
         if (recordedKeys.Count < solutionKeys.Count)
         {
             return;
@@ -611,18 +616,29 @@ public class Piano : Interactable
         {
             if (recordedKeys[i] != solutionKeys[i])
             {
-                Debug.Log("Incorrect sequence!");
+                Debug.Log("[Piano] Incorrect sequence!");
                 return;
             }
         }
 
-        Debug.Log("Correct sequence!");
+        Debug.Log("[Piano] Correct sequence!");
+        isPuzzleSolved = true;
         OnPuzzleSolved();
     }
 
     private void OnPuzzleSolved()
     {
-        Debug.Log("Puzzle Solved!");
+        Debug.Log("[Piano] Puzzle Solved!");
+
+        if (locket != null)
+        {
+            locket.SetActive(true);
+            Debug.Log("[Piano] Locket revealed!");
+        }
+        else
+        {
+            Debug.LogWarning("[Piano] Locket reference is missing!");
+        }
     }
 
     /// <summary>

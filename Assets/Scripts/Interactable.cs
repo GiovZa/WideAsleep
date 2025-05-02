@@ -21,7 +21,7 @@ public class Interactable : MonoBehaviour
     public virtual void Interact()
     {
         onInteraction.Invoke();
-        Debug.Log("Picked up object!");
+        Debug.Log("[Piano] Picked up object!");
     }
 
     public void DisableOutline()

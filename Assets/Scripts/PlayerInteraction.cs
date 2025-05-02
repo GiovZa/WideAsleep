@@ -27,15 +27,14 @@ public class PlayerInteraction : MonoBehaviour
         {
             CheckInteraction();
 
-            if (Input.GetKeyDown(KeyCode.F) && currentInteractable != null)
+            if (Input.GetKeyDown(KeyCode.E) && currentInteractable != null)
             {
                 if (currentInteractable is Piano)
                 {
-                    if (NoteManager.Instance.notesCollected == NoteManager.Instance.requiredNotes) {
+                    if (NoteManager.Instance.HasEnoughNotes()) {
                         isInteracting = true;
-                    } else
-                    {
-                        Debug.Log("Not enough notes!");
+                    } else {
+                        Debug.Log("[Piano] Not enough notes to play the piano!");
                         return;
                     }
                 }
@@ -61,7 +60,7 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (PlayerCamera == null)
         {
-            Debug.Log("No player camera!");
+            Debug.Log("[Piano] No player camera!");
             return;
         }
 

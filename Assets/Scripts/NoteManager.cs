@@ -22,11 +22,11 @@ public class NoteManager : MonoBehaviour
     public void CollectNote()
     {
         notesCollected++;
-        Debug.Log("Notes collected: " + notesCollected);
+        Debug.Log("[Piano] Notes collected: " + notesCollected);
 
         if (notesCollected == requiredNotes)
         {
-            Debug.Log("Collected all notes!");
+            Debug.Log("[Piano] Collected all notes!");
         }
     }
 
