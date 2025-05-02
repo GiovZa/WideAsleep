@@ -324,6 +324,7 @@ namespace playerChar
                                 else
                                     audioSource.volume = isSprinting ? 1f : 0.5f;
 
+                                audioSource.volume *= 0.1f;
                                 audioSource.PlayOneShot(FootstepSfx);
                                 SoundEvents.EmitSound(transform.position, audioSource.volume * noiseMeter);
                             }

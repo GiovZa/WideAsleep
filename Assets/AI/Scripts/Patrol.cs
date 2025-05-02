@@ -8,6 +8,8 @@ public class Patrol : MonoBehaviour
     public Transform waypointParent;
     public float arriveThreshold = 1.0f;
     public float waitTimeAtWaypoint = 3.0f; // Time to wait at each waypoint in seconds
+    public float yRotationDegrees = 0f; // The desired Y rotation in degrees (set in the inspector)
+    public bool applyRotation = true; // Whether or not to apply the Y rotation (toggleable)
 
     private List<Transform> waypoints = new();
     private NavMeshAgent agent;
@@ -38,7 +40,9 @@ public class Patrol : MonoBehaviour
             return;
         }
 
-        // waypoints.Sort(); // Sorting to ensure the waypoints are in the correct order
+        // Sort waypoints by their name (no need for custom functions)
+        waypoints.Sort((a, b) => a.name.CompareTo(b.name));
+
         PickNewTarget();
     }
 
@@ -71,39 +75,55 @@ public class Patrol : MonoBehaviour
         {
             agent.ResetPath();
         }
+
+        // Apply the rotation if rotation is enabled
+        if (applyRotation && currentTarget != null)
+        {
+            ApplyRotation();
+        }
     }
 
     void PickNewTarget()
     {
         if (waypoints.Count == 0) return;
 
-        // // If there's only one waypoint, stay at it and do not change targets
-        // if (waypoints.Count == 1)
-        // {
-        //     currentTarget = waypoints[0];
-        //     agent.SetDestination(currentTarget.position);
-        //     return;
-        // }
+        // If there's only one waypoint, stay at it and do not change targets
+        if (waypoints.Count == 1)
+        {
+            currentTarget = waypoints[0];
+            agent.SetDestination(currentTarget.position);
+            return;
+        }
 
-        // // Modulo approach to wrap the index safely within the waypoints range
-        // index = (index + 1) % waypoints.Count;
+        // Modulo approach to wrap the index safely within the waypoints range
+        index = (index + 1) % waypoints.Count;
 
-        // // Set the new target
-        // currentTarget = waypoints[index];
+        // Set the new target
+        currentTarget = waypoints[index];
 
-        // agent.SetDestination(currentTarget.position);
+        agent.SetDestination(currentTarget.position);
     }
 
     // Coroutine to wait for a set period before moving to the next waypoint
     IEnumerator WaitAtWaypoint(float waitTime)
     {
         isPatrolling = false; // Stop patrolling while waiting
-        Debug.Log("[Patrol] Reached waypoint. Waiting for " + waitTime + " seconds.");
+        // Debug.Log("[Patrol] Reached waypoint. Waiting for " + waitTime + " seconds.");
 
         yield return new WaitForSeconds(waitTime); // Wait at the current waypoint
 
-        Debug.Log("[Patrol] Wait time complete. Picking new target.");
+        // Debug.Log("[Patrol] Wait time complete. Picking new target.");
         PickNewTarget(); // Once wait time is over, pick a new target
         isPatrolling = true; // Resume patrolling
+    }
+
+    // Method to apply the Y rotation based on the value in yRotationDegrees
+    void ApplyRotation()
+    {
+        // Set the rotation to the desired Y rotation (maintaining the same X and Z values)
+        Vector3 currentRotation = transform.rotation.eulerAngles;
+        currentRotation.y = yRotationDegrees; // Set the Y rotation to the specified value
+
+        transform.rotation = Quaternion.Euler(currentRotation);
     }
 }
