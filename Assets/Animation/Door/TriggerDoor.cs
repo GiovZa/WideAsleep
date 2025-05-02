@@ -8,6 +8,7 @@ public class TriggerDoor : MonoBehaviour
     Animator doorAnimator;
     private bool inTriggerArea;
     [SerializeField] bool IsOpenAtStart;
+    [SerializeField] bool IsLocked;
 
     void Awake()
     {
@@ -21,6 +22,7 @@ public class TriggerDoor : MonoBehaviour
             doorAnimator.SetTrigger("Open");
             doorAnimator.SetBool("IsClosed", false);
         }
+        doorAnimator.SetBool("IsLocked", IsLocked);
     }
 
     void Update()
@@ -28,15 +30,18 @@ public class TriggerDoor : MonoBehaviour
         if (Input.GetKeyDown("e") && inTriggerArea)
         {
             if(doorAnimator.GetBool("IsClosed"))
+            {
+                doorAnimator.SetTrigger("Open");
+                if (doorAnimator.GetBool("IsLocked") == false)
                 {
-                    doorAnimator.SetTrigger("Open");
                     doorAnimator.SetBool("IsClosed", false);
                 }
-                else
-                {
-                    doorAnimator.SetTrigger("Close");
-                    doorAnimator.SetBool("IsClosed", true);
-                }
+            }
+            else
+            {
+                doorAnimator.SetTrigger("Close");
+                doorAnimator.SetBool("IsClosed", true);
+            }
         }
     }
 
