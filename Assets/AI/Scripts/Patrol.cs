@@ -38,8 +38,7 @@ public class Patrol : MonoBehaviour
             return;
         }
 
-        waypoints.Sort();
-
+        // waypoints.Sort(); // Sorting to ensure the waypoints are in the correct order
         PickNewTarget();
     }
 
@@ -55,7 +54,15 @@ public class Patrol : MonoBehaviour
 
     void Update()
     {
-        if (!agent.pathPending && agent.remainingDistance <= arriveThreshold && isPatrolling)
+        if (waypoints.Count == 1 && isPatrolling)
+        {
+            // If there's only one waypoint, just stay there (no movement)
+            if (!agent.pathPending && agent.remainingDistance <= arriveThreshold)
+            {
+                StartCoroutine(WaitAtWaypoint(waitTimeAtWaypoint)); // Wait indefinitely at the waypoint
+            }
+        }
+        else if (!agent.pathPending && agent.remainingDistance <= arriveThreshold && isPatrolling)
         {
             StartCoroutine(WaitAtWaypoint(waitTimeAtWaypoint)); // Wait at the current waypoint
         }
@@ -70,21 +77,21 @@ public class Patrol : MonoBehaviour
     {
         if (waypoints.Count == 0) return;
 
-        Transform oldTarget = currentTarget;
-        do
-        {
-            index += 1;
-            
-            if (index == waypoints.Count - 1)
-            {
-                Debug.Log("Resetting Index: " + index + " to 0 since waypoint count is: " + waypoints.Count);
-                index = 0;
-            }
+        // // If there's only one waypoint, stay at it and do not change targets
+        // if (waypoints.Count == 1)
+        // {
+        //     currentTarget = waypoints[0];
+        //     agent.SetDestination(currentTarget.position);
+        //     return;
+        // }
 
-            currentTarget = waypoints[index];
-        } while (currentTarget == oldTarget && waypoints.Count > 1);
+        // // Modulo approach to wrap the index safely within the waypoints range
+        // index = (index + 1) % waypoints.Count;
 
-        agent.SetDestination(currentTarget.position);
+        // // Set the new target
+        // currentTarget = waypoints[index];
+
+        // agent.SetDestination(currentTarget.position);
     }
 
     // Coroutine to wait for a set period before moving to the next waypoint
