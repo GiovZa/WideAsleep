@@ -4,5 +4,11 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Main Menu.unity
+    guid: d17efc2c27a414256a5619b2b8918d7b
+  - enabled: 1
+    path: Assets/Scenes/WIDE ASLEEP SUILIN/WIDE ASLEEP SUILIN.unity
+    guid: 6636a1820a6b848aca6e044b12e329c8
   m_configObjects: {}
