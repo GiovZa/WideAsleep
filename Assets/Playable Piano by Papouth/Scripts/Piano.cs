@@ -90,10 +90,19 @@ public class Piano : Interactable
 
         if (!isPianoActive)
         {
-            ActivatePiano();
+            if (!isPuzzleSolved)
+            {
+                ActivatePiano();
+            }
         }
         else
         {
+            if (isPuzzleSolved)
+            {
+                Debug.Log("[Piano] Puzzle already solved!");
+                return;
+            }
+
             DeactivatePiano();
         }
     }
@@ -605,7 +614,6 @@ public class Piano : Interactable
 
     private void CheckPuzzleSolution()
     {
-        if (isPuzzleSolved) return;
 
         if (recordedKeys.Count < solutionKeys.Count)
         {
