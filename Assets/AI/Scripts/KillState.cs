@@ -1,6 +1,7 @@
 using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class KillState : IState
 {
@@ -48,6 +49,7 @@ public class KillState : IState
             {
                 Debug.Log("[KillState] Executing kill...");
                 player.Die();
+                SceneManager.LoadSceneAsync(2);
             }
 
             // Optional: Scene reload or endgame

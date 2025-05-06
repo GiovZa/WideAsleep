@@ -12,6 +12,8 @@ public class HearingSense : MonoBehaviour
     public float normalVolume = 1.0f;
     public float maxDistance = 10f; // Max distance for visibility and volume adjustment
 
+    public float revealTime = 2f;
+
     private List<GameObject> soundEmitters = new List<GameObject>();
     private List<AudioSource> emitterAudioSources = new List<AudioSource>();
 
@@ -84,7 +86,7 @@ public class HearingSense : MonoBehaviour
                 audioSource.Play(); // Play the sound from the emitter's AudioSource
 
                 // Stop the sound after 1 second
-                StartCoroutine(StopSoundAfterDelay(audioSource, 1f));
+                StartCoroutine(StopSoundAfterDelay(audioSource, revealTime));
             }
         }
 
