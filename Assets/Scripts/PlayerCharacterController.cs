@@ -8,6 +8,8 @@ namespace playerChar
     [RequireComponent(typeof(CharacterController), typeof(AudioSource))]
     public class PlayerCharacterController : MonoBehaviour
     {
+        public bool isGamePaused = false;
+
         [Header("References")] [Tooltip("Reference to the main camera used for the player")]
         public Camera PlayerCamera;
 
@@ -162,7 +164,8 @@ namespace playerChar
 
             UpdateCharacterHeight(false);
 
-            HandleCharacterMovement();
+            if (isGamePaused == false)
+                HandleCharacterMovement();
         }
 
         void OnDie()

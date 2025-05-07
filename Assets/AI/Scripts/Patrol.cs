@@ -17,9 +17,11 @@ public class Patrol : MonoBehaviour
     private int index = 0;
 
     public bool isPatrolling = true;
+    private Animator animator;
 
     void Start()
     {
+        animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
 
         if (waypointParent == null)
@@ -108,6 +110,7 @@ public class Patrol : MonoBehaviour
     IEnumerator WaitAtWaypoint(float waitTime)
     {
         isPatrolling = false; // Stop patrolling while waiting
+        animator.SetBool("isWaiting", true);
         // Debug.Log("[Patrol] Reached waypoint. Waiting for " + waitTime + " seconds.");
 
         yield return new WaitForSeconds(waitTime); // Wait at the current waypoint
@@ -115,6 +118,7 @@ public class Patrol : MonoBehaviour
         // Debug.Log("[Patrol] Wait time complete. Picking new target.");
         PickNewTarget(); // Once wait time is over, pick a new target
         isPatrolling = true; // Resume patrolling
+        animator.SetBool("isWaiting", false);
     }
 
     // Method to apply the Y rotation based on the value in yRotationDegrees

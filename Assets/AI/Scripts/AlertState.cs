@@ -8,6 +8,7 @@ public class AlertState : IState
     private Vision vision;
     private Search search;
     private Transform player;
+    private Animator animator;
 
     private bool overrideFromSound = false;
 
@@ -39,6 +40,7 @@ public class AlertState : IState
         vision = ai.GetComponent<Vision>();
         search = ai.GetComponent<Search>();
         navMeshAgent = ai.GetComponent<NavMeshAgent>();  // Add the NavMeshAgent reference
+        animator = ai.GetComponent<Animator>();
 
         player = GameObject.FindWithTag("Player").transform;
     }
@@ -77,6 +79,11 @@ public class AlertState : IState
 
         alert.GoToLastKnownPosition(lastKnownPosition);
         Debug.Log("[AlertState] Moving to player's last known position");
+
+        if (animator != null)
+        {
+            animator.SetTrigger("Alert");
+        }
     }
 
     public void OverrideSearchWithSound(Vector3 soundPos)

@@ -37,7 +37,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1486388895194046202}
+  - {fileID: 78037661808270839}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!195 &5612978560981429739
@@ -76,6 +76,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waypointParent: {fileID: 0}
   arriveThreshold: 1
+  waitTimeAtWaypoint: 3
+  yRotationDegrees: 0
+  applyRotation: 1
   isPatrolling: 1
 --- !u!114 &5034603035996650639
 MonoBehaviour:
@@ -135,6 +138,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ca427eb4493df1468a85ad377432773, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  search: {fileID: 0}
   killRange: 1.5
 --- !u!114 &2399091793158627440
 MonoBehaviour:
@@ -178,57 +182,57 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6836801180170301645}
     m_Modifications:
-    - target: {fileID: 1207118002568900188, guid: a7dccd072c1e00542a3f758acc96b151, type: 3}
-      propertyPath: m_Name
-      value: VCA_Nurse_MoreFaces
-      objectReference: {fileID: 0}
-    - target: {fileID: 1984780945737741542, guid: a7dccd072c1e00542a3f758acc96b151, type: 3}
+    - target: {fileID: 1026490608898160619, guid: c4ff1a479a015c445b38bdab090c03e3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1984780945737741542, guid: a7dccd072c1e00542a3f758acc96b151, type: 3}
+    - target: {fileID: 1026490608898160619, guid: c4ff1a479a015c445b38bdab090c03e3, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1984780945737741542, guid: a7dccd072c1e00542a3f758acc96b151, type: 3}
+    - target: {fileID: 1026490608898160619, guid: c4ff1a479a015c445b38bdab090c03e3, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1984780945737741542, guid: a7dccd072c1e00542a3f758acc96b151, type: 3}
+    - target: {fileID: 1026490608898160619, guid: c4ff1a479a015c445b38bdab090c03e3, type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1984780945737741542, guid: a7dccd072c1e00542a3f758acc96b151, type: 3}
+    - target: {fileID: 1026490608898160619, guid: c4ff1a479a015c445b38bdab090c03e3, type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 1984780945737741542, guid: a7dccd072c1e00542a3f758acc96b151, type: 3}
+    - target: {fileID: 1026490608898160619, guid: c4ff1a479a015c445b38bdab090c03e3, type: 3}
       propertyPath: m_LocalRotation.y
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 1984780945737741542, guid: a7dccd072c1e00542a3f758acc96b151, type: 3}
+    - target: {fileID: 1026490608898160619, guid: c4ff1a479a015c445b38bdab090c03e3, type: 3}
       propertyPath: m_LocalRotation.z
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 1984780945737741542, guid: a7dccd072c1e00542a3f758acc96b151, type: 3}
+    - target: {fileID: 1026490608898160619, guid: c4ff1a479a015c445b38bdab090c03e3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1984780945737741542, guid: a7dccd072c1e00542a3f758acc96b151, type: 3}
+    - target: {fileID: 1026490608898160619, guid: c4ff1a479a015c445b38bdab090c03e3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1984780945737741542, guid: a7dccd072c1e00542a3f758acc96b151, type: 3}
+    - target: {fileID: 1026490608898160619, guid: c4ff1a479a015c445b38bdab090c03e3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5812433783851984499, guid: c4ff1a479a015c445b38bdab090c03e3, type: 3}
+      propertyPath: m_Name
+      value: Nurse Illustration
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: a7dccd072c1e00542a3f758acc96b151, type: 3}
---- !u!4 &1486388895194046202 stripped
+  m_SourcePrefab: {fileID: 100100000, guid: c4ff1a479a015c445b38bdab090c03e3, type: 3}
+--- !u!4 &78037661808270839 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 1984780945737741542, guid: a7dccd072c1e00542a3f758acc96b151, type: 3}
+  m_CorrespondingSourceObject: {fileID: 1026490608898160619, guid: c4ff1a479a015c445b38bdab090c03e3, type: 3}
   m_PrefabInstance: {fileID: 1093227996863080988}
   m_PrefabAsset: {fileID: 0}

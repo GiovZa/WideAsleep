@@ -47,5 +47,5 @@ public class NurseAI : MonoBehaviour
         currentState = newState;
         currentState?.Enter();
     }
-
+    
 }

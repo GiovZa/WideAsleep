@@ -6,6 +6,7 @@ public class ChaseState : IState
     private Chase chase;
     private Vision vision;
     private Transform player;
+    private Animator animator;
 
     public float killDistance = 1.5f;
 
@@ -15,6 +16,7 @@ public class ChaseState : IState
         chase = ai.GetComponent<Chase>();
         vision = ai.GetComponent<Vision>();
         player = GameObject.FindWithTag("Player").transform;
+        animator = ai.GetComponent<Animator>();
     }
 
     public void Enter()
@@ -23,6 +25,8 @@ public class ChaseState : IState
 
         chase.enabled = true;
         chase.StartChasing(player);
+
+        animator.SetBool("isChasing", true);
     }
 
     public void Update()
@@ -50,5 +54,7 @@ public class ChaseState : IState
 
         chase.StopChasing();
         chase.enabled = false;
+
+        animator.SetBool("isChasing", false);
     }
 }

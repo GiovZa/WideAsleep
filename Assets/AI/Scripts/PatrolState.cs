@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Animations;
 
 public class PatrolState : IState
 {
@@ -7,6 +8,7 @@ public class PatrolState : IState
     private Vision vision;
     private Hearing hearing;
     private Transform player;
+    private Animator animator;
 
     public PatrolState(NurseAI ai)
     {
@@ -15,6 +17,7 @@ public class PatrolState : IState
         vision = ai.GetComponent<Vision>();
         hearing = ai.GetComponent<Hearing>();
         patrol = ai.GetComponent<Patrol>();
+        animator = ai.GetComponent<Animator>();
     }
 
     public void Enter()
@@ -23,6 +26,8 @@ public class PatrolState : IState
 
         patrol.enabled = true;
         patrol.Restart();
+
+        animator.SetBool("isPatrolling", true);
     }
 
     public void Update()
@@ -47,5 +52,7 @@ public class PatrolState : IState
         Debug.Log("[PatrolState] Exiting Patrol State");
 
         patrol.enabled = false;
+
+        animator.SetBool("isPatrolling", false);
     }
 }

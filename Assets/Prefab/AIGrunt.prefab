@@ -505,6 +505,9 @@ PrefabInstance:
       addedObject: {fileID: 6688895088606379229}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 5423295978908738388}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 7644795208852356168}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
       insertIndex: -1
@@ -512,9 +515,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3930785247125285950}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5423295978908738388}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3447486784220686702}
@@ -552,6 +552,20 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &5423295978908738388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6723072205973766186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ca427eb4493df1468a85ad377432773, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  search: {fileID: 0}
+  killRange: 1.5
 --- !u!114 &7644795208852356168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -594,20 +608,6 @@ MonoBehaviour:
   playerMask:
     serializedVersion: 2
     m_Bits: 0
---- !u!114 &5423295978908738388
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6723072205973766186}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ca427eb4493df1468a85ad377432773, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  search: {fileID: 0}
-  killRange: 1.5
 --- !u!114 &3447486784220686702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -622,6 +622,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waypointParent: {fileID: 0}
   arriveThreshold: 1
+  waitTimeAtWaypoint: 3
+  yRotationDegrees: 0
+  applyRotation: 1
   isPatrolling: 1
 --- !u!114 &2672642234055967814
 MonoBehaviour:
