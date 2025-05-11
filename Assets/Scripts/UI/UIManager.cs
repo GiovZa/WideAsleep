@@ -1,9 +1,9 @@
 using System.Collections;
-using System.Collections.Generic;
 using playerChar;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
 
 public class UIManager : MonoBehaviour
 {
@@ -12,6 +12,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject pauseMenu;
     private PlayerCharacterController player;
     private bool isGamePaused;
+
+    [Header("Fade In and Out")]
+    [SerializeField] CanvasGroup canvasGroup;
+    [SerializeField] float fadeTime = 0.5f;
+    [SerializeField] float loadWaitTime;
     
     [Header("Notes")]
     [SerializeField] int notesCollected = 0;
@@ -27,6 +32,7 @@ public class UIManager : MonoBehaviour
         UpdateNotesHUD();
 
         player = FindObjectOfType<PlayerCharacterController>();
+        canvasGroup = FindAnyObjectByType<CanvasGroup>();
     }
 
     private void Update() 
@@ -40,6 +46,9 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Notes Collection
+    /// </summary>
     public void OnNoteCollected()
     {
         notesCollected ++;
@@ -61,6 +70,38 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Fade in and
+    /// </summary>
+    public void FadeOut()
+    {
+       canvasGroup.DOFade(1,fadeTime);
+    }
+
+    IEnumerator FadeAndLoad(int scneneIndexToLoad)
+    {
+        Debug.Log(scneneIndexToLoad);
+        FadeOut();
+        yield return new WaitForSeconds(loadWaitTime);
+        SceneManager.LoadSceneAsync(scneneIndexToLoad);
+    }
+
+    /// <summary>
+    /// Main Menu
+    /// </summary>
+    public void PlayGame()
+    {
+        StartCoroutine(FadeAndLoad(1));
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
+    /// <summary>
+    /// Pause Menu
+    /// </summary>
     public void CallPauseMenu()
     {
         Time.timeScale = 0f;
@@ -83,8 +124,10 @@ public class UIManager : MonoBehaviour
         Cursor.visible = false;
     }
 
-    public void QuitGame()
+    public void ExitToMainMenu()
     {
-        SceneManager.LoadSceneAsync(0);
+        Time.timeScale = 1.0f; //have to make the game keep running in order for coroutine to work
+        StartCoroutine(FadeAndLoad(0));
     }
+
 }
