@@ -168,6 +168,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4327e679092a6cf42851f094cd5c96a6, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4274492159672389031}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4327e679092a6cf42851f094cd5c96a6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4791138175432955314}
   m_SourcePrefab: {fileID: 100100000, guid: 4327e679092a6cf42851f094cd5c96a6, type: 3}
 --- !u!1 &1363491488015943982 stripped
 GameObject:
@@ -195,3 +198,33 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 40, y: 7.31, z: 6.47}
   m_Center: {x: -19.5, y: 1, z: 1}
+--- !u!114 &4791138175432955314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1363491488015943982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72373dd31c441c748ae0b79c3803be85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volume: 1
+  spatial: 1
+  mixerGroup: {fileID: 0}
+  stepClip: {fileID: 0}
+  stepTags:
+  - Player
+  - Enemy
+  interactClip: {fileID: 8300000, guid: 4b90623e26fac450198b979a65181d54, type: 3}
+  interactKey: 101
+  interactRadius: 3
+  timerClip: {fileID: 0}
+  timerDelay: 5
+  timerLoop: 0
+  repeatClip: {fileID: 0}
+  repeatInterval: 5
+  stateChangeClip: {fileID: 0}
+  currentState: 0
+  animationEventClip: {fileID: 0}

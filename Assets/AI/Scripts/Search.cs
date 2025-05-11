@@ -136,40 +136,43 @@ public class Search : MonoBehaviour
 
     void HandleLookAround()
     {
-        Quaternion targetRot = scanRotations[currentScanIndex];
-        transform.rotation = Quaternion.RotateTowards(
-            transform.rotation,
-            targetRot,
-            rotationSpeed * Time.deltaTime
-        );
+        // grab the animator (or cache this in Awake if you prefer)
+        Animator animator = GetComponent<Animator>();
 
-        float angle = Quaternion.Angle(transform.rotation, targetRot);
-        if (angle < 1f)
+        // get the current state info on layer 0
+        AnimatorStateInfo st = animator.GetCurrentAnimatorStateInfo(0);
+
+        // 1) if we haven't yet entered the LookAround state, fire the trigger once
+        if (!st.IsName("Alert") && !animator.IsInTransition(0))
         {
-            scanPauseTimer += Time.deltaTime;
-            if (scanPauseTimer >= scanPauseDuration)
+            animator.SetTrigger("Alert");
+            return;
+        }
+
+        // 2) if we're in Alert but it's still playing (<100%), do nothing
+        if (st.IsName("Alert") && st.normalizedTime < 0.5f)
+        {
+            return;
+        }
+
+        // 3) once Alert has fully played out, clean up and go to next point
+        if (st.IsName("Alert") && st.normalizedTime >= 0.5f && !animator.IsInTransition(0))
+        {
+            isLookingAround = false;
+            searchIndex++;
+
+            if (searchIndex >= searchPoints.Count)
             {
-                scanPauseTimer = 0f;
-                currentScanIndex++;
-
-                if (currentScanIndex >= scanRotations.Length)
-                {
-                    isLookingAround = false;
-                    searchIndex++;
-
-                    if (searchIndex >= searchPoints.Count)
-                    {
-                        Debug.Log("[Search] Finished all search points.");
-                        isSearching = false;
-                    }
-                    else
-                    {
-                        agent.SetDestination(searchPoints[searchIndex]);
-                    }
-                }
+                Debug.Log("[Search] Finished all search points.");
+                isSearching = false;
+            }
+            else
+            {
+                agent.SetDestination(searchPoints[searchIndex]);
             }
         }
     }
+
 
     public bool IsSearching() => isSearching;
 

@@ -12,7 +12,14 @@ public class AudioManager : MonoBehaviour
         else Destroy(gameObject);
     }
 
-    public void Play(AudioClip clip, Vector3 position, float volume = 1f, bool spatial = true, AudioMixerGroup mixerGroup = null)
+    public void Play(
+        AudioClip clip,
+        Vector3 position,
+        float volume = 1f,
+        bool spatial = true,
+        AudioMixerGroup mixerGroup = null,
+        float playDuration = -1f         // ← new parameter: how long to play
+    )
     {
         if (clip == null) return;
 
@@ -26,9 +33,14 @@ public class AudioManager : MonoBehaviour
         source.outputAudioMixerGroup = mixerGroup;
         source.Play();
 
-        Destroy(tempGO, clip.length);
+        // if a positive duration was passed in, clamp it to clip.length
+        float destroyAfter = (playDuration > 0f)
+            ? Mathf.Min(playDuration, clip.length)
+            : clip.length;
 
-        float soundRadius = volume * 5f; // tweak this multiplier
+        Destroy(tempGO, destroyAfter);
+
+        float soundRadius = volume * 5f;
         SoundEvents.EmitSound(position, soundRadius);        
     }
 }

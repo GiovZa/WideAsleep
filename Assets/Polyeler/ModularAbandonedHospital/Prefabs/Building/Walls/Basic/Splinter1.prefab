@@ -9,6 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 211193608332360533}
+  - component: {fileID: 9197362075343627524}
+  - component: {fileID: 6009352914153252549}
   m_Layer: 0
   m_Name: Splinter1
   m_TagString: Untagged
@@ -32,6 +34,63 @@ Transform:
   - {fileID: 1692483961105897883}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9197362075343627524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3902202296309580690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72373dd31c441c748ae0b79c3803be85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volume: 1
+  spatial: 1
+  mixerGroup: {fileID: 0}
+  stepClip: {fileID: 8300000, guid: b6103334a7ad149f1b6856960e75ba75, type: 3}
+  stepPlayLength: 1
+  stepTags:
+  - Player
+  - Enemy
+  interactClip: {fileID: 0}
+  interactPlayLength: 0
+  interactKey: 101
+  interactRadius: 3
+  timerClip: {fileID: 0}
+  timerPlayLength: 0
+  timerDelay: 5
+  timerLoop: 0
+  repeatClip: {fileID: 0}
+  repeatPlayLength: 0
+  repeatInterval: 5
+  stateChangeClip: {fileID: 0}
+  stateChangePlayLength: 0
+  currentState: 0
+  animationEventClip: {fileID: 0}
+  animationEventPlayLength: 0
+--- !u!135 &6009352914153252549
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3902202296309580690}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 2.2915106
+  m_Center: {x: 0.5021128, y: 0, z: 0.3001275}
 --- !u!1 &5625891497134622529
 GameObject:
   m_ObjectHideFlags: 0
