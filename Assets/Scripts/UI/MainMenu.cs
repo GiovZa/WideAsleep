@@ -6,9 +6,15 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+    IEnumerator Wait()
+    {
+        yield return new WaitForSeconds(1);
+    }
+
     public void PlayGame()
     {
-        SceneManager.LoadSceneAsync("WIDE ASLEEP SUILIN");
+        StartCoroutine(Wait());
+        SceneManager.LoadSceneAsync(1);
     }
 
     public void QuitGame()

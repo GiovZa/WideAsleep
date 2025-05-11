@@ -28,10 +28,17 @@ public class NoteManager : MonoBehaviour
         {
             Debug.Log("[Piano] Collected all notes!");
         }
+
+        UIManager.Instance.OnNoteCollected();
     }
 
     public bool HasEnoughNotes()
     {
         return notesCollected >= requiredNotes;
+    }
+
+    public int GetNoteCount()
+    {
+        return notesCollected;
     }
 }
