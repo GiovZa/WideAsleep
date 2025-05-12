@@ -21,6 +21,8 @@ public class UIManager : MonoBehaviour
     [Header("Notes")]
     [SerializeField] int notesCollected = 0;
     [SerializeField] int totalNotes = 5;
+    public Sprite paperNote;
+    public Sprite emptyPaperNote;
     public Image[] notes;
 
     void Start()
@@ -57,16 +59,17 @@ public class UIManager : MonoBehaviour
 
     void UpdateNotesHUD()
     {
-        for (int i = 0; i < totalNotes; i++)
+        for (int i = 0; i < notes.Length; i++)
         {
             if (i < notesCollected)
-            {
-                notes[i].gameObject.SetActive(true);
-            }
+                notes[i].sprite = paperNote;
             else
-            {
-                notes[i].gameObject.SetActive(false);
-            }
+                notes[i].sprite = emptyPaperNote;
+            
+            if (i < totalNotes)
+                notes[i].enabled = true;
+            else
+                notes[i].enabled = false;
         }
     }
 
@@ -76,6 +79,18 @@ public class UIManager : MonoBehaviour
     public void FadeOut()
     {
        canvasGroup.DOFade(1,fadeTime);
+    }
+
+    public void FadeIn()
+    {
+        canvasGroup.DOFade(0,fadeTime);
+    }
+
+    IEnumerator FadeOutAndFadeIn()
+    {
+        FadeOut();
+        yield return new WaitForSeconds(1);
+        FadeIn();
     }
 
     IEnumerator FadeAndLoad(int scneneIndexToLoad)
