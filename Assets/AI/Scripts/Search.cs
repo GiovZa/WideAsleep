@@ -136,28 +136,36 @@ public class Search : MonoBehaviour
 
     void HandleLookAround()
     {
-        // grab the animator (or cache this in Awake if you prefer)
         Animator animator = GetComponent<Animator>();
-
-        // get the current state info on layer 0
         AnimatorStateInfo st = animator.GetCurrentAnimatorStateInfo(0);
 
-        // 1) if we haven't yet entered the LookAround state, fire the trigger once
-        if (!st.IsName("Alert") && !animator.IsInTransition(0))
+        // 1) Grab the currently playing clip name
+        var clipInfos = animator.GetCurrentAnimatorClipInfo(0);
+        string clipName = clipInfos.Length > 0
+            ? clipInfos[0].clip.name
+            : "";
+        Debug.Log("[Search] ▶ Current clip: " + (clipName == "" ? "<none>" : clipName));
+
+        // 2) If we’re not yet in the LookAround clip, fire the trigger once
+        if (clipName != "Nurse Look Around" && !animator.IsInTransition(0))
         {
+            Debug.Log("[Search] → Triggering Alert animation");
             animator.SetTrigger("Alert");
             return;
         }
 
-        // 2) if we're in Alert but it's still playing (<100%), do nothing
-        if (st.IsName("Alert") && st.normalizedTime < 0.5f)
+        // 3) If we are in the clip but it hasn’t reached 50% yet, wait
+        Debug.Log($"[Search] ▶ normalizedTime = {st.normalizedTime:F2}");
+        if (clipName == "Nurse Look Around" && st.normalizedTime < 0.5f)
         {
+            Debug.Log("[Search] → LookAround playing, waiting...");
             return;
         }
 
-        // 3) once Alert has fully played out, clean up and go to next point
-        if (st.IsName("Alert") && st.normalizedTime >= 0.5f && !animator.IsInTransition(0))
+        // 4) Once it’s at least halfway, finish up and go to next point
+        if (clipName == "Nurse Look Around" && st.normalizedTime >= 0.5f)
         {
+            Debug.Log("[Search] → LookAround passed 50%, finishing lookaround");
             isLookingAround = false;
             searchIndex++;
 
@@ -168,11 +176,11 @@ public class Search : MonoBehaviour
             }
             else
             {
+                Debug.Log("[Search] Moving to next search point #" + searchIndex);
                 agent.SetDestination(searchPoints[searchIndex]);
             }
         }
     }
-
 
     public bool IsSearching() => isSearching;
 

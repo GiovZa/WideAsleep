@@ -132,6 +132,8 @@ public class AlertState : IState
                 Debug.Log("[AlertState] isStaring set → starting stareTimer");
             }
 
+            animator.SetBool("isChasing", true);
+
             Vector3 dir = (player.position - nurseAI.transform.position).normalized;
             dir.y = 0;
             nurseAI.transform.forward = Vector3.Lerp(nurseAI.transform.forward, dir, Time.deltaTime * 5f);
@@ -150,6 +152,7 @@ public class AlertState : IState
         else
         {
             Debug.Log("[AlertState] vision.CanSeePlayer == false");
+            animator.SetBool("isChasing", false);
         }
 
         if (!reachedLastPosition)
