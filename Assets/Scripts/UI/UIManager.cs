@@ -145,4 +145,8 @@ public class UIManager : MonoBehaviour
         StartCoroutine(FadeAndLoad(0));
     }
 
+    public void ReloadCurrentScene()
+    {
+        SceneManager.LoadSceneAsync(SceneManager.loadedSceneCount);
+    }
 }

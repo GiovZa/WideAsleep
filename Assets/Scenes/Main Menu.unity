@@ -2275,7 +2275,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   duration: 1
   popUpText: {fileID: 764238198}
-  dialouge: I will find them to play the tune again
+  dialouge: I need to find them to play the tune
   animator: {fileID: 764238200}
 --- !u!114 &1201776413
 MonoBehaviour:

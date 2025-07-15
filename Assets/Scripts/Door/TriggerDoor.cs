@@ -6,6 +6,7 @@ using UnityEngine;
 public class TriggerDoor : MonoBehaviour
 {
     Animator doorAnimator;
+    OcclusionPortal occlusionPortal;
     private bool inTriggerArea;
     [SerializeField] bool IsOpenAtStart;
     [SerializeField] bool IsLocked;
@@ -13,6 +14,7 @@ public class TriggerDoor : MonoBehaviour
     void Awake()
     {
         doorAnimator = GetComponent<Animator>();
+        occlusionPortal = GetComponentInChildren<OcclusionPortal>();
     }
 
     void Start()
@@ -29,36 +31,46 @@ public class TriggerDoor : MonoBehaviour
     {
         if (Input.GetKeyDown("e") && inTriggerArea)
         {
-            if(doorAnimator.GetBool("IsClosed"))
+            if (doorAnimator.GetBool("IsClosed"))
             {
                 doorAnimator.SetTrigger("Open");
                 if (doorAnimator.GetBool("IsLocked") == false)
                 {
                     doorAnimator.SetBool("IsClosed", false);
+                    occlusionPortal.open = true;
                 }
             }
             else
             {
                 doorAnimator.SetTrigger("Close");
                 doorAnimator.SetBool("IsClosed", true);
+                StartCoroutine(CloseOcclusionPortal());
             }
         }
     }
 
+    IEnumerator CloseOcclusionPortal()
+    {
+        yield return new WaitForSecondsRealtime(1);
+        occlusionPortal.open = false;
+    }
+
     void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.CompareTag("Player"))
-            {
-                inTriggerArea = true;
-            }
+        if (other.gameObject.CompareTag("Player"))
+        {
+            inTriggerArea = true;
+        }
     }
 
     void OnTriggerExit(Collider other)
     {
-        if(other.gameObject.CompareTag("Player"))
-            {
-                inTriggerArea = false;
-            }
+        if (other.gameObject.CompareTag("Player"))
+        {
+            inTriggerArea = false;
+        }
     }
+    
+
 }
 
