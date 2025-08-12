@@ -7,12 +7,18 @@ public class HearingSense : MonoBehaviour
     public KeyCode toggleKey = KeyCode.Q;
 
     [Header("Hearing Settings")]
-    public string soundEmitterTag = "Interactable"; // Tag to look for
+    public string soundEmitterTag = "XRay"; // Tag to look for
     public float mutedVolume = 0.1f;
     public float normalVolume = 1.0f;
     public float maxDistance = 10f; // Max distance for visibility and volume adjustment
 
     public float revealTime = 2f;
+
+    [Header("Vignette Settings")]
+    [SerializeField] private float vignetteFadeInTime = 0.5f;
+    [SerializeField] private float vignetteStayTime = 2.0f;
+    [SerializeField] private float vignetteFadeOutTime = 0.5f;
+    [SerializeField] [Range(0, 1)] private float vignetteMaxIntensity = 0.6f;
 
     private List<GameObject> soundEmitters = new List<GameObject>();
     private List<AudioSource> emitterAudioSources = new List<AudioSource>();
@@ -60,6 +66,12 @@ public class HearingSense : MonoBehaviour
 
     void PlayPulseForOneSecond()
     {
+        // Trigger the vignette effect
+        if (EffectsManager.Instance != null)
+        {
+            EffectsManager.Instance.PulseVignette(vignetteFadeInTime, vignetteStayTime, vignetteFadeOutTime, vignetteMaxIntensity);
+        }
+        
         // Get the position of the player or the object triggering the pulse
         Vector3 playerPosition = transform.position; // Assuming this script is on the player object
 
