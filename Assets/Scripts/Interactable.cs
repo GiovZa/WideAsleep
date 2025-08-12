@@ -6,15 +6,19 @@ using UnityEngine.Events;
 
 public class Interactable : MonoBehaviour
 {
-    Outline outline;
+    protected Outline outline;
     public string message;
 
     public UnityEvent onInteraction;
 
     // Start is called before the first frame update
-    void Start()
+    public virtual void Start()
     {
         outline = GetComponent<Outline>();
+        if (outline == null)
+        {
+            outline = GetComponentInChildren<Outline>();
+        }
         DisableOutline();
     }
 
@@ -26,10 +30,17 @@ public class Interactable : MonoBehaviour
 
     public void DisableOutline()
     {
-        outline.enabled = false;
+        if (outline != null)
+            outline.enabled = false;
     }
     public void EnableOutline()
     {
-        outline.enabled = true;
+        if (outline != null)
+            outline.enabled = true;
+    }
+
+    public virtual CrosshairType GetCrosshairType()
+    {
+        return CrosshairType.Interact; //default interact type
     }
 }

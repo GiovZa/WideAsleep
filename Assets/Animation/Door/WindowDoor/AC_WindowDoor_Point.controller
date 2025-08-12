@@ -21,7 +21,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 92354808254d10c41836ffcf759c8f5f, type: 2}
+  m_Motion: {fileID: 7400000, guid: 5b0c508faebfef74dab774324f1faa12, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -71,7 +71,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 9c4120770fe934340b8e81495755be75, type: 2}
+  m_Motion: {fileID: 7400000, guid: 727be7738ea2b88459cc747253d2b833, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -98,7 +98,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: b021b6d3d55c785458cceb64910088d7, type: 2}
+  m_Motion: {fileID: 7400000, guid: 73205b91aed3e5d4aa8203367c41ae2b, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -191,7 +191,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: AC_WindowDoor
+  m_Name: AC_WindowDoor_Point
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Open

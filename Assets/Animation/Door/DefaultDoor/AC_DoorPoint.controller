@@ -21,7 +21,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: e46467c6dde8f7545a32aadb4039b89e, type: 2}
+  m_Motion: {fileID: 7400000, guid: c7551bf82a161ae4e82367b98eac32de, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -112,7 +112,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: AC_Door
+  m_Name: AC_DoorPoint
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Open
@@ -173,7 +173,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: e95aa798163848841a108ce5a7c09a02, type: 2}
+  m_Motion: {fileID: 7400000, guid: dbb9d5ff9356c144e967f8a8a940a29f, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

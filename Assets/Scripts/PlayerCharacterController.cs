@@ -8,7 +8,7 @@ namespace playerChar
     [RequireComponent(typeof(CharacterController), typeof(AudioSource))]
     public class PlayerCharacterController : MonoBehaviour
     {
-        public bool isGamePaused = false;
+        // public bool isGamePaused = false; // This is now handled by the GameStateManager
 
         [Header("References")] [Tooltip("Reference to the main camera used for the player")]
         public Camera PlayerCamera;
@@ -113,6 +113,22 @@ namespace playerChar
         const float k_JumpGroundingPreventionTime = 0.2f;
         const float k_GroundCheckDistanceInAir = 0.07f;
 
+        private void OnEnable()
+        {
+            if (GameStateManager.Instance != null)
+            {
+                GameStateManager.Instance.OnGameStateChanged += HandleGameStateChanged;
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (GameStateManager.Instance != null)
+            {
+                GameStateManager.Instance.OnGameStateChanged -= HandleGameStateChanged;
+            }
+        }
+
         void Start()
         {
             // fetch components on the same gameObject
@@ -164,8 +180,7 @@ namespace playerChar
 
             UpdateCharacterHeight(false);
 
-            if (isGamePaused == false)
-                HandleCharacterMovement();
+            HandleCharacterMovement();
         }
 
         void OnDie()
@@ -174,6 +189,11 @@ namespace playerChar
             Debug.LogWarning("Ya Died!");
 
             // EventManager.Broadcast(Events.PlayerDeathEvent);
+        }
+
+        private void HandleGameStateChanged(GameState newState)
+        {
+            CanMove = newState == GameState.Gameplay;
         }
 
         void HandleHeadbob(float bobAmount, float bobSpeed)
@@ -489,7 +509,9 @@ namespace playerChar
             return true;
         }
     
-        // Movement toggle functions when interacting with objects with a separate UI (Piano)
+        // Movement is now controlled by the GameStateManager.
+        // The following methods are no longer needed.
+        /*
         public void DisableMovement()
         {
             CanMove = false;
@@ -503,5 +525,6 @@ namespace playerChar
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
+        */
     }
 }

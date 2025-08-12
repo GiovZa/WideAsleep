@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class TriggerDoor : MonoBehaviour
+public class TriggerDoor_Area : Interactable
 {
     Animator doorAnimator;
     OcclusionPortal occlusionPortal;
@@ -17,7 +17,7 @@ public class TriggerDoor : MonoBehaviour
         occlusionPortal = GetComponentInChildren<OcclusionPortal>();
     }
 
-    void Start()
+    public override void Start()
     {
         if (IsOpenAtStart == true)
         {
@@ -70,7 +70,5 @@ public class TriggerDoor : MonoBehaviour
             inTriggerArea = false;
         }
     }
-    
-
 }
 

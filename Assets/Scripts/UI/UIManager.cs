@@ -11,7 +11,7 @@ public class UIManager : MonoBehaviour
     [Header("Pause Menu")]
     [SerializeField] GameObject pauseMenu;
     private PlayerCharacterController player;
-    private bool isGamePaused;
+    private PlayerInteraction playerInteraction;
 
     [Header("Fade In and Out")]
     [SerializeField] CanvasGroup canvasGroup;
@@ -34,6 +34,10 @@ public class UIManager : MonoBehaviour
         UpdateNotesHUD();
 
         player = FindObjectOfType<PlayerCharacterController>();
+        if (player != null)
+        {
+            playerInteraction = player.GetComponent<PlayerInteraction>();
+        }
         canvasGroup = FindAnyObjectByType<CanvasGroup>();
     }
 
@@ -41,10 +45,14 @@ public class UIManager : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Escape))
         {
-            if (isGamePaused == false)
-                CallPauseMenu();
-            else
+            if (GameStateManager.Instance.CurrentState == GameState.Paused)
+            {
                 ExitPauseMenu();
+            }
+            else if (GameStateManager.Instance.CurrentState == GameState.Gameplay && !GameStateManager.Instance.IsEscapeKeyConsumed())
+            {
+                CallPauseMenu();
+            }
         }
     }
 
@@ -119,21 +127,21 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void CallPauseMenu()
     {
+        GameStateManager.Instance.SetState(GameState.Paused);
         Time.timeScale = 0f;
         pauseMenu.SetActive(true);
-        isGamePaused = true;
-        player.isGamePaused = true;
-
+        playerInteraction.SetCrosshairVisible(false);
+        
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
 
     public void ExitPauseMenu()
     {
+        GameStateManager.Instance.SetState(GameState.Gameplay);
         Time.timeScale = 1.0f;
         pauseMenu.SetActive(false);
-        isGamePaused = false;
-        player.isGamePaused = false;
+        playerInteraction.SetCrosshairVisible(true);
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;

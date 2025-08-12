@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class PianoDoorController : MonoBehaviour
+public class OnesideDoorController : MonoBehaviour
 {
     [Header("Status")]
     [SerializeField] bool isLocked;
@@ -15,11 +15,13 @@ public class PianoDoorController : MonoBehaviour
     public AudioClip lockedSfx;
     AudioSource audioSource;
     Animator doorAnimator;
+    //OcclusionPortal occlusionPortal;
 
     private void Awake()
     {
         doorAnimator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
+        //occlusionPortal = GetComponentInChildren<OcclusionPortal>();
     }
 
     void Start()
@@ -29,6 +31,7 @@ public class PianoDoorController : MonoBehaviour
         {
             doorAnimator.SetTrigger("Open");
             doorAnimator.SetBool("IsClosed", false);
+            //occlusionPortal.open = true;
         }
         doorAnimator.SetBool("IsLocked", isLocked);
     }
@@ -57,11 +60,13 @@ public class PianoDoorController : MonoBehaviour
         {
             doorAnimator.SetTrigger("Open");
             doorAnimator.SetBool("IsClosed", false);
+            //occlusionPortal.open = true;
         }
         else
         {
             doorAnimator.SetTrigger("Close");
             doorAnimator.SetBool("IsClosed", true);
+            //StartCoroutine(CloseOcclusionPortal());
         }
 
         PlaySfx(openSfx);
@@ -78,4 +83,10 @@ public class PianoDoorController : MonoBehaviour
         if (audioSource != null && clip != null)
             audioSource.PlayOneShot(clip);
     }
+
+    // IEnumerator CloseOcclusionPortal()
+    // {
+    //     yield return new WaitForSecondsRealtime(1);
+    //     occlusionPortal.open = false;
+    // }
 }

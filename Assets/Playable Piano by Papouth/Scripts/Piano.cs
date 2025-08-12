@@ -113,6 +113,8 @@ public class Piano : Interactable
         baseSheet.SetActive(isPianoActive);
 
         Debug.Log("[Piano] Piano activated! Press ESC to exit.");
+        
+        GameStateManager.Instance.SetState(GameState.InteractingWithUI);
 
         if (keyboard != null)
         {
@@ -124,17 +126,22 @@ public class Piano : Interactable
         {
             playerCharacterController = FindObjectOfType<PlayerCharacterController>();
         }
-
+        
+        // Player movement is now handled by the GameStateManager.
+        /*
         if (playerCharacterController != null)
         {
             playerCharacterController.DisableMovement();
         }
+        */
     }
 
     private void DeactivatePiano()
     {
         isPianoActive = false;
         baseSheet.SetActive(isPianoActive);
+        
+        GameStateManager.Instance.SetState(GameState.Gameplay);
 
         if (keyboard != null)
         {
@@ -144,10 +151,13 @@ public class Piano : Interactable
         recordedKeys.Clear();
 
         // Enable player movement
+        // Player movement is now handled by the GameStateManager.
+        /*
         if (playerCharacterController != null)
         {
             playerCharacterController.EnableMovement();
         }
+        */
 
         Debug.Log("[Piano] Piano deactivated!");
     }
@@ -164,6 +174,7 @@ public class Piano : Interactable
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 DeactivatePiano();
+                GameStateManager.Instance.ConsumeEscapeKeyForThisFrame();
             }
         }
     }
