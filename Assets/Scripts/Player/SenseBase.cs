@@ -29,6 +29,7 @@ public abstract class SenseBase : MonoBehaviour
     protected EffectsManager effectsManager;
     private float effectEndTime;
     private float cooldownEndTime;
+    private bool isSensesActive = true;
 
     /// <summary>
     /// The duration of the sense's effect. To be implemented by subclasses.
@@ -41,6 +42,17 @@ public abstract class SenseBase : MonoBehaviour
         if (effectsManager == null)
         {
             Debug.LogError("EffectsManager instance not found. Make sure an EffectsManager is active in the scene.");
+        }
+
+        if (GameStateManager.Instance != null)
+        {
+            GameStateManager.Instance.OnGameStateChanged += HandleGameStateChanged;
+            // Initialize based on the current state in case this script starts after the initial state is set
+            HandleGameStateChanged(GameStateManager.Instance.CurrentState);
+        }
+        else
+        {
+            Debug.LogError("GameStateManager instance not found. Senses will not respond to game state changes.");
         }
 
         if (cooldownImage != null)
@@ -71,7 +83,7 @@ public abstract class SenseBase : MonoBehaviour
     /// </summary>
     private void HandleReadyState()
     {
-        if (Input.GetKeyDown(activateKey))
+        if (isSensesActive && Input.GetKeyDown(activateKey))
         {
             ActivateSense();
             currentState = SenseState.Active;
@@ -138,4 +150,17 @@ public abstract class SenseBase : MonoBehaviour
     /// Activates the specific sense ability. To be implemented by subclasses.
     /// </summary>
     protected abstract void ActivateSense();
+
+    private void HandleGameStateChanged(GameState newState)
+    {
+        isSensesActive = newState == GameState.Gameplay;
+    }
+
+    private void OnDisable()
+    {
+        if (GameStateManager.Instance != null)
+        {
+            GameStateManager.Instance.OnGameStateChanged -= HandleGameStateChanged;
+        }
+    }
 }

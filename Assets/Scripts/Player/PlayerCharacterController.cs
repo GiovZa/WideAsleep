@@ -123,10 +123,6 @@ namespace playerChar
 
         private void OnEnable()
         {
-            if (GameStateManager.Instance != null)
-            {
-                GameStateManager.Instance.OnGameStateChanged += HandleGameStateChanged;
-            }
         }
 
         private void OnDisable()
@@ -142,6 +138,15 @@ namespace playerChar
             // fetch components on the same gameObject
             m_Controller = GetComponent<CharacterController>();
             audioSource = GetComponent<AudioSource>();
+
+            if (GameStateManager.Instance != null)
+            {
+                GameStateManager.Instance.OnGameStateChanged += HandleGameStateChanged;
+            }
+            else
+            {
+                Debug.LogError("GameStateManager instance not found.");
+            }
 
             m_Controller.enableOverlapRecovery = true;
 
@@ -209,6 +214,17 @@ namespace playerChar
         private void HandleGameStateChanged(GameState newState)
         {
             CanMove = newState == GameState.Gameplay;
+
+            if (newState == GameState.InteractingWithUI || newState == GameState.Paused)
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
         }
 
         void HandleRotation()

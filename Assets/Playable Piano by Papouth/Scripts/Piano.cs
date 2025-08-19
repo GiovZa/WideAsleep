@@ -10,7 +10,6 @@ public class Piano : Interactable
 {
     #region Variables
     [SerializeField] private GameObject baseSheet;
-    private int actualSheet;
     [SerializeField] private GameObject personalSheet;
     private bool isPianoActive = false;
 
@@ -19,7 +18,6 @@ public class Piano : Interactable
     [SerializeField] private ParticleSystem[] particlesPiano;
     [SerializeField] private bool enableParticle;
 
-    [SerializeField] private float actualVolume;
     [SerializeField] private TextMeshProUGUI volAmount;
 
     [SerializeField] private AudioClip[] notes;
@@ -29,6 +27,7 @@ public class Piano : Interactable
 
     private AudioSource audioSource;
     private PlayerCharacterController playerCharacterController;
+    private PlayerInteraction playerInteraction;
 
     [SerializeField] private GameObject keyboard;
 
@@ -54,15 +53,12 @@ public class Piano : Interactable
         isPianoActive = false;
 
         audioSource = GetComponent<AudioSource>();
+        playerInteraction = FindObjectOfType<PlayerInteraction>();
 
         personalSheet.SetActive(isPianoActive);
         baseSheet.SetActive(isPianoActive);
 
-        actualSheet = 0;
-
         // baseSheet.GetComponentInChildren<Image>().sprite = sheets[actualSheet];
-
-        actualVolume = 0.5f;
 
         if (keyboard == null)
         {
@@ -82,39 +78,35 @@ public class Piano : Interactable
     #region Interaction Implementation
     public override void Interact()
     {
-        /*if (!NoteManager.Instance.HasEnoughNotes())
+        if (isPianoActive)
         {
-            Debug.Log("[Piano] You need more notes to use the piano!");
-            return;
-        }*/
-
-        if (!isPianoActive)
-        {
-            if (!isPuzzleSolved)
-            {
-                ActivatePiano();
-            }
+            // If the piano is on, turn it off.
+            DeactivatePiano();
         }
         else
         {
+            // If the piano is off, try to turn it on.
             if (isPuzzleSolved)
             {
                 Debug.Log("[Piano] Puzzle already solved!");
-                return;
+                return; // Don't activate if the puzzle is already solved.
             }
 
-            DeactivatePiano();
+            // Always activate the piano. The sheet music visibility is handled in ActivatePiano().
+            ActivatePiano();
         }
     }
 
     private void ActivatePiano()
     {
         isPianoActive = true;
-        baseSheet.SetActive(isPianoActive);
+        baseSheet.SetActive(NoteManager.Instance.HasEnoughNotes());
 
         Debug.Log("[Piano] Piano activated! Press ESC to exit.");
         
         GameStateManager.Instance.SetState(GameState.InteractingWithUI);
+        playerInteraction.SetInteracting(true);
+        UIManager.Instance.DisableHUD();
 
         if (keyboard != null)
         {
@@ -142,6 +134,8 @@ public class Piano : Interactable
         baseSheet.SetActive(isPianoActive);
         
         GameStateManager.Instance.SetState(GameState.Gameplay);
+        playerInteraction.SetInteracting(false);
+        UIManager.Instance.EnableHUD();
 
         if (keyboard != null)
         {

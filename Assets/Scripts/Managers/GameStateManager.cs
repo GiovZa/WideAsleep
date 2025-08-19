@@ -11,10 +11,8 @@ public enum GameState
 public class GameStateManager : MonoBehaviour
 {
     public static GameStateManager Instance { get; private set; }
-
     public GameState CurrentState { get; private set; }
     public event Action<GameState> OnGameStateChanged;
-    
     private bool escapeConsumed = false;
 
     private void Awake()

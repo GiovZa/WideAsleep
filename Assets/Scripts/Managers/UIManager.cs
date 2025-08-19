@@ -133,6 +133,7 @@ public class UIManager : MonoBehaviour
         Time.timeScale = 0f;
         pauseMenu.SetActive(true);
         playerInteraction.SetCrosshairVisible(false);
+        DisableHUD();
         
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -144,6 +145,7 @@ public class UIManager : MonoBehaviour
         Time.timeScale = 1.0f;
         pauseMenu.SetActive(false);
         playerInteraction.SetCrosshairVisible(true);
+        EnableHUD();
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -153,7 +155,7 @@ public class UIManager : MonoBehaviour
     {
         deathScreen.SetActive(true);
         playerInteraction.SetCrosshairVisible(false);
-        HUD.SetActive(false);
+        DisableHUD();
         
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -168,5 +170,18 @@ public class UIManager : MonoBehaviour
     public void ReloadCurrentScene()
     {
         SceneManager.LoadSceneAsync(SceneManager.loadedSceneCount);
+    }
+
+    /// <summary>
+    /// Handling Interacting with UI
+    /// </summary>
+    public void DisableHUD()
+    {
+        HUD.SetActive(false);
+    }
+
+    public void EnableHUD()
+    {
+        HUD.SetActive(true);
     }
 }

@@ -61,35 +61,17 @@ public class PlayerInteraction : MonoBehaviour
             return;
         }
 
-        if (!isInteracting)
-        {
-            CheckInteraction();
+        CheckInteraction();
 
-            if (Input.GetKeyDown(KeyCode.E) && currentInteractable != null)
-            {
-                if (currentInteractable is Piano)
-                {
-                    if (NoteManager.Instance.HasEnoughNotes())
-                    {
-                        isInteracting = true;
-                    }
-                    else
-                    {
-                        Debug.Log("[Piano] Not enough notes to play the piano!");
-                        return;
-                    }
-                }
-
-                currentInteractable.Interact();
-            }
-        }
-        else
+        if (Input.GetKeyDown(KeyCode.E) && currentInteractable != null)
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                ExitInteraction();
-            }
+            currentInteractable.Interact();
         }
+    }
+
+    public void SetInteracting(bool interacting)
+    {
+        isInteracting = interacting;
     }
 
     void ExitInteraction()
