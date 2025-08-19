@@ -1,10 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
     private bool isDead = false;
+    private int currentSceneIndex;
 
     public void Die()
     {
@@ -13,7 +13,8 @@ public class Player : MonoBehaviour
 
         // Play death animation, disable controls, fade to black, etc.
         Debug.Log("Player has been killed!");
-
+        UIManager.Instance.ShowDeathScreen();
+        
         // Optional: Reload scene
         // SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }

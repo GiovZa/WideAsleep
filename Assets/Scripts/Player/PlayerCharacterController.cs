@@ -86,6 +86,12 @@ namespace playerChar
         [Tooltip("Sound played when jumping")] public AudioClip JumpSfx;
         [Tooltip("Sound played when landing")] public AudioClip LandSfx;
 
+        [Header("Noisy Surfaces")]
+        [Tooltip("Tag for surfaces that make a sound when stepped on.")]
+        public string NoisySurfaceTag = "NoisySurface";
+        [Tooltip("Cooldown in seconds between playing noisy surface sounds.")]
+        public float NoisySurfaceSfxCooldown = 0.5f;
+
         [Header("Headbob")]
         [Tooltip("How tall the bounce of head bobs are when walking")] public float HeadbobAmountWalk = 0.08f;
         [Tooltip("How tall the bounce of head bobs are when sprinting")] public float HeadbobAmountSprint = 0.05f;
@@ -100,12 +106,14 @@ namespace playerChar
         public bool IsCrouching { get; private set; }
 
         private bool CanMove = true;
+        public Transform lookTarget;
 
         CharacterController m_Controller;
         Vector3 m_GroundNormal;
         Vector3 m_CharacterVelocity;
         Vector3 m_LatestImpactSpeed;
         float m_LastTimeJumped = 0f;
+        float m_LastTimeNoisySurfaceSfxPlayed = -1f;
         float m_CameraVerticalAngle = 0f;
         float m_FootstepDistanceCounter;
         float m_TargetCharacterHeight;
@@ -155,6 +163,13 @@ namespace playerChar
                 transform.transform.position = new Vector3(10,0,-10);
             }
 
+            if (lookTarget != null)
+            {
+                HandleLookAtTarget();
+            }
+
+            HandleRotation();
+
             if (!CanMove)
             {
                 return;
@@ -180,7 +195,7 @@ namespace playerChar
 
             UpdateCharacterHeight(false);
 
-            HandleCharacterMovement();
+            HandleMovement();
         }
 
         void OnDie()
@@ -196,6 +211,41 @@ namespace playerChar
             CanMove = newState == GameState.Gameplay;
         }
 
+        void HandleRotation()
+        {
+            if (GameStateManager.Instance.CurrentState == GameState.Gameplay)
+            {
+                if (lookTarget != null) return;
+                // horizontal character rotation
+                // rotate the transform with the input speed around its local Y axis
+                transform.Rotate(
+                    new Vector3(0f, Input.GetAxis("Mouse X") * RotationSpeed, 0f), Space.Self);
+            
+                // vertical camera rotation
+                // add vertical inputs to the camera's vertical angle
+                m_CameraVerticalAngle += Input.GetAxis("Mouse Y") * RotationSpeed * (isInverted ? 1f : -1f);
+
+                // limit the camera's vertical angle to min/max
+                m_CameraVerticalAngle = Mathf.Clamp(m_CameraVerticalAngle, -89f, 89f);
+
+                // apply the vertical angle as a local rotation to the camera transform along its right axis (makes it pivot up and down)
+                PlayerCamera.transform.localEulerAngles = new Vector3(m_CameraVerticalAngle, 0, 0);
+            }
+        }
+
+        void HandleLookAtTarget()
+        {
+            Vector3 directionToTarget = (lookTarget.position - PlayerCamera.transform.position).normalized;
+            Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
+            PlayerCamera.transform.rotation = Quaternion.Slerp(PlayerCamera.transform.rotation, targetRotation, Time.deltaTime * 2.0f);
+
+            // Also rotate the player body
+            Vector3 flatDirection = directionToTarget;
+            flatDirection.y = 0;
+            Quaternion bodyRotation = Quaternion.LookRotation(flatDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, bodyRotation, Time.deltaTime * 2.0f);
+        }
+ 
         void HandleHeadbob(float bobAmount, float bobSpeed)
         {
             float bob = Mathf.Sin(Time.time * bobSpeed) * bobAmount;
@@ -245,27 +295,8 @@ namespace playerChar
             }
         }
 
-        void HandleCharacterMovement()
+        void HandleMovement()
         {
-            // horizontal character rotation
-            {
-                // rotate the transform with the input speed around its local Y axis
-                transform.Rotate(
-                    new Vector3(0f, Input.GetAxis("Mouse X") * RotationSpeed, 0f), Space.Self);
-            }
-
-            // vertical camera rotation
-            {
-                // add vertical inputs to the camera's vertical angle
-                m_CameraVerticalAngle += Input.GetAxis("Mouse Y") * RotationSpeed * (isInverted ? 1f : -1f);
-
-                // limit the camera's vertical angle to min/max
-                m_CameraVerticalAngle = Mathf.Clamp(m_CameraVerticalAngle, -89f, 89f);
-
-                // apply the vertical angle as a local rotation to the camera transform along its right axis (makes it pivot up and down)
-                PlayerCamera.transform.localEulerAngles = new Vector3(m_CameraVerticalAngle, 0, 0);
-            }
-
             // character movement handling
             bool isSprinting = Input.GetButton("Sprint");
             {
@@ -410,6 +441,36 @@ namespace playerChar
             // Debug.Log($"Character Velocity: {CharacterVelocity}");
         }
 
+        private void OnTriggerStay(Collider other)
+        {
+            // Make sure we are grounded and moving to trigger the sound
+            if (IsGrounded && CharacterVelocity.magnitude > 0.2f)
+            {
+                // Check if the object has the specified tag
+                if (!string.IsNullOrEmpty(NoisySurfaceTag) && other.gameObject.CompareTag(NoisySurfaceTag))
+                {
+                    // Check if the cooldown has passed
+                    if (Time.time >= m_LastTimeNoisySurfaceSfxPlayed + NoisySurfaceSfxCooldown)
+                    {
+                        // Try to get an AudioSource from the collided object
+                        AudioSource surfaceAudio = other.gameObject.GetComponent<AudioSource>();
+
+                        // Use AudioManager to play the sound at the collision point
+                        if (AudioManager.Instance != null && surfaceAudio != null && surfaceAudio.clip != null)
+                        {
+                            AudioManager.Instance.Play(surfaceAudio.clip, other.transform.position, surfaceAudio.volume);
+                            
+                            // Emit sound for AI
+                            SoundEvents.EmitSound(transform.position, surfaceAudio.volume * noiseMeter);
+
+                            // Reset cooldown timer
+                            m_LastTimeNoisySurfaceSfxPlayed = Time.time;
+                        }
+                    }
+                }
+            }
+        }
+
         // Returns true if the slope angle represented by the given normal is under the slope angle limit of the character controller
         bool IsNormalUnderSlopeLimit(Vector3 normal)
         {
@@ -492,7 +553,7 @@ namespace playerChar
                         }
                     }
                 }
-                // Debug.Log("✅ No obstructions detected, can stand up!");
+                // Debug.Log("No obstructions detected, can stand up!");
                 
                 m_TargetCharacterHeight = CapsuleHeightStanding;
                 // Debug.Log($"TargetCharacterHeight: {m_TargetCharacterHeight}");
@@ -507,6 +568,11 @@ namespace playerChar
 
             IsCrouching = crouched;
             return true;
+        }
+
+        public void Freeze()
+        {
+            CanMove = false;
         }
     
         // Movement is now controlled by the GameStateManager.

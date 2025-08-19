@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 5983470323781372672}
   - component: {fileID: 9092502506809099772}
   - component: {fileID: 6023626159821768203}
+  - component: {fileID: 4339248304144422593}
+  - component: {fileID: 536183665020882965}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -49,7 +51,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerCamera: {fileID: 6806078760192323123}
-  AudioSource: {fileID: 0}
+  audioSource: {fileID: 0}
   GravityDownForce: 12
   GroundCheckLayers:
     serializedVersion: 2
@@ -70,11 +72,18 @@ MonoBehaviour:
   CapsuleHeightStanding: 1.8
   CapsuleHeightCrouching: 0.9
   CrouchingSharpness: 10
-  FootstepSfxFrequency: 1
-  FootstepSfxFrequencyWhileSprinting: 1
-  FootstepSfx: {fileID: 8300000, guid: 0fd5ef5132f4af646a1ea9c99df6cc62, type: 3}
-  JumpSfx: {fileID: 8300000, guid: 08a39fa513ade6e49bc478057a86dc65, type: 3}
-  LandSfx: {fileID: 8300000, guid: 0297c4af354fbf94596177a5f118118d, type: 3}
+  FootstepSfxFrequency: 0.3
+  FootstepSfxFrequencyWhileSprinting: 0.3
+  FootstepSfx: {fileID: 8300000, guid: dc8c457c0e08efc4284e79262e9bae2c, type: 3}
+  noiseMeter: 10
+  JumpSfx: {fileID: 0}
+  LandSfx: {fileID: 0}
+  NoisySurfaceTag: NoisySurface
+  NoisySurfaceSfxCooldown: 1
+  HeadbobAmountWalk: 0.12
+  HeadbobAmountSprint: 0.08
+  HeadbobSpeed: 1
+  lookTarget: {fileID: 0}
 --- !u!143 &5983470323781372672
 CharacterController:
   m_ObjectHideFlags: 0
@@ -111,9 +120,9 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 0fd5ef5132f4af646a1ea9c99df6cc62, type: 3}
-  m_PlayOnAwake: 1
-  m_Volume: 1
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 0.2
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -210,6 +219,62 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerReach: 3
+  PlayerCamera: {fileID: 0}
+  crosshairImage: {fileID: 0}
+  defaultCrosshair: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  interactCrosshair: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  pickupCrosshair: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  doorCrosshair: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  defaultColor: {r: 1, g: 1, b: 1, a: 1}
+  interactColor: {r: 1, g: 0, b: 0, a: 1}
+--- !u!114 &4339248304144422593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6700985936480113284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0579db606d561484ab8e8d26a2723e30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activateKey: 120
+  cooldownDuration: 4
+  cooldownImage: {fileID: 0}
+  activeColor: {r: 1, g: 1, b: 1, a: 1}
+  mutedVolume: 0.1
+  normalVolume: 1
+  maxDistance: 30
+  revealTime: 3
+  vignetteFadeInTime: 0.5
+  vignetteStayTime: 2
+  vignetteFadeOutTime: 0.5
+  vignetteMaxIntensity: 0.6
+  setSaturation: -60
+--- !u!114 &536183665020882965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6700985936480113284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4937760851f25245b4602f48a8734fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activateKey: 122
+  cooldownDuration: 3
+  cooldownImage: {fileID: 0}
+  activeColor: {r: 1, g: 1, b: 1, a: 1}
+  effectDuration: 2.5
+  FadeInTime: 0.5
+  FadeOutTime: 0.5
+  clearStart: 20
+  clearEnd: 50
+  clearMaxRadius: 0.5
+  vignetteIntensity: 0.15
 --- !u!1 &8869429432111375642
 GameObject:
   m_ObjectHideFlags: 0
@@ -221,6 +286,7 @@ GameObject:
   - component: {fileID: 8261344346183648188}
   - component: {fileID: 6806078760192323123}
   - component: {fileID: 4466014407329690833}
+  - component: {fileID: -8427413806365767691}
   m_Layer: 0
   m_Name: MainCamera
   m_TagString: Untagged
@@ -242,7 +308,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8583526281846590103}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 113.425, z: 0}
 --- !u!20 &6806078760192323123
 Camera:
   m_ObjectHideFlags: 0
@@ -302,3 +368,47 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8869429432111375642}
   m_Enabled: 1
+--- !u!114 &-8427413806365767691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8869429432111375642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_AllowHDROutput: 1
+  m_UseScreenCoordOverride: 0
+  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
+  m_TaaSettings:
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0

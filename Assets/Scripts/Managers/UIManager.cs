@@ -8,8 +8,10 @@ using DG.Tweening;
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set;}
-    [Header("Pause Menu")]
+    [Header("Menus")]
     [SerializeField] GameObject pauseMenu;
+    [SerializeField] GameObject deathScreen;
+    [SerializeField] GameObject HUD;
     private PlayerCharacterController player;
     private PlayerInteraction playerInteraction;
 
@@ -145,6 +147,16 @@ public class UIManager : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+    }
+
+    public void ShowDeathScreen()
+    {
+        deathScreen.SetActive(true);
+        playerInteraction.SetCrosshairVisible(false);
+        HUD.SetActive(false);
+        
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void ExitToMainMenu()

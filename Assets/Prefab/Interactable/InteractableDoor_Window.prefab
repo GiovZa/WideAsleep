@@ -400,6 +400,8 @@ MonoBehaviour:
       m_Calls: []
   IsOpenAtStart: 0
   IsLocked: 0
+  openSfx: {fileID: 8300000, guid: c08ef59ef7f156b41b3ed3d63421708a, type: 3}
+  closeSfx: {fileID: 8300000, guid: 5ef1b920ecdc6e54f910c583e8f141c3, type: 3}
 --- !u!1 &5500292932416152989
 GameObject:
   m_ObjectHideFlags: 0

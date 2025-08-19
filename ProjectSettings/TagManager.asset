@@ -9,18 +9,19 @@ TagManager:
   - XRay
   - DoorFront
   - DoorBack
+  - NoisySurface
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
-  - 
+  - Enemy
   - PostProcessing
   - Interactable
-  - XRay
-  - 
+  - XRay_Enemy
+  - XRay_Noise
   - 
   - 
   - 

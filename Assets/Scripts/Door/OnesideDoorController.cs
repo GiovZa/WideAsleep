@@ -69,19 +69,13 @@ public class OnesideDoorController : MonoBehaviour
             //StartCoroutine(CloseOcclusionPortal());
         }
 
-        PlaySfx(openSfx);
+        AudioManager.Instance.Play(openSfx, transform.position, 1f);
     }
 
     private void PlayLockedFeedback()
     {
         doorAnimator.SetTrigger("Open");
-        PlaySfx(lockedSfx);
-    }
-
-    private void PlaySfx(AudioClip clip)
-    {
-        if (audioSource != null && clip != null)
-            audioSource.PlayOneShot(clip);
+        AudioManager.Instance.Play(lockedSfx, transform.position, 1f);
     }
 
     // IEnumerator CloseOcclusionPortal()

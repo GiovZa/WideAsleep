@@ -124,6 +124,7 @@ public class AlertState : IState
                 isStaring = true;
                 stareTimer = stareTime;
                 Debug.Log("[AlertState] Player spotted. Beginning stare down...");
+                navMeshAgent.isStopped = true; // Stop moving
             }
 
             Vector3 dir = (player.position - nurseAI.transform.position).normalized;

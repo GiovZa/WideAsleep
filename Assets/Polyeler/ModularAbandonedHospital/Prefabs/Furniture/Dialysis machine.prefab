@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8913733282350175303}
   - component: {fileID: 8763896918488687903}
   - component: {fileID: 1618736213854682023}
-  - component: {fileID: 1597094588992838294}
+  - component: {fileID: 1249214170908742426}
   m_Layer: 0
   m_Name: Dialysis machine
   m_TagString: Untagged
@@ -27,13 +27,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3244054237170349047}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
+  m_LocalPosition: {x: 0.49955237, y: 1.9582387, z: -0.6315557}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5716269898430730320}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
 --- !u!33 &8763896918488687903
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -96,8 +96,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &1597094588992838294
-MeshCollider:
+--- !u!65 &1249214170908742426
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -114,10 +114,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 6764189354707102376, guid: 8f0aadfecc600d84b9ed8e2c4314eb00, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 0.6648145, y: 1.9681047, z: 0.6716171}
+  m_Center: {x: 0.08471042, y: 0.9840514, z: -0.0021843838}
 --- !u!1 &8845881492301564266
 GameObject:
   m_ObjectHideFlags: 0

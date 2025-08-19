@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
+using playerChar;
 
 public class KillState : IState
 {
@@ -8,6 +9,7 @@ public class KillState : IState
     private NavMeshAgent agent;
     private Animator animator;
     private Player player;
+    private PlayerCharacterController playerController;
 
     private float killDelay = 1.5f;
     private float timer = 0f;
@@ -19,6 +21,7 @@ public class KillState : IState
         agent = ai.GetComponent<NavMeshAgent>();
         animator = ai.GetComponent<Animator>();
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        playerController = player.GetComponent<PlayerCharacterController>();
     }
 
     public void Enter()
@@ -26,6 +29,12 @@ public class KillState : IState
         Debug.Log("[KillState] Entering Kill State");
 
         agent.isStopped = true;
+
+        if (playerController != null)
+        {
+            playerController.Freeze();
+            playerController.lookTarget = nurseAI.transform;
+        }
 
         if (animator != null)
         {
@@ -48,7 +57,6 @@ public class KillState : IState
             {
                 Debug.Log("[KillState] Executing kill...");
                 player.Die();
-                SceneManager.LoadSceneAsync(2);
             }
 
             // Optional: Scene reload or endgame
