@@ -21,14 +21,7 @@ public class AlertState : IState
     private Vector3 lastSeenDirection;
     private Vector3 previousPlayerPosition;
 
-    private Quaternion[] scanRotations;
-    private int currentScanIndex = 0;
-    private float scanPauseDuration = 0.4f;
-    private float scanPauseTimer = 0f;
-    private bool isScanning = false;
     private bool hasScanned = false;
-
-    private float rotationSpeed = 120f;
 
     // Reference to the NavMeshAgent for pathfinding
     private NavMeshAgent navMeshAgent;
@@ -52,11 +45,7 @@ public class AlertState : IState
         alert.enabled = true;
         isStaring = false;
         reachedLastPosition = false;
-        isScanning = false;
         hasScanned = false;
-
-        currentScanIndex = 0;
-        scanPauseTimer = 0f;
 
         navMeshAgent.isStopped = false;  // Ensure the agent is not stopped
 
@@ -92,7 +81,6 @@ public class AlertState : IState
         lastSeenDirection = (soundPos - nurseAI.transform.position).normalized;
         previousPlayerPosition = soundPos;
         reachedLastPosition = false;
-        isScanning = false;
         hasScanned = false;
         overrideFromSound = true;
     }
@@ -119,6 +107,10 @@ public class AlertState : IState
 
         if (vision.CanSeePlayer(player))
         {
+            // Continuously update last known position while player is visible
+            lastKnownPosition = player.position;
+            alert.GoToLastKnownPosition(lastKnownPosition);
+
             if (!isStaring)
             {
                 isStaring = true;
@@ -141,21 +133,32 @@ public class AlertState : IState
             return;
         }
 
+        // If we were staring but lost sight, reset and resume course.
+        if (isStaring)
+        {
+            Debug.Log("[AlertState] Lost sight of player during stare. Resuming path.");
+            isStaring = false;
+            navMeshAgent.isStopped = false;
+        }
+
         if (!reachedLastPosition)
         {
             float distanceToLastPos = Vector3.Distance(nurseAI.transform.position, lastKnownPosition);
             if (distanceToLastPos <= alert.arriveThreshold)
             {
-                Debug.Log("[AlertState] Reached last known position. Starting smooth scan...");
+                Debug.Log("[AlertState] Reached last known position. Beginning search.");
                 reachedLastPosition = true;
-                isScanning = true;
+                hasScanned = true;
 
-                Quaternion baseRot = nurseAI.transform.rotation;
-                scanRotations = new Quaternion[] {
-                    baseRot * Quaternion.AngleAxis(90f, Vector3.up),
-                    baseRot * Quaternion.AngleAxis(-90f, Vector3.up),
-                    baseRot
-                };
+                // Directly start the search instead of scanning here
+                Vector3 playerMovementDir = (player.position - previousPlayerPosition).normalized;
+                previousPlayerPosition = player.position;
+
+                // Fallback if player isn't moving
+                if (playerMovementDir == Vector3.zero)
+                    playerMovementDir = (player.position - nurseAI.transform.position).normalized;
+
+                search.StartSearch(nurseAI.transform.position, playerMovementDir);
             }
             else
             {
@@ -165,47 +168,6 @@ public class AlertState : IState
                     // Path is blocked or not valid, decide what to do next
                     Debug.Log("[AlertState] Path to last known position is blocked, transitioning to search.");
                     nurseAI.TransitionToState(nurseAI.patrolState);  // Or you can start a search state here
-                }
-            }
-        }
-        else if (isScanning)
-        {
-            Quaternion targetRot = scanRotations[currentScanIndex];
-            nurseAI.transform.rotation = Quaternion.RotateTowards(
-                nurseAI.transform.rotation,
-                targetRot,
-                rotationSpeed * Time.deltaTime
-            );
-
-            float angle = Quaternion.Angle(nurseAI.transform.rotation, targetRot);
-            if (angle < 1f)
-            {
-                scanPauseTimer += Time.deltaTime;
-                if (scanPauseTimer >= scanPauseDuration)
-                {
-                    scanPauseTimer = 0f;
-                    currentScanIndex++;
-
-                    if (currentScanIndex >= scanRotations.Length)
-                    {
-                        Debug.Log("[AlertState] Finished scanning. Beginning search.");
-                        isScanning = false;
-                        hasScanned = true;
-
-                        Vector3 playerMovementDir = (player.position - previousPlayerPosition).normalized;
-                        previousPlayerPosition = player.position;
-
-                        // Fallback if player isn't moving
-                        if (playerMovementDir == Vector3.zero)
-                            playerMovementDir = (player.position - nurseAI.transform.position).normalized;
-
-                        search.StartSearch(nurseAI.transform.position, playerMovementDir);
-                    }
-                    else
-                    {
-                        Vector3 fwd = nurseAI.transform.forward;
-                        Debug.Log($"[AlertState] Finished turn {currentScanIndex}, forward = ({fwd.x:F2}, {fwd.y:F2}, {fwd.z:F2})");
-                    }
                 }
             }
         }

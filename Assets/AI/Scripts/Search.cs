@@ -11,10 +11,8 @@ public class Search : MonoBehaviour
     private Vector3 lastSeenDirection;
     private List<Vector3> searchPoints = new();
     private int searchIndex = 0;
-    private float searchPauseTimer = 0f;
     private bool isSearching = false;
     private bool isLookingAround = false;
-
     public float maxSearchPointDistance = 6f;
     public float minSearchPointDistance = 3f;
     public int maxSearchAttempts = 10;
@@ -45,7 +43,6 @@ public class Search : MonoBehaviour
         lastSeenDirection = perceivedDirection.normalized;
         searchPoints.Clear();
         searchIndex = 0;
-        searchPauseTimer = 0f;
         isSearching = false;
         isLookingAround = false;
 
