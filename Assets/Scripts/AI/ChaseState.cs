@@ -7,8 +7,7 @@ public class ChaseState : IState
     private Vision vision;
     private Transform player;
     private Animator animator;
-
-    public float killDistance = 1.5f;
+    private UnityEngine.AI.NavMeshAgent agent;
 
     public ChaseState(NurseAI ai)
     {
@@ -17,6 +16,7 @@ public class ChaseState : IState
         vision = ai.GetComponent<Vision>();
         player = GameObject.FindWithTag("Player").transform;
         animator = ai.GetComponent<Animator>();
+        agent = ai.GetComponent<UnityEngine.AI.NavMeshAgent>();
     }
 
     public void Enter()
@@ -31,9 +31,10 @@ public class ChaseState : IState
 
     public void Update()
     {
-        if (Vector3.Distance(nurseAI.transform.position, player.position) <= killDistance)
+        if (Vector3.Distance(nurseAI.transform.position, player.position) <= nurseAI.killRange)
         {
-            Debug.Log("[ChaseState] Player in kill range. Transitioning to KillState.");
+            Debug.Log("[ChaseState] Player in kill range. Stopping and transitioning to KillState.");
+            agent.isStopped = true;
             nurseAI.TransitionToState(nurseAI.killState);
             return;
         }

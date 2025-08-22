@@ -45,11 +45,11 @@ public class Hearing : MonoBehaviour
         else
         {
             // Add detailed log for why the sound was ignored
-            Debug.LogWarning($"[Hearing] Sound IGNORED at {soundPos}. " +
-                             $"Distance: {distance:F2}, " +
-                             $"AI Hearing Radius: {hearingRadius}, " +
-                             $"Sound's Radius: {radius:F2}. " +
-                             $"(Must be within BOTH radii to be heard)");
+            // Debug.LogWarning($"[Hearing] Sound IGNORED at {soundPos}. " +
+            //                  $"Distance: {distance:F2}, " +
+            //                  $"AI Hearing Radius: {hearingRadius}, " +
+            //                  $"Sound's Radius: {radius:F2}. " +
+            //                  $"(Must be within BOTH radii to be heard)");
         }
     }
 

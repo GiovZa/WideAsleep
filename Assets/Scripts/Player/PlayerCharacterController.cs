@@ -124,6 +124,7 @@ namespace playerChar
         public float CurrentStamina { get; private set; }
         private bool CanMove = true;
         public Transform lookTarget;
+        public Vector3 lookTargetOffset;
 
         CharacterController m_Controller;
         Vector3 m_GroundNormal;
@@ -271,7 +272,8 @@ namespace playerChar
 
         void HandleLookAtTarget()
         {
-            Vector3 directionToTarget = (lookTarget.position - PlayerCamera.transform.position).normalized;
+            Vector3 targetPosition = lookTarget.position + lookTargetOffset;
+            Vector3 directionToTarget = (targetPosition - PlayerCamera.transform.position).normalized;
             Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
             PlayerCamera.transform.rotation = Quaternion.Slerp(PlayerCamera.transform.rotation, targetRotation, Time.deltaTime * 2.0f);
 

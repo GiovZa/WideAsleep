@@ -11,9 +11,12 @@ public class KillState : IState
     private Player player;
     private PlayerCharacterController playerController;
 
-    private float killDelay = 1.5f;
+    private float killDelay = 1f;
     private float timer = 0f;
     private bool hasKilled = false;
+
+    // This can be adjusted from the NurseAI script if you make it public
+    private Vector3 headLookOffset = new Vector3(0f, 5f, 0f);
 
     public KillState(NurseAI ai)
     {
@@ -41,6 +44,7 @@ public class KillState : IState
         {
             playerController.Freeze();
             playerController.lookTarget = nurseAI.transform;
+            playerController.lookTargetOffset = headLookOffset;
         }
 
         if (animator != null)
@@ -73,5 +77,12 @@ public class KillState : IState
     public void Exit()
     {
         Debug.Log("[KillState] Exiting Kill State (this shouldn't happen normally)");
+
+        // Reset the look target and offset when exiting, just in case.
+        if (playerController != null)
+        {
+            playerController.lookTarget = null;
+            playerController.lookTargetOffset = Vector3.zero;
+        }
     }
 }

@@ -7430,7 +7430,6 @@ GameObject:
   - component: {fileID: 7263394490318565231}
   - component: {fileID: 6086841089558661811}
   - component: {fileID: 6803546437687992494}
-  - component: {fileID: 2371615320614757818}
   m_Layer: 0
   m_Name: Playable_Piano
   m_TagString: Interactable
@@ -7544,14 +7543,13 @@ MonoBehaviour:
   onInteraction:
     m_PersistentCalls:
       m_Calls: []
-  baseSheet: {fileID: 2551474775547031061}
+  sheetPuzzleUI: {fileID: 0}
   personalSheet: {fileID: 930372165662608025}
   particlesPiano:
   - {fileID: 6179952480333007097}
   - {fileID: 5278118783917839270}
   - {fileID: 6179952480333007097}
   enableParticle: 1
-  actualVolume: 0.5
   volAmount: {fileID: 0}
   notes:
   - {fileID: 8300000, guid: 5101c2bb5d881064f8de2616255250f9, type: 3}
@@ -7677,8 +7675,8 @@ MonoBehaviour:
   - {fileID: 8238882400816788095}
   - {fileID: 8474349155060311593}
   - {fileID: 2346861113314315208}
+  locket: {fileID: 0}
   keyboard: {fileID: 1382700613731191378}
-  solutionKeys: 690000006f000000640000007400000064000000
 --- !u!82 &6086841089558661811
 AudioSource:
   m_ObjectHideFlags: 0
@@ -7793,34 +7791,6 @@ MonoBehaviour:
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
---- !u!114 &2371615320614757818
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3930038628237913654}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 895feb07e94664242abbd168a45b9186, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  message: Use piano
-  onInteraction:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3930038628237913654}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &3974561499242384559
 GameObject:
   m_ObjectHideFlags: 0

@@ -32,14 +32,6 @@ public class PatrolState : IState
 
     public void Update()
     {
-        float distanceToPlayer = Vector3.Distance(nurseAI.transform.position, player.position);
-        if (distanceToPlayer <= nurseAI.killRange)
-        {
-            Debug.Log("[PatrolState] Player in kill range. Transitioning to KillState.");
-            nurseAI.TransitionToState(nurseAI.killState);
-            return;
-        }
-
         if (vision.CanSeePlayer(player.transform))
         {
             Debug.Log("[PatrolState] Player spotted. Transitioning to AlertState.");

@@ -98,13 +98,6 @@ public class AlertState : IState
             return;
         }
 
-        float distanceToPlayer = Vector3.Distance(nurseAI.transform.position, player.position);
-        if (distanceToPlayer <= nurseAI.killRange)
-        {
-            nurseAI.TransitionToState(nurseAI.killState);
-            return;
-        }
-
         if (vision.CanSeePlayer(player))
         {
             // Continuously update last known position while player is visible
