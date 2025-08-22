@@ -27,9 +27,28 @@ public class UIManager : MonoBehaviour
     public Sprite emptyPaperNote;
     public Image[] notes;
 
+    [Header("Stamina")]
+    private AudioSource staminaAudioSource;
+    [SerializeField, Range(0, 1)] private float staminaAudioThreshold = 0.3f;
+
     void Start()
     {
         Instance = this;
+
+        // Find the stamina audio source by tag
+        GameObject staminaAudioObject = GameObject.FindWithTag("StaminaAudioSource");
+        if (staminaAudioObject != null)
+        {
+            staminaAudioSource = staminaAudioObject.GetComponent<AudioSource>();
+            if (staminaAudioSource == null)
+            {
+                Debug.LogError("[UIManager] GameObject with tag 'StaminaAudioSource' is missing an AudioSource component.");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[UIManager] Could not find GameObject with tag 'StaminaAudioSource'. Stamina audio will not play.");
+        }
 
         notesCollected = NoteManager.Instance.GetNoteCount();
         totalNotes = NoteManager.Instance.requiredNotes;
@@ -39,6 +58,7 @@ public class UIManager : MonoBehaviour
         if (player != null)
         {
             playerInteraction = player.GetComponent<PlayerInteraction>();
+            UpdateStaminaEffects(player.CurrentStamina / player.MaxStamina);
         }
         canvasGroup = FindAnyObjectByType<CanvasGroup>();
     }
@@ -55,6 +75,12 @@ public class UIManager : MonoBehaviour
             {
                 CallPauseMenu();
             }
+        }
+
+        if (player != null)
+        {
+            float staminaPercentage = player.CurrentStamina / player.MaxStamina;
+            UpdateStaminaEffects(staminaPercentage);
         }
     }
 
@@ -124,6 +150,11 @@ public class UIManager : MonoBehaviour
         Application.Quit();
     }
 
+    public void LoadNextScene()
+    {
+        StartCoroutine(FadeAndLoad(SceneManager.GetActiveScene().buildIndex + 1));
+    }
+
     /// <summary>
     /// Pause Menu
     /// </summary>
@@ -183,5 +214,38 @@ public class UIManager : MonoBehaviour
     public void EnableHUD()
     {
         HUD.SetActive(true);
+    }
+
+    private void UpdateStaminaEffects(float staminaPercentage)
+    {
+        // Update visual effect
+        if (EffectsManager.Instance != null)
+        {
+            EffectsManager.Instance.UpdateStaminaEffect(staminaPercentage);
+        }
+
+        // Update audio effect
+        if (staminaAudioSource != null && staminaAudioSource.clip != null)
+        {
+            if (staminaPercentage <= staminaAudioThreshold)
+            {
+                if (!staminaAudioSource.isPlaying)
+                {
+                    staminaAudioSource.loop = true;
+                    staminaAudioSource.Play();
+                }
+
+                // As stamina decreases towards 0, volume increases towards 1.
+                float volume = 1.0f - (staminaPercentage / staminaAudioThreshold);
+                staminaAudioSource.volume = Mathf.Clamp01(volume);
+            }
+            else
+            {
+                if (staminaAudioSource.isPlaying)
+                {
+                    staminaAudioSource.Stop();
+                }
+            }
+        }
     }
 }

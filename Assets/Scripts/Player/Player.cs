@@ -3,12 +3,14 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
+    [Tooltip("For Testing Use")]
+    public bool canDie = true;
     private bool isDead = false;
     private int currentSceneIndex;
 
     public void Die()
     {
-        if (isDead) return;
+        if (isDead || !canDie) return;
         isDead = true;
 
         // Play death animation, disable controls, fade to black, etc.

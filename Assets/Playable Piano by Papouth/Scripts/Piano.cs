@@ -9,10 +9,13 @@ using playerChar;
 public class Piano : Interactable
 {
     #region Variables
-    [SerializeField] private GameObject baseSheet;
+    [Header("Puzzle UI")]
+    [SerializeField] private GameObject sheetPuzzleUI; // The parent UI for the puzzle.
+
     [SerializeField] private GameObject personalSheet;
     private bool isPianoActive = false;
-
+    private bool justActivated = false;
+    
     [Header("Notes Particles")]
     [Tooltip("Particles emitted by pressing keys")]
     [SerializeField] private ParticleSystem[] particlesPiano;
@@ -56,7 +59,10 @@ public class Piano : Interactable
         playerInteraction = FindObjectOfType<PlayerInteraction>();
 
         personalSheet.SetActive(isPianoActive);
-        baseSheet.SetActive(isPianoActive);
+        if (sheetPuzzleUI != null)
+        {
+            sheetPuzzleUI.SetActive(false);
+        }
 
         // baseSheet.GetComponentInChildren<Image>().sprite = sheets[actualSheet];
 
@@ -92,7 +98,7 @@ public class Piano : Interactable
                 return; // Don't activate if the puzzle is already solved.
             }
 
-            // Always activate the piano. The sheet music visibility is handled in ActivatePiano().
+            // Always activate the piano.
             ActivatePiano();
         }
     }
@@ -100,7 +106,11 @@ public class Piano : Interactable
     private void ActivatePiano()
     {
         isPianoActive = true;
-        baseSheet.SetActive(NoteManager.Instance.HasEnoughNotes());
+        justActivated = true;
+        if (sheetPuzzleUI != null)
+        {
+            sheetPuzzleUI.SetActive(true);
+        }
 
         Debug.Log("[Piano] Piano activated! Press ESC to exit.");
         
@@ -131,7 +141,10 @@ public class Piano : Interactable
     private void DeactivatePiano()
     {
         isPianoActive = false;
-        baseSheet.SetActive(isPianoActive);
+        if (sheetPuzzleUI != null)
+        {
+            sheetPuzzleUI.SetActive(false);
+        }
         
         GameStateManager.Instance.SetState(GameState.Gameplay);
         playerInteraction.SetInteracting(false);
@@ -160,6 +173,12 @@ public class Piano : Interactable
     {
         if (isPianoActive)
         {
+            if (justActivated)
+            {
+                justActivated = false;
+                return;
+            }
+            
             PianoInputs();
             // SheetDisplay();
             // Volume();
@@ -603,33 +622,32 @@ public class Piano : Interactable
 
     private void RecordKey(KeyCode key)
     {
+        if (isPuzzleSolved) return;
+
         recordedKeys.Add(key);
-        Debug.Log("[Piano] Recorded: " + key);
 
-        if (recordedKeys.Count == 5)
+        // Maintain a sliding window of the most recent keys, matching the solution length.
+        if (recordedKeys.Count > solutionKeys.Count)
         {
-            CheckPuzzleSolution();
-
-            recordedKeys.Clear(); // Clear and record next 5
-            Debug.Log("[Piano] Cleared sequence!");
+            recordedKeys.RemoveAt(0); // Remove the oldest key.
         }
 
-        return;
+        // Only check if we have enough keys to possibly match the solution.
+        if (recordedKeys.Count == solutionKeys.Count)
+        {
+            CheckPuzzleSolution();
+        }
     }
 
     private void CheckPuzzleSolution()
     {
-
-        if (recordedKeys.Count < solutionKeys.Count)
-        {
-            return;
-        }
-
+        // Compare the current sequence of recorded keys with the solution.
         for (int i = 0; i < solutionKeys.Count; i++)
         {
             if (recordedKeys[i] != solutionKeys[i])
             {
-                Debug.Log("[Piano] Incorrect sequence!");
+                // The sequence is incorrect. With the new sliding window check,
+                // this will be called frequently, so logging an error here would be spam.
                 return;
             }
         }
@@ -637,6 +655,7 @@ public class Piano : Interactable
         Debug.Log("[Piano] Correct sequence!");
         isPuzzleSolved = true;
         OnPuzzleSolved();
+        DeactivatePiano(); // Deactivate after solving.
     }
 
     private void OnPuzzleSolved()

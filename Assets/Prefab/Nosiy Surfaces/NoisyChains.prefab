@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8373282277108238395}
   - component: {fileID: 3043915715330466465}
   - component: {fileID: 7631099656249486279}
+  - component: {fileID: 7900197735822531948}
   m_Layer: 0
   m_Name: NoisyChains
   m_TagString: NoisySurface
@@ -166,9 +167,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce47037a58b82e34b8dd3dfdf5525bcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  xRayColor: {r: 0.9083557, g: 0.9054863, b: 0.34155142, a: 1}
+  xRayIntensity: 2
   XRayLayer:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 1024
+--- !u!114 &7900197735822531948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6047632106450932002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ad12b04088b3d047854b1ab04b55354, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  surfaceType: 1
 --- !u!1001 &5252970692101076966
 PrefabInstance:
   m_ObjectHideFlags: 0

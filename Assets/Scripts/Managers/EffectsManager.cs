@@ -15,6 +15,28 @@ public class EffectsManager : MonoBehaviour
     private DepthOfField depthOfField;
     private Coroutine visionSenseCoroutine;
     private ColorAdjustments colorAdjustments;
+    private ChromaticAberration chromaticAberration;
+    private WhiteBalance whiteBalance;
+
+    [Header("Effect Settings")]
+    // [Tooltip("The maximum *additional* intensity of the chromatic aberration effect for the stamina feedback.")]
+    // [Range(0, 1)]
+    // public float maxStaminaChromaticAberration = 0.75f;
+
+    [Tooltip("The maximum temperature shift (towards blue) for the stamina feedback.")]
+    [Range(-100, 0)]
+    public float maxStaminaTemperatureShift = -40f;
+
+    [Tooltip("How quickly the stamina effect fades in and out.")]
+    public float staminaEffectSmoothTime = 0.5f;
+    
+    // private float baseChromaticAberrationIntensity;
+    // private float targetChromaticAberrationIntensity;
+    // private float chromaticAberrationVelocity;
+
+    private float baseTemperature;
+    private float targetTemperature;
+    private float temperatureVelocity;
 
     private void Awake()
     {
@@ -38,6 +60,8 @@ public class EffectsManager : MonoBehaviour
             postProcessVolume.profile.TryGet(out vignette);
             postProcessVolume.profile.TryGet(out depthOfField);
             postProcessVolume.profile.TryGet(out colorAdjustments);
+            // postProcessVolume.profile.TryGet(out chromaticAberration);
+            postProcessVolume.profile.TryGet(out whiteBalance);
         }
 
         if (vignette == null)
@@ -53,6 +77,61 @@ public class EffectsManager : MonoBehaviour
         if (colorAdjustments == null)
         {
             Debug.LogWarning("ColorAdjustments not found on a Post Process Volume in the scene. The black and white effect will not work.");
+        }
+
+        // if (chromaticAberration != null)
+        // {
+        //     baseChromaticAberrationIntensity = chromaticAberration.intensity.value;
+        //     targetChromaticAberrationIntensity = baseChromaticAberrationIntensity;
+        // }
+        // else
+        // {
+        //     Debug.LogWarning("ChromaticAberration not found on a Post Process Volume in the scene. The stamina effect will not work.");
+        // }
+
+        if (whiteBalance != null)
+        {
+            baseTemperature = whiteBalance.temperature.value;
+            targetTemperature = baseTemperature;
+        }
+        else
+        {
+            Debug.LogWarning("WhiteBalance not found on a Post Process Volume in the scene. The stamina temperature effect will not work.");
+        }
+    }
+
+    private void Update()
+    {
+        // if (chromaticAberration != null)
+        // {
+        //     float currentIntensity = chromaticAberration.intensity.value;
+        //     float newIntensity = Mathf.SmoothDamp(currentIntensity, targetChromaticAberrationIntensity, ref chromaticAberrationVelocity, staminaEffectSmoothTime);
+        //     chromaticAberration.intensity.Override(newIntensity);
+        // }
+
+        if (whiteBalance != null)
+        {
+            float currentTemperature = whiteBalance.temperature.value;
+            float newTemperature = Mathf.SmoothDamp(currentTemperature, targetTemperature, ref temperatureVelocity, staminaEffectSmoothTime);
+            whiteBalance.temperature.Override(newTemperature);
+        }
+    }
+
+    public void UpdateStaminaEffect(float staminaPercentage)
+    {
+        // if (chromaticAberration != null)
+        // {
+        //     // Invert the percentage: low stamina = high effect intensity
+        //     // Calculate the *additional* intensity based on stamina drain
+        //     float intensityDelta = (1.0f - staminaPercentage) * maxStaminaChromaticAberration;
+        //     targetChromaticAberrationIntensity = baseChromaticAberrationIntensity + intensityDelta;
+        // }
+        
+        if (whiteBalance != null)
+        {
+            // Invert the percentage: low stamina = colder temperature
+            float temperatureDelta = (1.0f - staminaPercentage) * maxStaminaTemperatureShift;
+            targetTemperature = baseTemperature + temperatureDelta;
         }
     }
 

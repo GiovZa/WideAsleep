@@ -4,7 +4,7 @@ public class OnesideDoorTrigger : Interactable
 {
     OnesideDoorController doorController;
     [SerializeField] bool unlockFromThisSide;
-    [SerializeField] Outline doorOutline;
+    [SerializeField] QuickOutline doorOutline;
 
     public override void Start()
     {

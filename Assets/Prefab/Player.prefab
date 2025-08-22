@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8583526281846590103}
+  - component: {fileID: 5804778731400172916}
   - component: {fileID: 5627215174818730747}
   - component: {fileID: 5983470323781372672}
   - component: {fileID: 9092502506809099772}
@@ -17,7 +18,7 @@ GameObject:
   - component: {fileID: 536183665020882965}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -36,8 +37,22 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8261344346183648188}
+  - {fileID: 101491244701401858}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5804778731400172916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6700985936480113284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b90e03801b768645a1608dae5bccb52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canDie: 1
 --- !u!114 &5627215174818730747
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64,6 +79,10 @@ MonoBehaviour:
   AccelerationSpeedInAir: 5
   SprintSpeedModifier: 1.5
   KillHeight: -50
+  MaxStamina: 100
+  StaminaDrainRate: 35
+  StaminaRegenerationRate: 20
+  StaminaRegenerationDelay: 1
   RotationSpeed: 2
   AimingRotationMultiplier: 0.4
   isInverted: 0
@@ -74,7 +93,12 @@ MonoBehaviour:
   CrouchingSharpness: 10
   FootstepSfxFrequency: 0.3
   FootstepSfxFrequencyWhileSprinting: 0.3
-  FootstepSfx: {fileID: 8300000, guid: dc8c457c0e08efc4284e79262e9bae2c, type: 3}
+  FootstepSfx:
+  - {fileID: 8300000, guid: 66482d870d0f80347aae2f0ecb3c81f3, type: 3}
+  - {fileID: 8300000, guid: f85beecee4204224aafbd92e315a7ab8, type: 3}
+  - {fileID: 8300000, guid: 645b8aaa80774cd449b35da21581c795, type: 3}
+  FootstepVolumeRange: {x: 0.85, y: 1.1}
+  FootstepPitchRange: {x: 0.9, y: 1.1}
   noiseMeter: 10
   JumpSfx: {fileID: 0}
   LandSfx: {fileID: 0}
@@ -286,7 +310,7 @@ GameObject:
   - component: {fileID: 8261344346183648188}
   - component: {fileID: 6806078760192323123}
   - component: {fileID: 4466014407329690833}
-  - component: {fileID: -8427413806365767691}
+  - component: {fileID: 1629691054998053365}
   m_Layer: 0
   m_Name: MainCamera
   m_TagString: Untagged
@@ -341,7 +365,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 40
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -368,7 +392,7 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8869429432111375642}
   m_Enabled: 1
---- !u!114 &-8427413806365767691
+--- !u!114 &1629691054998053365
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -391,7 +415,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -412,3 +436,131 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!1 &8959815880512956746
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 101491244701401858}
+  - component: {fileID: 1541215886696021745}
+  m_Layer: 0
+  m_Name: Stamina Audio Source
+  m_TagString: StaminaAudioSource
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &101491244701401858
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8959815880512956746}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8583526281846590103}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &1541215886696021745
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8959815880512956746}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: f8eb6d1add8cc4943ac929bbcd069d69, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

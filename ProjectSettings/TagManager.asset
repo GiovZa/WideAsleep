@@ -10,6 +10,7 @@ TagManager:
   - DoorFront
   - DoorBack
   - NoisySurface
+  - StaminaAudioSource
   layers:
   - Default
   - TransparentFX

@@ -3,7 +3,12 @@ guid: da5813e8efed9fb4985f32ff0c97da21
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: copperlock_m
+    second: {fileID: 2100000, guid: b8deaa6cf0e18ac48b00b9c5119a8481, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

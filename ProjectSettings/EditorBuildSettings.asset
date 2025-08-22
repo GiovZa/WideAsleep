@@ -12,6 +12,6 @@ EditorBuildSettings:
     path: Assets/Scenes/WIDE ASLEEP SUILIN/WIDE ASLEEP SUILIN.unity
     guid: 6636a1820a6b848aca6e044b12e329c8
   - enabled: 1
-    path: Assets/Scenes/TEMP_DeathMenu.unity
-    guid: d65d707432191624d9bc585e410a2b77
+    path: Assets/Scenes/LevelHearing_BossPrototype/LevelHearing_BossPrototype.unity
+    guid: 95b5d79f972c5114f81e5cf66a2aa68c
   m_configObjects: {}

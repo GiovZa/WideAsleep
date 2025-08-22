@@ -628,9 +628,9 @@ MonoBehaviour:
   maxSearchPointDistance: 6
   minSearchPointDistance: 4
   maxSearchAttempts: 10
-  searchDurationAtPoint: 1
+  searchDurationAtPoint: 0.5
   angleSpread: 30
-  numPointsToTry: 2
+  numPointsToTry: 3
 --- !u!114 &913150443022887199
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -643,8 +643,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68ba4db1ca068224f883ac4ce3ac10cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewDistance: 10
-  viewAngle: 90
+  viewDistance: 8
+  viewAngle: 70
   playerMask:
     serializedVersion: 2
     m_Bits: 0
@@ -663,7 +663,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab01aa8bd336a2041ae8c7a614007727, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hearingRadius: 15
+  hearingRadius: 20
   playerMask:
     serializedVersion: 2
     m_Bits: 0
@@ -680,7 +680,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xRayColor: {r: 1, g: 0, b: 0, a: 1}
-  xRayIntensity: 1
+  xRayIntensity: 3
   XRayLayer:
     serializedVersion: 2
     m_Bits: 512

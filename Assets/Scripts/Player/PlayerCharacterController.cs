@@ -47,6 +47,19 @@ namespace playerChar
         [Tooltip("Height at which the player dies instantly when falling off the map")]
         public float KillHeight = -50f;
 
+        [Header("Stamina")]
+        [Tooltip("Maximum stamina for sprinting.")]
+        public float MaxStamina = 100f;
+
+        [Tooltip("The rate at which stamina drains while sprinting.")]
+        public float StaminaDrainRate = 20f;
+
+        [Tooltip("The rate at which stamina regenerates.")]
+        public float StaminaRegenerationRate = 15f;
+        
+        [Tooltip("The delay in seconds before stamina begins to regenerate after sprinting.")]
+        public float StaminaRegenerationDelay = 2f;
+
         [Header("Rotation")] [Tooltip("Rotation speed for moving the camera")]
         public float RotationSpeed = 2f;
 
@@ -78,8 +91,14 @@ namespace playerChar
         [Tooltip("Amount of footstep sounds played when moving one meter while sprinting")]
         public float FootstepSfxFrequencyWhileSprinting = 1f;
 
-        [Tooltip("Sound played for footsteps")]
-        public AudioClip FootstepSfx;
+        [Tooltip("Sounds played for footsteps")]
+        public AudioClip[] FootstepSfx;
+
+        [Tooltip("Random volume variation for footsteps")]
+        public Vector2 FootstepVolumeRange = new Vector2(0.8f, 1.0f);
+
+        [Tooltip("Random pitch variation for footsteps")]
+        public Vector2 FootstepPitchRange = new Vector2(0.95f, 1.05f);
 
         public float noiseMeter = 10f;
 
@@ -87,8 +106,6 @@ namespace playerChar
         [Tooltip("Sound played when landing")] public AudioClip LandSfx;
 
         [Header("Noisy Surfaces")]
-        [Tooltip("Tag for surfaces that make a sound when stepped on.")]
-        public string NoisySurfaceTag = "NoisySurface";
         [Tooltip("Cooldown in seconds between playing noisy surface sounds.")]
         public float NoisySurfaceSfxCooldown = 0.5f;
 
@@ -104,7 +121,7 @@ namespace playerChar
         public bool HasJumpedThisFrame { get; private set; }
         public bool IsDead { get; private set; }
         public bool IsCrouching { get; private set; }
-
+        public float CurrentStamina { get; private set; }
         private bool CanMove = true;
         public Transform lookTarget;
 
@@ -117,6 +134,7 @@ namespace playerChar
         float m_CameraVerticalAngle = 0f;
         float m_FootstepDistanceCounter;
         float m_TargetCharacterHeight;
+        float m_StaminaRegenerationTimer;
 
         const float k_JumpGroundingPreventionTime = 0.2f;
         const float k_GroundCheckDistanceInAir = 0.07f;
@@ -156,6 +174,8 @@ namespace playerChar
             // force the crouch state to false when starting
             SetCrouchingState(false, true);
             UpdateCharacterHeight(true);
+
+            CurrentStamina = MaxStamina;
         }
 
         void Update()
@@ -313,22 +333,56 @@ namespace playerChar
 
         void HandleMovement()
         {
+            Vector3 moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
+
+            // --- Stamina Logic ---
+            bool wantsToSprint = Input.GetButton("Sprint");
+            bool isSprinting = wantsToSprint && CurrentStamina > 0f && IsGrounded && !IsCrouching;
+            
+            // If the player wants to sprint, but is crouching, try to stand up
+            if (wantsToSprint && IsCrouching)
+            {
+                if (SetCrouchingState(false, false))
+                {
+                    isSprinting = CurrentStamina > 0f && IsGrounded;
+                }
+            }
+
+            // Drain stamina if sprinting and moving
+            if (isSprinting && moveInput.magnitude > 0.1f)
+            {
+                CurrentStamina -= StaminaDrainRate * Time.deltaTime;
+                CurrentStamina = Mathf.Max(CurrentStamina, 0f);
+                m_StaminaRegenerationTimer = StaminaRegenerationDelay;
+            }
+            else
+            {
+                // Regenerate stamina
+                if (m_StaminaRegenerationTimer > 0)
+                {
+                    m_StaminaRegenerationTimer -= Time.deltaTime;
+                }
+                else if (CurrentStamina < MaxStamina)
+                {
+                    CurrentStamina += StaminaRegenerationRate * Time.deltaTime;
+                    CurrentStamina = Mathf.Min(CurrentStamina, MaxStamina);
+                }
+            }
+            // --- End Stamina Logic ---
+
             // character movement handling
-            bool isSprinting = Input.GetButton("Sprint");
             {
                 if (isSprinting)
                 {
+                    // This check is now implicitly handled by the stamina logic, 
+                    // but we keep it to ensure crouch state is correctly managed if stamina runs out mid-sprint.
                     isSprinting = SetCrouchingState(false, false);
                 }
 
                 float speedModifier = isSprinting ? SprintSpeedModifier : 1f;
 
                 // converts move input to a worldspace vector based on our character's transform orientation
-                Vector3 moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
-
-                // Constrain move input to max magnitude of 1 (prevents diagonal speed boost)
-                moveInput = Vector3.ClampMagnitude(moveInput, 1);
-                Vector3 worldspaceMoveInput = transform.TransformVector(moveInput);
+                Vector3 worldspaceMoveInput = transform.TransformVector(Vector3.ClampMagnitude(moveInput, 1));
 
                 // handle grounded movement
                 if (IsGrounded)
@@ -385,17 +439,20 @@ namespace playerChar
                         {
                             m_FootstepDistanceCounter = 0f;
                             
-                            if (FootstepSfx != null)
+                            if (FootstepSfx != null && FootstepSfx.Length > 0)
                             {
-                                audioSource.pitch = isSprinting ? 1.2f : 1f;
+                                int index = UnityEngine.Random.Range(0, FootstepSfx.Length);
+                                AudioClip clip = FootstepSfx[index];
 
-                                if (IsCrouching)
-                                    audioSource.volume = 0.2f;
-                                else
-                                    audioSource.volume = isSprinting ? 1f : 0.5f;
+                                float basePitch = isSprinting ? 1.2f : 1f;
+                                audioSource.pitch = basePitch * UnityEngine.Random.Range(FootstepPitchRange.x, FootstepPitchRange.y);
 
-                                audioSource.volume *= 0.1f;
-                                audioSource.PlayOneShot(FootstepSfx);
+                                float baseVolume = IsCrouching ? 0.2f : (isSprinting ? 1f : 0.5f);
+                                audioSource.volume = baseVolume * UnityEngine.Random.Range(FootstepVolumeRange.x, FootstepVolumeRange.y);
+                                
+                                //audioSource.volume *= 0.1f;
+
+                                audioSource.PlayOneShot(clip);
                                 SoundEvents.EmitSound(transform.position, audioSource.volume * noiseMeter);
                             }
 
@@ -462,22 +519,18 @@ namespace playerChar
             // Make sure we are grounded and moving to trigger the sound
             if (IsGrounded && CharacterVelocity.magnitude > 0.2f)
             {
-                // Check if the object has the specified tag
-                if (!string.IsNullOrEmpty(NoisySurfaceTag) && other.gameObject.CompareTag(NoisySurfaceTag))
+                // Check if the object has a NoisySurface component
+                NoisySurface surface = other.gameObject.GetComponent<NoisySurface>();
+
+                if (surface != null)
                 {
                     // Check if the cooldown has passed
                     if (Time.time >= m_LastTimeNoisySurfaceSfxPlayed + NoisySurfaceSfxCooldown)
                     {
-                        // Try to get an AudioSource from the collided object
-                        AudioSource surfaceAudio = other.gameObject.GetComponent<AudioSource>();
-
                         // Use AudioManager to play the sound at the collision point
-                        if (AudioManager.Instance != null && surfaceAudio != null && surfaceAudio.clip != null)
+                        if (AudioManager.Instance != null)
                         {
-                            AudioManager.Instance.Play(surfaceAudio.clip, other.transform.position, surfaceAudio.volume);
-                            
-                            // Emit sound for AI
-                            SoundEvents.EmitSound(transform.position, surfaceAudio.volume * noiseMeter);
+                            AudioManager.Instance.PlayNoisySurfaceSound(surface.surfaceType, transform.position);
 
                             // Reset cooldown timer
                             m_LastTimeNoisySurfaceSfxPlayed = Time.time;
