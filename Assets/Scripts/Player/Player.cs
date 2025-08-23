@@ -5,6 +5,7 @@ public class Player : MonoBehaviour
 {
     [Tooltip("For Testing Use")]
     public bool canDie = true;
+    public bool IsHiding { get; set; }
     private bool isDead = false;
     private int currentSceneIndex;
 

@@ -11,6 +11,12 @@ public class Vision : MonoBehaviour
 
     public bool CanSeePlayer(Transform player)
     {
+        Player playerState = player.GetComponent<Player>();
+        if (playerState != null && playerState.IsHiding)
+        {
+            return false;
+        }
+        
         Vector3 dirToPlayer = (player.position - transform.position).normalized;
 
         if (Vector3.Angle(transform.forward, dirToPlayer) < viewAngle / 2f)

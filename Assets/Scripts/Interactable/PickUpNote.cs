@@ -4,21 +4,16 @@ public class PickupNote : Interactable
 {
     [SerializeField] private AudioClip pickupSound;
 
-    private void Awake()
+    public override void Interact(GameObject interactor)
     {
-        pickupSound = GetComponent<AudioSource>().clip;
-    }
-
-    public override void Interact()
-    {
-        base.Interact(); // Calls the base message + UnityEvent
+        base.Interact(interactor); // Calls the base message + UnityEvent
         Debug.Log("Note picked up!");
 
         NoteManager.Instance.CollectNote();
 
         if (pickupSound != null)
         {
-            AudioSource.PlayClipAtPoint(pickupSound, transform.position);
+            AudioManager.Instance.PlaySoundForPlayerOnly(pickupSound, transform.position, 1f, true);
         }
 
         gameObject.SetActive(false); // Disables the note

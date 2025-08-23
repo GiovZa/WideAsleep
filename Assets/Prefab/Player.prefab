@@ -16,6 +16,8 @@ GameObject:
   - component: {fileID: 6023626159821768203}
   - component: {fileID: 4339248304144422593}
   - component: {fileID: 536183665020882965}
+  - component: {fileID: 6657441970045153162}
+  - component: {fileID: 7198970837452929405}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -38,6 +40,7 @@ Transform:
   m_Children:
   - {fileID: 8261344346183648188}
   - {fileID: 101491244701401858}
+  - {fileID: 6299546429172198232}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5804778731400172916
@@ -72,7 +75,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   GroundCheckDistance: 1
-  MaxSpeedOnGround: 5
+  MaxSpeedOnGround: 4
   MovementSharpnessOnGround: 5
   MaxSpeedCrouchedRatio: 0.5
   MaxSpeedInAir: 2
@@ -102,12 +105,12 @@ MonoBehaviour:
   noiseMeter: 10
   JumpSfx: {fileID: 0}
   LandSfx: {fileID: 0}
-  NoisySurfaceTag: NoisySurface
   NoisySurfaceSfxCooldown: 1
   HeadbobAmountWalk: 0.12
   HeadbobAmountSprint: 0.08
   HeadbobSpeed: 1
   lookTarget: {fileID: 0}
+  lookTargetOffset: {x: 0, y: 0, z: 0}
 --- !u!143 &5983470323781372672
 CharacterController:
   m_ObjectHideFlags: 0
@@ -152,7 +155,7 @@ AudioSource:
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
+  Priority: 50
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500
@@ -299,6 +302,71 @@ MonoBehaviour:
   clearEnd: 50
   clearMaxRadius: 0.5
   vignetteIntensity: 0.15
+  highlightDistance: 20
+--- !u!114 &6657441970045153162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6700985936480113284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6bbc15dc6e796c4b9e3bb4572ef515f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectToThrowPrefab: {fileID: 3491303132119564599, guid: e1e074cf0e491684788645bad0cb769e, type: 3}
+  throwPoint: {fileID: 6299546429172198232}
+  throwForce: 15
+  throwAngle: 15
+  throwKey: 103
+--- !u!114 &7198970837452929405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6700985936480113284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52427bd4cd32b7e4eb6781e6c69a9a9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detectionIcon: {fileID: 0}
+  heartbeatAudioSource: {fileID: 9092502506809099772}
+  heartbeatSound: {fileID: 8300000, guid: fb99e77e73637604ab6b1c1ccdc87a8e, type: 3}
+  aiSpottedSound: {fileID: 0}
+--- !u!1 &8720869365300973038
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6299546429172198232}
+  m_Layer: 0
+  m_Name: ThrowingPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6299546429172198232
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8720869365300973038}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.3067962, y: 1.6999998, z: 0.07665321}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8583526281846590103}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8869429432111375642
 GameObject:
   m_ObjectHideFlags: 0
@@ -327,7 +395,7 @@ Transform:
   m_GameObject: {fileID: 8869429432111375642}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1.5999999, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

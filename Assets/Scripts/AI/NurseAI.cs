@@ -43,6 +43,12 @@ public class NurseAI : MonoBehaviour
     {
         Debug.Log($"[NurseAI] Transitioning from {currentState?.GetType().Name} to {newState.GetType().Name}");
 
+        // Notify that the player is safe if transitioning from a danger state to patrol
+        if ((currentState == alertState || currentState == chaseState) && newState == patrolState)
+        {
+            AINotifier.NotifyEnemyLostPlayer(this.gameObject);
+        }
+
         currentState?.Exit();
         currentState = newState;
         currentState?.Enter();

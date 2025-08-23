@@ -16,6 +16,7 @@ public class AlertState : IState
     private float stareTimer;
     private bool isStaring;
 
+    private bool wasTriggeredBySound = false;
     private bool reachedLastPosition = false;
     private Vector3 lastKnownPosition;
     private Vector3 lastSeenDirection;
@@ -51,12 +52,14 @@ public class AlertState : IState
 
         if (!overrideFromSound)
         {
+            wasTriggeredBySound = false;
             lastKnownPosition = player.position;
             previousPlayerPosition = player.position;
             lastSeenDirection = (player.position - nurseAI.transform.position).normalized;
         }
         else
         {
+            wasTriggeredBySound = true;
             overrideFromSound = false; // reset after use
         }
 
@@ -67,7 +70,7 @@ public class AlertState : IState
         };
 
         alert.GoToLastKnownPosition(lastKnownPosition);
-        Debug.Log("[AlertState] Moving to player's last known position");
+        Debug.Log($"[AlertState] Moving to last known position: {lastKnownPosition}");
 
         if (animator != null)
         {
@@ -79,10 +82,16 @@ public class AlertState : IState
     {
         lastKnownPosition = soundPos;
         lastSeenDirection = (soundPos - nurseAI.transform.position).normalized;
-        previousPlayerPosition = soundPos;
         reachedLastPosition = false;
         hasScanned = false;
         overrideFromSound = true;
+
+        // Immediately tell the AI to go to the new position
+        // This prevents the Update loop from overriding it in the same frame.
+        if (alert != null)
+        {
+            alert.GoToLastKnownPosition(soundPos);
+        }
     }
 
     public void Update()
@@ -106,6 +115,9 @@ public class AlertState : IState
 
             if (!isStaring)
             {
+                // This is the first frame of visual contact in this state. Notify the player.
+                AINotifier.NotifyEnemySpottedPlayer(nurseAI.gameObject);
+
                 isStaring = true;
                 stareTimer = stareTime;
                 Debug.Log("[AlertState] Player spotted. Beginning stare down...");
@@ -122,6 +134,13 @@ public class AlertState : IState
                 Debug.Log("[AlertState] Stare complete. Transitioning to ChaseState.");
                 nurseAI.TransitionToState(nurseAI.chaseState);
             }
+
+        if (Vector3.Distance(nurseAI.transform.position, player.position) <= nurseAI.killRange)
+        {
+            Debug.Log("[AlertState] Player in kill range. Stopping and transitioning to KillState.");
+            navMeshAgent.isStopped = true;
+            nurseAI.TransitionToState(nurseAI.killState);
+        }
 
             return;
         }
@@ -143,15 +162,24 @@ public class AlertState : IState
                 reachedLastPosition = true;
                 hasScanned = true;
 
-                // Directly start the search instead of scanning here
-                Vector3 playerMovementDir = (player.position - previousPlayerPosition).normalized;
-                previousPlayerPosition = player.position;
+                // Start the search based on what triggered the alert.
+                if (wasTriggeredBySound)
+                {
+                    // If triggered by sound, search in the direction the sound came from.
+                    search.StartSearch(nurseAI.transform.position, lastSeenDirection);
+                }
+                else
+                {
+                    // If triggered by sight, search in the direction the player was moving.
+                    Vector3 playerMovementDir = (player.position - previousPlayerPosition).normalized;
+                    previousPlayerPosition = player.position;
 
-                // Fallback if player isn't moving
-                if (playerMovementDir == Vector3.zero)
-                    playerMovementDir = (player.position - nurseAI.transform.position).normalized;
+                    // Fallback if player isn't moving
+                    if (playerMovementDir == Vector3.zero)
+                        playerMovementDir = (player.position - nurseAI.transform.position).normalized;
 
-                search.StartSearch(nurseAI.transform.position, playerMovementDir);
+                    search.StartSearch(nurseAI.transform.position, playerMovementDir);
+                }
             }
             else
             {

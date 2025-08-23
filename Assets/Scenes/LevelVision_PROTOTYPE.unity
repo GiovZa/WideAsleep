@@ -1852,6 +1852,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseMenu: {fileID: 240048606}
+  deathScreen: {fileID: 0}
+  HUD: {fileID: 0}
   canvasGroup: {fileID: 38667464}
   fadeTime: 1
   loadWaitTime: 1
@@ -1865,6 +1867,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  staminaAudioThreshold: 0.3
 --- !u!1 &378453110
 GameObject:
   m_ObjectHideFlags: 0
@@ -2583,6 +2586,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86cb168838cd92347af4cf85e4a0fe9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  soundClip: {fileID: 0}
 --- !u!1 &434154519
 GameObject:
   m_ObjectHideFlags: 0
@@ -5757,6 +5761,7 @@ MonoBehaviour:
   clearEnd: 50
   clearMaxRadius: 0.5
   vignetteIntensity: 0.15
+  highlightDistance: 20
 --- !u!114 &1081979684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5781,6 +5786,7 @@ MonoBehaviour:
   vignetteStayTime: 2.5
   vignetteFadeOutTime: 0.5
   vignetteMaxIntensity: 0.6
+  setSaturation: -60
 --- !u!114 &1081979685
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7141,6 +7147,63 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7397614166772106959, guid: 08b145b7c6a8d5c4ca1400d774e0fb7c, type: 3}
   m_PrefabInstance: {fileID: 1405834090}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1442471685
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 7903115610902475712, guid: 7ed9960714c900841b20da1e562fcf5d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.679
+      objectReference: {fileID: 0}
+    - target: {fileID: 7903115610902475712, guid: 7ed9960714c900841b20da1e562fcf5d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.0001001358
+      objectReference: {fileID: 0}
+    - target: {fileID: 7903115610902475712, guid: 7ed9960714c900841b20da1e562fcf5d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -2.671
+      objectReference: {fileID: 0}
+    - target: {fileID: 7903115610902475712, guid: 7ed9960714c900841b20da1e562fcf5d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7903115610902475712, guid: 7ed9960714c900841b20da1e562fcf5d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7903115610902475712, guid: 7ed9960714c900841b20da1e562fcf5d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7903115610902475712, guid: 7ed9960714c900841b20da1e562fcf5d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7903115610902475712, guid: 7ed9960714c900841b20da1e562fcf5d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7903115610902475712, guid: 7ed9960714c900841b20da1e562fcf5d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7903115610902475712, guid: 7ed9960714c900841b20da1e562fcf5d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8130319280671467464, guid: 7ed9960714c900841b20da1e562fcf5d, type: 3}
+      propertyPath: m_Name
+      value: Closet
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 7ed9960714c900841b20da1e562fcf5d, type: 3}
 --- !u!1 &1463919104
 GameObject:
   m_ObjectHideFlags: 0
@@ -7785,6 +7848,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc5976cbbb228654cbff2f7c8afaa9d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxStaminaTemperatureShift: -40
+  staminaEffectSmoothTime: 0.5
 --- !u!1 &1567587300
 GameObject:
   m_ObjectHideFlags: 0
@@ -10071,6 +10136,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 800af056cba96ef47961254a3ed4d0fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  noisySurfaceSounds: []
 --- !u!1 &2052420386
 GameObject:
   m_ObjectHideFlags: 0
@@ -10470,7 +10536,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2096908824
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10675,3 +10741,4 @@ SceneRoots:
   - {fileID: 1019137479}
   - {fileID: 168024267}
   - {fileID: 404157046}
+  - {fileID: 1442471685}

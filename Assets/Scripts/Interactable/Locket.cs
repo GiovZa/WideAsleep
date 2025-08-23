@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class Locket : Interactable
 {
-    public override void Interact()
+    public override void Interact(GameObject interactor)
     {
-        base.Interact();
-
-        gameObject.SetActive(false); // Disables the locket
+        base.Interact(interactor);
     }
 }

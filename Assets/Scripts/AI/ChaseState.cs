@@ -25,6 +25,7 @@ public class ChaseState : IState
 
         chase.enabled = true;
         chase.StartChasing(player);
+        AINotifier.NotifyEnemySpottedPlayer(nurseAI.gameObject);
 
         animator.SetBool("isChasing", true);
     }

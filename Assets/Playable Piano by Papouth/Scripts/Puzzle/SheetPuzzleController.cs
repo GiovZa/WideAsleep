@@ -5,7 +5,17 @@ public class SheetPuzzleController : MonoBehaviour
 {
     [SerializeField] private List<DraggablePiece> pieces;
 
+    void Start()
+    {
+        UpdatePiecesDisplay();
+    }
+
     void OnEnable()
+    {
+        UpdatePiecesDisplay();
+    }
+
+    private void UpdatePiecesDisplay()
     {
         int notes = NoteManager.Instance.GetNoteCount();
         for (int i = 0; i < pieces.Count; i++)

@@ -17,11 +17,11 @@ public class HearingSense : SenseBase
     [SerializeField] [Range(0, 1)] private float vignetteMaxIntensity = 0.6f;
     [SerializeField] [Range(-100,100)] private int setSaturation = -60;
 
-    private List<SoundEmitter> soundEmitters = new List<SoundEmitter>();
+    private List<SoundEmitterHint> soundEmitters = new List<SoundEmitterHint>();
     private List<SwitchLayer> switchableObjects = new List<SwitchLayer>();
     
     // Lists to track objects affected by the current pulse
-    private List<SoundEmitter> activeEmitters = new List<SoundEmitter>();
+    private List<SoundEmitterHint> activeEmitters = new List<SoundEmitterHint>();
     private List<SwitchLayer> activeSwitchableObjects = new List<SwitchLayer>();
 
     protected override float EffectDuration => revealTime;
@@ -39,7 +39,7 @@ public class HearingSense : SenseBase
     void CacheSoundEmitters()
     {
         soundEmitters.Clear();
-        soundEmitters.AddRange(FindObjectsOfType<SoundEmitter>());
+        soundEmitters.AddRange(FindObjectsOfType<SoundEmitterHint>());
     }
 
     void CacheSwitchableObjects()
@@ -73,7 +73,6 @@ public class HearingSense : SenseBase
                 float adjustedVolume = Mathf.Clamp01(1 - (distance / maxDistance)) * normalVolume;
                 emitter.PlaySound(adjustedVolume);
                 emitter.SetVisible(true);
-                emitter.ToggleHighlight(true);
                 activeEmitters.Add(emitter);
             }
         }
@@ -104,9 +103,7 @@ public class HearingSense : SenseBase
         {
             if (emitter != null)
             {
-                emitter.StopSound();
                 emitter.SetVisible(false);
-                emitter.ToggleHighlight(false);
             }
         }
 
@@ -121,7 +118,7 @@ public class HearingSense : SenseBase
     }
 
     // Call this if you spawn new objects dynamically during gameplay
-    public void RegisterSoundEmitter(SoundEmitter emitter)
+    public void RegisterSoundEmitter(SoundEmitterHint emitter)
     {
         if (!soundEmitters.Contains(emitter))
         {

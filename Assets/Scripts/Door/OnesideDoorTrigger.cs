@@ -12,12 +12,12 @@ public class OnesideDoorTrigger : Interactable
         doorController = GetComponentInParent<OnesideDoorController>();
         
         outline = doorOutline;
-        DisableOutline();
+        ReleaseOutline();
     }
 
-    public override void Interact()
+    public override void Interact(GameObject interactor)
     {
-        base.Interact();
+        base.Interact(interactor);
         if (unlockFromThisSide)
             doorController.OpenFromBack();
         else

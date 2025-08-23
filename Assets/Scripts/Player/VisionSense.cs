@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 /// <summary>
 /// Manages the player's "Vision Sense" ability, which clarifies the screen by disabling Depth of Field.
@@ -27,7 +28,27 @@ public class VisionSense : SenseBase
     [Range(0, 1)]
     public float vignetteIntensity = 0.15f;
 
+    [Header("Highlight Settings")]
+    [SerializeField] private float highlightDistance = 20f;
+    private List<Interactable> highlightableObjects = new List<Interactable>();
+    private List<Interactable> highlightedObjects = new List<Interactable>();
+
     protected override float EffectDuration => effectDuration;
+
+    protected override void Start()
+    {
+        base.Start();
+        
+        VisionSenseHighlight[] targets = FindObjectsOfType<VisionSenseHighlight>();
+        foreach (var target in targets)
+        {
+            Interactable interactable = target.GetComponent<Interactable>();
+            if (interactable != null)
+            {
+                highlightableObjects.Add(interactable);
+            }
+        }
+    }
 
     protected override void ActivateSense()
     {
@@ -36,6 +57,33 @@ public class VisionSense : SenseBase
         {
             effectsManager.TriggerVisionSense(effectDuration, FadeInTime, clearStart, clearEnd, clearMaxRadius);
             effectsManager.PulseVignette(FadeInTime, effectDuration, FadeOutTime, vignetteIntensity);
+        }
+
+        Vector3 playerPosition = transform.position;
+        highlightedObjects.Clear();
+
+        foreach (var interactable in highlightableObjects)
+        {
+            if (interactable != null && Vector3.Distance(playerPosition, interactable.transform.position) <= highlightDistance)
+            {
+                interactable.RequestOutline();
+                highlightedObjects.Add(interactable);
+            }
+        }
+
+        StartCoroutine(StopHighlightAfterDelay(effectDuration));
+    }
+
+    private System.Collections.IEnumerator StopHighlightAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        foreach (var interactable in highlightedObjects)
+        {
+            if (interactable != null)
+            {
+                interactable.ReleaseOutline();
+            }
         }
     }
 }

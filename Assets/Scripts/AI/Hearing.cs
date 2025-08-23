@@ -7,6 +7,16 @@ public class Hearing : MonoBehaviour
 {
     public float hearingRadius = 5f;
     public LayerMask playerMask;
+    private Player player;
+
+    void Start()
+    {
+        GameObject playerObj = GameObject.FindWithTag("Player");
+        if (playerObj != null)
+        {
+            player = playerObj.GetComponent<Player>();
+        }
+    }
 
     public bool HeardPlayer(Vector3 noiseSource)
     {
@@ -27,13 +37,18 @@ public class Hearing : MonoBehaviour
 
     private void OnSoundHeard(Vector3 soundPos, float radius)
     {
+        if (player != null && player.IsHiding)
+        {
+            return;
+        }
+
         float distance = Vector3.Distance(transform.position, soundPos);
         if (distance <= hearingRadius && distance <= radius)
         {
             Debug.Log($"[Hearing] Heard sound at {soundPos}, distance = {distance}");
 
             NurseAI ai = GetComponent<NurseAI>();
-            if (ai != null && ai.currentState != ai.chaseState)
+            if (ai != null && ai.currentState != ai.chaseState && ai.currentState != ai.killState)
             {
                 Vector3 searchDir = (soundPos - transform.position).normalized;
 
@@ -44,7 +59,7 @@ public class Hearing : MonoBehaviour
         }
         else
         {
-            // Add detailed log for why the sound was ignored
+            // // Add detailed log for why the sound was ignored
             // Debug.LogWarning($"[Hearing] Sound IGNORED at {soundPos}. " +
             //                  $"Distance: {distance:F2}, " +
             //                  $"AI Hearing Radius: {hearingRadius}, " +

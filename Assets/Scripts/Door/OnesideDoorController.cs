@@ -13,6 +13,7 @@ public class OnesideDoorController : MonoBehaviour
     [Header("Audio")]
     public AudioClip openSfx;
     public AudioClip lockedSfx;
+    [SerializeField] float SfxRadius = 3f;
     AudioSource audioSource;
     Animator doorAnimator;
     //OcclusionPortal occlusionPortal;
@@ -69,13 +70,13 @@ public class OnesideDoorController : MonoBehaviour
             //StartCoroutine(CloseOcclusionPortal());
         }
 
-        AudioManager.Instance.Play(openSfx, transform.position, 1f);
+        AudioManager.Instance.Play(openSfx, transform.position, 1f, SfxRadius);
     }
 
     private void PlayLockedFeedback()
     {
         doorAnimator.SetTrigger("Open");
-        AudioManager.Instance.Play(lockedSfx, transform.position, 1f);
+        AudioManager.Instance.Play(lockedSfx, transform.position, 1f, SfxRadius);
     }
 
     // IEnumerator CloseOcclusionPortal()

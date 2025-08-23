@@ -82,7 +82,7 @@ public class Piano : Interactable
     }
 
     #region Interaction Implementation
-    public override void Interact()
+    public override void Interact(GameObject interactor)
     {
         if (isPianoActive)
         {

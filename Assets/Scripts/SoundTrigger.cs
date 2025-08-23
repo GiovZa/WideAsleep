@@ -5,6 +5,7 @@ public class SoundTrigger : MonoBehaviour
 {
     [Header("Global Settings")]
     public float volume = 1f;
+    public float soundRadius = 5f;
     public bool spatial = true;
     public AudioMixerGroup mixerGroup;
 
@@ -16,26 +17,31 @@ public class SoundTrigger : MonoBehaviour
     public AudioClip interactClip;
     public KeyCode interactKey = KeyCode.E;
     public float interactRadius = 3f;
+    public float interactSoundRadius = 7f;
 
     [Header("Timer Trigger")]
     public AudioClip timerClip;
     public float timerDelay = 5f;
     public bool timerLoop = false;
+    public float timerSoundRadius = 10f;
     private float timer;
     private bool hasPlayedTimer = false;
 
     [Header("Repeat Trigger")]
     public AudioClip repeatClip;
     public float repeatInterval = 5f;
+    public float repeatSoundRadius = 5f;
     private float repeatTimer;
 
     [Header("State Change Trigger")]
     public AudioClip stateChangeClip;
     public bool currentState;
+    public float stateChangeSoundRadius = 5f;
     private bool lastState;
 
     [Header("Animation Event")]
     public AudioClip animationEventClip;
+    public float animationEventSoundRadius = 5f;
 
     private Transform player;
 
@@ -60,7 +66,7 @@ public class SoundTrigger : MonoBehaviour
         {
             if (other.CompareTag(tag))
             {
-                PlayClip(stepClip);
+                PlayClip(stepClip, soundRadius);
                 break;
             }
         }
@@ -75,7 +81,7 @@ public class SoundTrigger : MonoBehaviour
             Debug.Log("E pressesd");
             Debug.Log(Vector3.Distance(player.position, gameObject.transform.position));
             if (Vector3.Distance(player.position, gameObject.transform.position) <= interactRadius)
-                PlayClip(interactClip);
+                PlayClip(interactClip, interactSoundRadius);
         }
     }
 
@@ -88,7 +94,7 @@ public class SoundTrigger : MonoBehaviour
             timer += Time.deltaTime;
             if (timer >= timerDelay)
             {
-                PlayClip(timerClip);
+                PlayClip(timerClip, timerSoundRadius);
                 hasPlayedTimer = true;
                 if (timerLoop) timer = 0f;
             }
@@ -102,7 +108,7 @@ public class SoundTrigger : MonoBehaviour
         repeatTimer += Time.deltaTime;
         if (repeatTimer >= repeatInterval)
         {
-            PlayClip(repeatClip);
+            PlayClip(repeatClip, repeatSoundRadius);
             repeatTimer = 0f;
         }
     }
@@ -113,7 +119,7 @@ public class SoundTrigger : MonoBehaviour
 
         if (currentState != lastState)
         {
-            PlayClip(stateChangeClip);
+            PlayClip(stateChangeClip, stateChangeSoundRadius);
             lastState = currentState;
         }
     }
@@ -121,7 +127,7 @@ public class SoundTrigger : MonoBehaviour
     public void PlayAnimationEventSound()
     {
         if (animationEventClip != null)
-            PlayClip(animationEventClip);
+            PlayClip(animationEventClip, animationEventSoundRadius);
     }
 
     public void SetState(bool state)
@@ -129,8 +135,8 @@ public class SoundTrigger : MonoBehaviour
         currentState = state;
     }
 
-    private void PlayClip(AudioClip clip)
+    private void PlayClip(AudioClip clip, float radius)
     {
-        AudioManager.Instance.Play(clip, gameObject.transform.position, volume, spatial, mixerGroup);
+        AudioManager.Instance.Play(clip, gameObject.transform.position, volume, radius, spatial, mixerGroup);
     }
 }

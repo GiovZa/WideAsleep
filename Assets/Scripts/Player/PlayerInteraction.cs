@@ -24,6 +24,7 @@ public class PlayerInteraction : MonoBehaviour
     Interactable currentInteractable;
     bool isInteracting = false;
     CrosshairType currentCrosshairType = CrosshairType.Default;
+    private PlayerCharacterController m_PlayerCharacterController;
 
     private void OnEnable()
     {
@@ -43,10 +44,10 @@ public class PlayerInteraction : MonoBehaviour
 
     void Start()
     {
-        PlayerCharacterController playerController = GetComponent<PlayerCharacterController>(); // Replace with the actual script name
-        if (playerController != null)
+        m_PlayerCharacterController = GetComponent<PlayerCharacterController>(); 
+        if (m_PlayerCharacterController != null)
         {
-            PlayerCamera = playerController.PlayerCamera;
+            PlayerCamera = m_PlayerCharacterController.PlayerCamera;
         }
 
         // Initialize Crosshair
@@ -61,11 +62,16 @@ public class PlayerInteraction : MonoBehaviour
             return;
         }
 
-        CheckInteraction();
+        // Only check for new interactables if the player is not hiding
+        if (m_PlayerCharacterController == null || !m_PlayerCharacterController.IsHiding)
+        {
+            CheckInteraction();
+        }
 
+        // Allow interaction if the key is pressed and there is a current interactable
         if (Input.GetKeyDown(KeyCode.E) && currentInteractable != null)
         {
-            currentInteractable.Interact();
+            currentInteractable.Interact(this.gameObject);
         }
     }
 
@@ -83,58 +89,50 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (PlayerCamera == null)
         {
-            Debug.Log("[Piano] No player camera!");
+            Debug.LogWarning("[PlayerInteraction] Player camera is not set!");
             return;
         }
 
         RaycastHit hit;
         Ray ray = new Ray(PlayerCamera.transform.position, PlayerCamera.transform.forward);
+        Interactable newInteractable = null;
 
-        // If colliding with anything within player reach
         if (Physics.Raycast(ray, out hit, playerReach))
         {
-            if (hit.collider.CompareTag("Interactable")) // Check if looking at an interactable
+            if (hit.collider.CompareTag("Interactable"))
             {
-                Interactable newInteractable = hit.collider.GetComponent<Interactable>();
-
-                if (currentInteractable && newInteractable != currentInteractable)
+                var interactableComponent = hit.collider.GetComponent<Interactable>();
+                if (interactableComponent != null && interactableComponent.enabled)
                 {
-                    currentInteractable.DisableOutline();
-                }
-
-                if (newInteractable != null && newInteractable.enabled)
-                {
-                    SetNewCurrentInteractable(newInteractable);
-                }
-                else
-                {
-                    DisableCurrentInteractable();
+                    newInteractable = interactableComponent;
                 }
             }
-            else
+        }
+
+        // If the object we're looking at is different from the one we were looking at last frame.
+        if (newInteractable != currentInteractable)
+        {
+            // Disable the outline on the old object.
+            if (currentInteractable != null)
             {
-                DisableCurrentInteractable();
+                currentInteractable.ReleaseOutline();
             }
+
+            // Set the new object and enable its outline.
+            currentInteractable = newInteractable;
+            if (currentInteractable != null)
+            {
+                currentInteractable.RequestOutline();
+            }
+        }
+        
+        // Update crosshair based on whether we are looking at an interactable.
+        if (currentInteractable != null)
+        {
+            SetCrosshairType(currentInteractable.GetCrosshairType());
         }
         else
         {
-            DisableCurrentInteractable();
-        }
-    }
-
-    void SetNewCurrentInteractable(Interactable newInteractable)
-    {
-        currentInteractable = newInteractable;
-        currentInteractable.EnableOutline();
-        SetCrosshairType(currentInteractable.GetCrosshairType());
-    }
-
-    void DisableCurrentInteractable()
-    {
-        if (currentInteractable)
-        {
-            currentInteractable.DisableOutline();
-            currentInteractable = null;
             SetCrosshairType(CrosshairType.Default);
         }
     }
@@ -185,7 +183,9 @@ public class PlayerInteraction : MonoBehaviour
 
         if (!isGameplay && currentInteractable)
         {
-            DisableCurrentInteractable();
+            currentInteractable.ReleaseOutline();
+            currentInteractable = null;
+            SetCrosshairType(CrosshairType.Default);
         }
     }
 

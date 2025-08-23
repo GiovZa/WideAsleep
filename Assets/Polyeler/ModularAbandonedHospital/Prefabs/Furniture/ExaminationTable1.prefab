@@ -11,13 +11,12 @@ GameObject:
   - component: {fileID: 7356610700336238424}
   - component: {fileID: 5908906113557871975}
   - component: {fileID: 7817406611715447037}
-  - component: {fileID: 5473882889712571488}
   m_Layer: 0
   m_Name: ExaminationTable1.006
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &7356610700336238424
 Transform:
@@ -84,28 +83,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &5473882889712571488
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 911079476477118156}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 6211763478848853495, guid: 8f0aadfecc600d84b9ed8e2c4314eb00, type: 3}
 --- !u!1 &1008492078416652799
 GameObject:
   m_ObjectHideFlags: 0
@@ -117,13 +94,12 @@ GameObject:
   - component: {fileID: 540480195603337352}
   - component: {fileID: 2992536002425914749}
   - component: {fileID: 2049730692164083298}
-  - component: {fileID: 5352572902107766123}
   m_Layer: 0
   m_Name: ExaminationTable1.005
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &540480195603337352
 Transform:
@@ -191,28 +167,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &5352572902107766123
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1008492078416652799}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 2349596124331825361, guid: 8f0aadfecc600d84b9ed8e2c4314eb00, type: 3}
 --- !u!1 &2513375016661591679
 GameObject:
   m_ObjectHideFlags: 0
@@ -224,13 +178,12 @@ GameObject:
   - component: {fileID: 8131290696673556782}
   - component: {fileID: 903459515305075476}
   - component: {fileID: 5184503372260539520}
-  - component: {fileID: 8174796056753411210}
   m_Layer: 0
   m_Name: ExaminationTable1.009
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &8131290696673556782
 Transform:
@@ -298,28 +251,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &8174796056753411210
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2513375016661591679}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 7039447567909609789, guid: 8f0aadfecc600d84b9ed8e2c4314eb00, type: 3}
 --- !u!1 &3128181686132837544
 GameObject:
   m_ObjectHideFlags: 0
@@ -331,13 +262,12 @@ GameObject:
   - component: {fileID: 8971662305963250188}
   - component: {fileID: 3492652017952690154}
   - component: {fileID: 1663358146443066487}
-  - component: {fileID: 3445982713447497034}
   m_Layer: 0
   m_Name: ExaminationTable1.004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &8971662305963250188
 Transform:
@@ -405,28 +335,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &3445982713447497034
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3128181686132837544}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -147761591643681096, guid: 8f0aadfecc600d84b9ed8e2c4314eb00, type: 3}
 --- !u!1 &3175096151165502255
 GameObject:
   m_ObjectHideFlags: 0
@@ -436,12 +344,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8200939755345650626}
+  - component: {fileID: 57903989100509894}
   m_Layer: 0
   m_Name: ExaminationTable1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &8200939755345650626
 Transform:
@@ -468,6 +377,27 @@ Transform:
   - {fileID: 1324141062385804485}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &57903989100509894
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3175096151165502255}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.310998, y: 1.643609, z: 0.93949646}
+  m_Center: {x: 0.20985903, y: 0.32180452, z: -0.012566328}
 --- !u!1 &3479678186247963265
 GameObject:
   m_ObjectHideFlags: 0
@@ -479,13 +409,12 @@ GameObject:
   - component: {fileID: 6299699380735836415}
   - component: {fileID: 5101606430654936598}
   - component: {fileID: 6116680964020348790}
-  - component: {fileID: 4818213630615391247}
   m_Layer: 0
   m_Name: ExaminationTable1.008
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &6299699380735836415
 Transform:
@@ -553,28 +482,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &4818213630615391247
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3479678186247963265}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -8951783644198735104, guid: 8f0aadfecc600d84b9ed8e2c4314eb00, type: 3}
 --- !u!1 &5619746785243217740
 GameObject:
   m_ObjectHideFlags: 0
@@ -586,13 +493,12 @@ GameObject:
   - component: {fileID: 2435500874090320866}
   - component: {fileID: 386065434813309263}
   - component: {fileID: 7677478667249560859}
-  - component: {fileID: 7290605147498392562}
   m_Layer: 0
   m_Name: ExaminationTable1.003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &2435500874090320866
 Transform:
@@ -660,28 +566,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &7290605147498392562
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5619746785243217740}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 1053124567325160420, guid: 8f0aadfecc600d84b9ed8e2c4314eb00, type: 3}
 --- !u!1 &6977543050631034401
 GameObject:
   m_ObjectHideFlags: 0
@@ -693,13 +577,12 @@ GameObject:
   - component: {fileID: 1487120006616199457}
   - component: {fileID: 2095039794563110058}
   - component: {fileID: 6300110534707411923}
-  - component: {fileID: 7450154118863864688}
   m_Layer: 0
   m_Name: ExaminationTable1.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1487120006616199457
 Transform:
@@ -766,28 +649,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &7450154118863864688
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6977543050631034401}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -260333541351168682, guid: 8f0aadfecc600d84b9ed8e2c4314eb00, type: 3}
 --- !u!1 &8388115944484462271
 GameObject:
   m_ObjectHideFlags: 0
@@ -799,13 +660,12 @@ GameObject:
   - component: {fileID: 2339048703461949402}
   - component: {fileID: 1904891932387835978}
   - component: {fileID: 4234896865209977327}
-  - component: {fileID: 684769658580755786}
   m_Layer: 0
   m_Name: ExaminationTable1.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &2339048703461949402
 Transform:
@@ -873,28 +733,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &684769658580755786
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8388115944484462271}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 6844519928488595791, guid: 8f0aadfecc600d84b9ed8e2c4314eb00, type: 3}
 --- !u!1 &8907627762276482815
 GameObject:
   m_ObjectHideFlags: 0
@@ -906,13 +744,12 @@ GameObject:
   - component: {fileID: 2556808170820288615}
   - component: {fileID: 1520694947432677861}
   - component: {fileID: 1597396661812982038}
-  - component: {fileID: 3577306843813360038}
   m_Layer: 0
   m_Name: ExaminationTable1.007
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &2556808170820288615
 Transform:
@@ -979,28 +816,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &3577306843813360038
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8907627762276482815}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -6811838037221516565, guid: 8f0aadfecc600d84b9ed8e2c4314eb00, type: 3}
 --- !u!1 &9066668905062967058
 GameObject:
   m_ObjectHideFlags: 0
@@ -1012,13 +827,12 @@ GameObject:
   - component: {fileID: 1324141062385804485}
   - component: {fileID: 4579511518965920418}
   - component: {fileID: 355688774271701210}
-  - component: {fileID: 1430771993450430391}
   m_Layer: 0
   m_Name: ExaminationTable1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1324141062385804485
 Transform:
@@ -1086,25 +900,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &1430771993450430391
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9066668905062967058}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 8148544677022602852, guid: 8f0aadfecc600d84b9ed8e2c4314eb00, type: 3}

@@ -102,8 +102,8 @@ namespace playerChar
 
         public float noiseMeter = 10f;
 
-        [Tooltip("Sound played when jumping")] public AudioClip JumpSfx;
-        [Tooltip("Sound played when landing")] public AudioClip LandSfx;
+        [Tooltip("Sounds played when jumping")] public AudioClip[] JumpSfx;
+        [Tooltip("Sound played when landing")] public AudioClip[] LandSfx;
 
         [Header("Noisy Surfaces")]
         [Tooltip("Cooldown in seconds between playing noisy surface sounds.")]
@@ -121,6 +121,7 @@ namespace playerChar
         public bool HasJumpedThisFrame { get; private set; }
         public bool IsDead { get; private set; }
         public bool IsCrouching { get; private set; }
+        public bool IsHiding { get; private set; }
         public float CurrentStamina { get; private set; }
         private bool CanMove = true;
         public Transform lookTarget;
@@ -201,6 +202,12 @@ namespace playerChar
                 return;
             }
 
+            if (IsHiding)
+            {
+                RegenerateStamina();
+                return;
+            }
+
             HasJumpedThisFrame = false;
 
             bool wasGrounded = IsGrounded;
@@ -209,7 +216,10 @@ namespace playerChar
             // landing
             if (IsGrounded && !wasGrounded)
             {
-                audioSource.PlayOneShot(LandSfx);
+                if (LandSfx != null)
+                {
+                    AudioManager.Instance.PlayRandomSoundForPlayerOnly(LandSfx, transform.position);
+                }
                 SoundEvents.EmitSound(transform.position, 0.8f * noiseMeter);
             }
 
@@ -359,16 +369,7 @@ namespace playerChar
             }
             else
             {
-                // Regenerate stamina
-                if (m_StaminaRegenerationTimer > 0)
-                {
-                    m_StaminaRegenerationTimer -= Time.deltaTime;
-                }
-                else if (CurrentStamina < MaxStamina)
-                {
-                    CurrentStamina += StaminaRegenerationRate * Time.deltaTime;
-                    CurrentStamina = Mathf.Min(CurrentStamina, MaxStamina);
-                }
+                RegenerateStamina();
             }
             // --- End Stamina Logic ---
 
@@ -416,8 +417,13 @@ namespace playerChar
                             CharacterVelocity += Vector3.up * JumpForce;
 
                             // play sound
-                            audioSource.PlayOneShot(JumpSfx);
-                            SoundEvents.EmitSound(transform.position, 1.0f * noiseMeter);
+                            if (JumpSfx != null && JumpSfx.Length > 0)
+                            {
+                                // int index = UnityEngine.Random.Range(0, JumpSfx.Length);
+                                // audioSource.PlayOneShot(JumpSfx[index]);
+                                AudioManager.Instance.PlayRandomSoundForPlayerOnly(JumpSfx, transform.position, 0.5f);
+                                SoundEvents.EmitSound(transform.position, 1.0f * noiseMeter);
+                            }
 
                             // remember last time we jumped because we need to prevent snapping to ground for a short time
                             m_LastTimeJumped = Time.time;
@@ -516,6 +522,19 @@ namespace playerChar
             // Debug.Log($"Character Velocity: {CharacterVelocity}");
         }
 
+        private void RegenerateStamina()
+        {
+            if (m_StaminaRegenerationTimer > 0)
+            {
+                m_StaminaRegenerationTimer -= Time.deltaTime;
+            }
+            else if (CurrentStamina < MaxStamina)
+            {
+                CurrentStamina += StaminaRegenerationRate * Time.deltaTime;
+                CurrentStamina = Mathf.Min(CurrentStamina, MaxStamina);
+            }
+        }
+
         private void OnTriggerStay(Collider other)
         {
             // Make sure we are grounded and moving to trigger the sound
@@ -532,7 +551,7 @@ namespace playerChar
                         // Use AudioManager to play the sound at the collision point
                         if (AudioManager.Instance != null)
                         {
-                            AudioManager.Instance.PlayNoisySurfaceSound(surface.surfaceType, transform.position);
+                            AudioManager.Instance.PlayNoisySurfaceSound(surface, transform.position);
 
                             // Reset cooldown timer
                             m_LastTimeNoisySurfaceSfxPlayed = Time.time;
@@ -644,6 +663,12 @@ namespace playerChar
         public void Freeze()
         {
             CanMove = false;
+        }
+
+        public void SetHidingState(bool hiding)
+        {
+            IsHiding = hiding;
+            m_Controller.enabled = !hiding;
         }
     
         // Movement is now controlled by the GameStateManager.

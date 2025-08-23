@@ -13,7 +13,7 @@ public class TriggerDoor_Point : Interactable
     [Header("Audio")]
     public AudioClip openSfx;
     public AudioClip closeSfx;
-
+    [SerializeField] float SfxRadius = 3f;
     void Awake()
     {
         doorAnimator = GetComponent<Animator>();
@@ -42,9 +42,9 @@ public class TriggerDoor_Point : Interactable
     }
 
     //Door Control Methods
-    public override void Interact()
+    public override void Interact(GameObject interactor)
     {
-        base.Interact();
+        base.Interact(interactor);
         if (doorAnimator.GetBool("IsClosed"))
         {
             OpenDoor();
@@ -63,7 +63,7 @@ public class TriggerDoor_Point : Interactable
             doorAnimator.SetBool("IsClosed", false);
             occlusionPortal.open = true;
         }
-        AudioManager.Instance.Play(openSfx, transform.position, 1f);
+        AudioManager.Instance.Play(openSfx, transform.position, 1f, SfxRadius);
     }
     
     private void CloseDoor()   
@@ -71,7 +71,7 @@ public class TriggerDoor_Point : Interactable
         doorAnimator.SetTrigger("Close");
         doorAnimator.SetBool("IsClosed", true);
         StartCoroutine(CloseOcclusionPortal());
-        AudioManager.Instance.Play(closeSfx, transform.position, 1f);
+        AudioManager.Instance.Play(closeSfx, transform.position, 1f, SfxRadius);
     }
 
     //Visual Effects

@@ -10,13 +10,13 @@ public class NoisySurfaceSound
     public AudioClip[] audioClips;
     [Range(0, 2)]
     public float volume = 1f;
+    [Range(0, 30)]
+    public float soundRadius = 5f;
 }
 
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance;
-    [Header("General Settings")]
-    [SerializeField] private float soundRadiusMultiplier = 5f;
 
     [Header("Noisy Surface Sounds")]
     public List<NoisySurfaceSound> noisySurfaceSounds;
@@ -38,7 +38,40 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void Play(AudioClip clip, Vector3 position, float volume = 1f, bool spatial = true, AudioMixerGroup mixerGroup = null)
+    #region Play sounds for both Player and AI
+    /// <summary>
+    /// Plays a sound that can be heard by both the player and the AI.
+    /// </summary>
+    /// <param name="clip">The audio clip to play.</param>
+    /// <param name="position">The world position to play the sound at.</param>
+    /// <param name="volume">The audible volume for the player.</param>
+    /// <param name="soundRadius">The radius for AI detection, normally it would be 5m.</param>
+    /// <param name="spatial">Whether the sound is 3D.</param>
+    /// <param name="mixerGroup">The audio mixer group to use.</param>
+    public void Play(AudioClip clip, Vector3 position, float volume = 1f, float soundRadius = 5f, bool spatial = true, AudioMixerGroup mixerGroup = null)
+    {
+        if (clip == null) return;
+
+        // Play the sound for the player
+        PlaySoundForPlayerOnly(clip, position, volume, spatial, mixerGroup);
+
+        // Emit the sound event for the AI
+        SoundEvents.EmitSound(position, soundRadius);
+    }
+
+    public void PlayRandomSound(AudioClip[] clips, Vector3 position, float volume = 1f, float soundRadius = 5f, bool spatial = true, AudioMixerGroup mixerGroup = null)
+    {
+        int rand = Random.Range(0, clips.Length);
+        Play(clips[rand], position, volume, soundRadius, spatial, mixerGroup);
+    }
+
+    #endregion
+
+    #region Play sounds for Player only
+    /// <summary>
+    /// Plays a sound that can only be heard by the player, not the AI.
+    /// </summary>
+    public void PlaySoundForPlayerOnly(AudioClip clip, Vector3 position, float volume = 1f, bool spatial = true, AudioMixerGroup mixerGroup = null)
     {
         if (clip == null) return;
 
@@ -53,27 +86,50 @@ public class AudioManager : MonoBehaviour
         source.Play();
 
         Destroy(tempGO, clip.length);
-
-        float soundRadius = volume * soundRadiusMultiplier;
-        SoundEvents.EmitSound(position, soundRadius);        
     }
 
-    public void PlayNoisySurfaceSound(SurfaceType surfaceType, Vector3 position)
+    public void PlayRandomSoundForPlayerOnly(AudioClip[] clips, Vector3 position, float volume = 1f, bool spatial = true, AudioMixerGroup mixerGroup = null)
     {
-        if (surfaceSoundDictionary.TryGetValue(surfaceType, out NoisySurfaceSound surfaceSound))
+        int rand = Random.Range(0, clips.Length);
+
+        if (clips == null) return;
+
+        GameObject tempGO = new GameObject("TempAudio");
+        tempGO.transform.position = position;
+
+        AudioSource source = tempGO.AddComponent<AudioSource>();
+        source.clip = clips[rand];
+        source.volume = volume;
+        source.spatialBlend = spatial ? 1f : 0f;
+        source.outputAudioMixerGroup = mixerGroup;
+        source.Play();
+
+        Destroy(tempGO, clips[rand].length);
+    }
+    #endregion
+
+    public void PlayNoisySurfaceSound(NoisySurface surface, Vector3 position)
+    {
+        if (surface == null) return;
+
+        if (surfaceSoundDictionary.TryGetValue(surface.surfaceType, out NoisySurfaceSound surfaceSound))
         {
             if (surfaceSound.audioClips != null && surfaceSound.audioClips.Length > 0)
             {
-                // Pick a random clip
+                // Pick a random clip from the dictionary
                 AudioClip clipToPlay = surfaceSound.audioClips[Random.Range(0, surfaceSound.audioClips.Length)];
-                
-                // Play it using the existing Play method
-                Play(clipToPlay, position, surfaceSound.volume, true);
+
+                // Check if we should use the override values from the surface component
+                float volume = surface.overrideDefaults ? surface.volume : surfaceSound.volume;
+                float radius = surface.overrideDefaults ? surface.soundRadius : surfaceSound.soundRadius;
+
+                // Play it using the existing Play method with the determined values
+                Play(clipToPlay, position, volume, radius, true);
             }
         }
         else
         {
-            Debug.LogWarning($"[AudioManager] No sound clips configured for surface type: {surfaceType}");
+            Debug.LogWarning($"[AudioManager] No sound clips configured for surface type: {surface.surfaceType}");
         }
     }
 }
