@@ -135,6 +135,7 @@ public class EffectsManager : MonoBehaviour
         }
     }
 
+    #region Vignette Effect
     /// <summary>
     /// Triggers a vignette pulse effect.
     /// </summary>
@@ -183,7 +184,9 @@ public class EffectsManager : MonoBehaviour
         // Reset intensity
         vignette.intensity.Override(originalIntensity);
     }
-
+    #endregion
+    
+    #region Blurry Vision Effect
     /// <summary>
     /// Temporarily adjusts Depth of Field to make the scene clear.
     /// </summary>
@@ -260,7 +263,9 @@ public class EffectsManager : MonoBehaviour
 
         visionSenseCoroutine = null;
     }
+    #endregion
 
+    #region Black and White Effect
     /// <summary>
     /// Triggers a black and white screen effect.
     /// </summary>
@@ -309,4 +314,58 @@ public class EffectsManager : MonoBehaviour
         }
         colorAdjustments.saturation.Override(originalSaturation);
     }
+    #endregion
+
+    #region Stun Effect
+    /// <summary>
+    /// The effect when player get stunned by SCREAM's scream.
+    /// </summary>
+    /// <param name="duration">How long the effect should last in seconds.</param>
+    /// <param name="fadeTime">How long the fade in and fade out should last in seconds.</param>
+    /// <param name="setColorFilter">The color filter to use for the stun effect.</param>
+    public void TriggerStunEffect(float duration, float fadeTime, Color setColorFilter)
+    {
+        if (colorAdjustments != null)
+        {
+            StartCoroutine(StunEffectCoroutine(duration, fadeTime, setColorFilter));
+        }
+    }
+
+    private IEnumerator StunEffectCoroutine(float duration, float fadeTime, Color setColorFilter)
+    {
+        // Store original Color Filter
+        Color originalColorFilter = colorAdjustments.colorFilter.value;
+
+        // set fade in and out times
+        float fadeInTime = fadeTime;
+        float fadeOutTime = fadeTime;
+
+        // Fade in
+        float elapsedTime = 0f;
+        while (elapsedTime < fadeInTime)
+        {
+            float t = elapsedTime / fadeInTime;
+            Color currentColorFilter = Color.Lerp(originalColorFilter, setColorFilter, t);
+            colorAdjustments.colorFilter.Override(currentColorFilter);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        colorAdjustments.colorFilter.Override(setColorFilter);
+
+        // Hold at black and white
+        yield return new WaitForSeconds(duration);
+
+        // Fade out
+        elapsedTime = 0f;
+        while (elapsedTime < fadeOutTime)
+        {
+            float t = elapsedTime / fadeOutTime;
+            Color currentColorFilter = Color.Lerp(setColorFilter, originalColorFilter, t);
+            colorAdjustments.colorFilter.Override(currentColorFilter);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        colorAdjustments.colorFilter.Override(originalColorFilter);
+    }
+    #endregion
 }

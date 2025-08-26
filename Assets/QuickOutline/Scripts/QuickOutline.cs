@@ -82,8 +82,8 @@ public class QuickOutline : MonoBehaviour {
 
   void Awake() {
 
-    // Cache renderers
-    renderers = GetComponentsInChildren<Renderer>();
+    // Cache renderers, exclude particle system renderers
+    renderers = GetComponentsInChildren<Renderer>().Where(r => r is not ParticleSystemRenderer).ToArray();
 
     // Instantiate outline materials
     outlineMaskMaterial = Instantiate(Resources.Load<Material>(@"Materials/OutlineMask"));

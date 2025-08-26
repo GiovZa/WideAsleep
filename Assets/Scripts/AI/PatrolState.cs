@@ -35,7 +35,11 @@ public class PatrolState : IState
         if (vision.CanSeePlayer(player.transform))
         {
             Debug.Log("[PatrolState] Player spotted. Transitioning to AlertState.");
-            AINotifier.NotifyEnemySpottedPlayer(nurseAI.gameObject);
+            if (!nurseAI.hasSpottedPlayer)
+            {
+                AINotifier.NotifyEnemySpottedPlayer(nurseAI.gameObject);
+                nurseAI.hasSpottedPlayer = true;
+            }
             nurseAI.TransitionToState(nurseAI.alertState);
         }
     }

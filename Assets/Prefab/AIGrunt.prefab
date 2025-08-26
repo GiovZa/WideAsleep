@@ -527,6 +527,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8433240445712171426}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2073405547774305139}
   m_SourcePrefab: {fileID: 100100000, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
 --- !u!1 &6723072205973766186 stripped
 GameObject:
@@ -544,14 +547,14 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 5
-  m_Acceleration: 8
+  m_Acceleration: 4
   avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_AngularSpeed: 150
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 2
+  m_Height: 2.4
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
@@ -684,3 +687,25 @@ MonoBehaviour:
   XRayLayer:
     serializedVersion: 2
     m_Bits: 512
+--- !u!114 &2073405547774305139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6723072205973766186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c5fd94292edb3d45964d26edbd62868, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  surfaceSounds:
+  - physicMaterial: {fileID: 13400000, guid: 8f500a3bc0c2ba64eb8d6adda6ebb657, type: 2}
+    audioClips:
+    - {fileID: 8300000, guid: 6a448c2a01a01404384efbfb9f53dcd4, type: 3}
+    - {fileID: 8300000, guid: 448ba3f0de52bf14c8fb749466706df7, type: 3}
+    - {fileID: 8300000, guid: baaabbac02112c6479207fdbca57ebe8, type: 3}
+    - {fileID: 8300000, guid: 43760c14638de194580fbab20a5f4ff3, type: 3}
+    - {fileID: 8300000, guid: 8ff17fcf9bba8f6438f1e25c6002992b, type: 3}
+    volume: 1
+  raycastDistance: 1

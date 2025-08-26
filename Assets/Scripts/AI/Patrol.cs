@@ -52,8 +52,16 @@ public class Patrol : MonoBehaviour
     {
         isPatrolling = true;
         agent = GetComponent<NavMeshAgent>();
-        if (!agent.pathPending && agent.remainingDistance <= arriveThreshold)
+
+        // When restarting patrol after an interruption, always tell the agent to resume its path
+        // to its last known target waypoint.
+        if (currentTarget != null)
         {
+            agent.SetDestination(currentTarget.position);
+        }
+        else
+        {
+            // Fallback for the very first time the AI starts, ensures it has a target.
             PickNewTarget();
         }
     }
@@ -71,11 +79,6 @@ public class Patrol : MonoBehaviour
         else if (!agent.pathPending && agent.remainingDistance <= arriveThreshold && isPatrolling)
         {
             StartCoroutine(WaitAtWaypoint(waitTimeAtWaypoint)); // Wait at the current waypoint
-        }
-
-        if (!isPatrolling)
-        {
-            agent.ResetPath();
         }
 
         // Apply the rotation if rotation is enabled
@@ -109,16 +112,19 @@ public class Patrol : MonoBehaviour
     // Coroutine to wait for a set period before moving to the next waypoint
     IEnumerator WaitAtWaypoint(float waitTime)
     {
-        isPatrolling = false; // Stop patrolling while waiting
+        isPatrolling = false; // Stop Update() from re-triggering this coroutine
+        agent.isStopped = true; // Pause the agent's movement
         animator.SetBool("isWaiting", true);
-        // Debug.Log("[Patrol] Reached waypoint. Waiting for " + waitTime + " seconds.");
 
         yield return new WaitForSeconds(waitTime); // Wait at the current waypoint
 
-        // Debug.Log("[Patrol] Wait time complete. Picking new target.");
-        PickNewTarget(); // Once wait time is over, pick a new target
-        isPatrolling = true; // Resume patrolling
-        animator.SetBool("isWaiting", false);
+        if (waypoints.Count > 1)
+        {
+            PickNewTarget(); // Once wait time is over, pick a new target
+            agent.isStopped = false; // Resume agent movement
+            isPatrolling = true; // Allow Update() to trigger this again on arrival
+            animator.SetBool("isWaiting", false);
+        }
     }
 
     // Method to apply the Y rotation based on the value in yRotationDegrees

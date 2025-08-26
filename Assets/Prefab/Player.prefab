@@ -24,7 +24,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8583526281846590103
 Transform:
   m_ObjectHideFlags: 0
@@ -103,8 +103,13 @@ MonoBehaviour:
   FootstepVolumeRange: {x: 0.85, y: 1.1}
   FootstepPitchRange: {x: 0.9, y: 1.1}
   noiseMeter: 10
-  JumpSfx: {fileID: 0}
-  LandSfx: {fileID: 0}
+  JumpSfx:
+  - {fileID: 8300000, guid: 10cc2457f86da054cb7427d4dfbb4a5a, type: 3}
+  - {fileID: 8300000, guid: 72f2068d16ceba149b5259f5d0d4f830, type: 3}
+  LandSfx:
+  - {fileID: 8300000, guid: 90df39e45ce87c845b38b8fa8c3d6746, type: 3}
+  - {fileID: 8300000, guid: ce8bc6d623cbb8244a131ca66c955ddb, type: 3}
+  - {fileID: 8300000, guid: 763ba2c41de29a3409e2c393025933ef, type: 3}
   NoisySurfaceSfxCooldown: 1
   HeadbobAmountWalk: 0.12
   HeadbobAmountSprint: 0.08
@@ -335,7 +340,7 @@ MonoBehaviour:
   detectionIcon: {fileID: 0}
   heartbeatAudioSource: {fileID: 9092502506809099772}
   heartbeatSound: {fileID: 8300000, guid: fb99e77e73637604ab6b1c1ccdc87a8e, type: 3}
-  aiSpottedSound: {fileID: 0}
+  aiSpottedSound: {fileID: 8300000, guid: 5582bccb1efff41be8649836559d52f3, type: 3}
 --- !u!1 &8720869365300973038
 GameObject:
   m_ObjectHideFlags: 0

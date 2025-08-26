@@ -11,7 +11,6 @@ public class AlertState : IState
     private Animator animator;
 
     private bool overrideFromSound = false;
-
     private float stareTime = 1.0f;
     private float stareTimer;
     private bool isStaring;
@@ -116,7 +115,11 @@ public class AlertState : IState
             if (!isStaring)
             {
                 // This is the first frame of visual contact in this state. Notify the player.
-                AINotifier.NotifyEnemySpottedPlayer(nurseAI.gameObject);
+                if (!nurseAI.hasSpottedPlayer)
+                {
+                    AINotifier.NotifyEnemySpottedPlayer(nurseAI.gameObject);
+                    nurseAI.hasSpottedPlayer = true;
+                }
 
                 isStaring = true;
                 stareTimer = stareTime;

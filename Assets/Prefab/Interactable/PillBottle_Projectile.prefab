@@ -126,7 +126,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a772a36afeadd134481a7ef6618bed17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noiseRadius: 10
+  hitSounds:
+  - {fileID: 8300000, guid: 2f7873a0717930e4cbdd3d9d43aadf12, type: 3}
+  - {fileID: 8300000, guid: 8447bb584d464a342b72d7985d442c68, type: 3}
+  - {fileID: 8300000, guid: 97fcc520f87654f468508d88cb12ba2a, type: 3}
+  volume: 1
+  noiseRadius: 15
 --- !u!65 &8984435998987496539
 BoxCollider:
   m_ObjectHideFlags: 0

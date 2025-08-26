@@ -1,0 +1,145 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &31900000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Nurse AlertMask
+  m_Mask: 00000000010000000100000000000000000000000100000001000000010000000100000000000000000000000000000000000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: Body.001
+    m_Weight: 1
+  - m_Path: Dress.001
+    m_Weight: 1
+  - m_Path: Head.001
+    m_Weight: 1
+  - m_Path: Legs.001
+    m_Weight: 1
+  - m_Path: Nurse Armature
+    m_Weight: 1
+  - m_Path: Nurse Armature/root
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/pelvis.L
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/pelvis.R
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/DEF_Skirt01
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/DEF_Skirt_Back01
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/DEF_SkirtA_01.L
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/DEF_SkirtA_01.R
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/DEF_SkirtB_01.L
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/DEF_SkirtB_01.R
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/DEF_SkirtC_01.L
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/DEF_SkirtC_01.R
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/Skirt2
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/Skirt2/DEF_Skirt02
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/Skirt2/DEF_Skirt_Back02
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/Skirt2/DEF_SkirtA_02.L
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/Skirt2/DEF_SkirtA_02.R
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/Skirt2/DEF_SkirtB_02.L
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/Skirt2/DEF_SkirtB_02.R
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/Skirt2/DEF_SkirtC_02.L
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/Skirt2/DEF_SkirtC_02.R
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/Skirt2/Skirt3
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/Skirt2/Skirt3/DEF_Skirt03
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/Skirt2/Skirt3/DEF_Skirt_Back03
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/Skirt2/Skirt3/DEF_SkirtA_03.L
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/Skirt2/Skirt3/DEF_SkirtA_03.R
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/Skirt2/Skirt3/DEF_SkirtB_03.L
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/Skirt2/Skirt3/DEF_SkirtB_03.R
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/Skirt2/Skirt3/DEF_SkirtC_03.L
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/Skirt2/Skirt3/DEF_SkirtC_03.R
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/Skirt2/Skirt3/Skirt4
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/Skirt2/Skirt3/Skirt4/DEF_Skirt04
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/Skirt2/Skirt3/Skirt4/DEF_Skirt_Back04
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/Skirt2/Skirt3/Skirt4/DEF_SkirtA_04.L
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/Skirt2/Skirt3/Skirt4/DEF_SkirtA_04.R
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/Skirt2/Skirt3/Skirt4/DEF_SkirtB_04.L
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/Skirt2/Skirt3/Skirt4/DEF_SkirtB_04.R
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/Skirt2/Skirt3/Skirt4/DEF_SkirtC_04.L
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/Skirt1/Skirt2/Skirt3/Skirt4/DEF_SkirtC_04.R
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/spine.002
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/spine.002/spine.003
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/spine.002/spine.003/shoulder.L
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/spine.002/spine.003/shoulder.L/upper_arm.L
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/spine.002/spine.003/shoulder.L/upper_arm.L/forearm.L
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/spine.002/spine.003/shoulder.L/upper_arm.L/forearm.L/hand.L
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/spine.002/spine.003/shoulder.R
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/spine.002/spine.003/shoulder.R/upper_arm.R
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/spine.002/spine.003/shoulder.R/upper_arm.R/forearm.R
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/spine.002/spine.003/shoulder.R/upper_arm.R/forearm.R/hand.R
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/spine.002/spine.003/spine.004
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/spine.002/spine.003/spine.004/spine.005
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/spine.001/spine.002/spine.003/spine.004/spine.005/Head
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/thigh.L
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/thigh.L/shin.L
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/thigh.L/shin.L/foot.L
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/thigh.L/shin.L/foot.L/heel.02.L
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/thigh.R
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/thigh.R/shin.R
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/thigh.R/shin.R/foot.R
+    m_Weight: 1
+  - m_Path: Nurse Armature/root/thigh.R/shin.R/foot.R/heel.02.R
+    m_Weight: 1

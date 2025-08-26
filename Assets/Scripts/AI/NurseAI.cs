@@ -2,16 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IState
-{
-    void Enter();
-    void Update();
-    void Exit();
-}
-
 public class NurseAI : MonoBehaviour
 {
     public IState currentState;
+    [HideInInspector]
+    public bool hasSpottedPlayer = false;
 
     public PatrolState patrolState;
     public AlertState alertState;
@@ -47,6 +42,7 @@ public class NurseAI : MonoBehaviour
         if ((currentState == alertState || currentState == chaseState) && newState == patrolState)
         {
             AINotifier.NotifyEnemyLostPlayer(this.gameObject);
+            hasSpottedPlayer = false; // Reset the flag when the AI loses the player
         }
 
         currentState?.Exit();

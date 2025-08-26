@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using SoundSystem;
@@ -124,6 +125,7 @@ namespace playerChar
         public bool IsHiding { get; private set; }
         public float CurrentStamina { get; private set; }
         private bool CanMove = true;
+        private bool isStunned = false;
         public Transform lookTarget;
         public Vector3 lookTargetOffset;
 
@@ -669,6 +671,31 @@ namespace playerChar
         {
             IsHiding = hiding;
             m_Controller.enabled = !hiding;
+        }
+
+        public void Stun(float duration)
+        {
+            if (isStunned) return;
+            StartCoroutine(StunCoroutine(duration));
+        }
+
+        private IEnumerator StunCoroutine(float duration)
+        {
+            isStunned = true;
+            CanMove = false;
+            Debug.Log($"Player stunned for {duration} seconds.");
+
+            // You can add visual/audio feedback for the stun effect here
+
+            yield return new WaitForSeconds(duration);
+
+            // Only re-enable movement if the game is in the Gameplay state
+            if (GameStateManager.Instance.CurrentState == GameState.Gameplay)
+            {
+                CanMove = true;
+            }
+            isStunned = false;
+            Debug.Log("Player stun ended.");
         }
     
         // Movement is now controlled by the GameStateManager.

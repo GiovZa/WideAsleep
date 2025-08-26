@@ -5,8 +5,9 @@ using SoundSystem;
 public class ThrowableProjectile : MonoBehaviour
 {
     [Header("Distraction")]
-    public float noiseRadius = 10f;
-
+    public AudioClip[] hitSounds;
+    public float volume = 1.0f;
+    public float noiseRadius = 15f;
     private bool hasHitSurface = false;
 
     private void OnCollisionEnter(Collision collision)
@@ -20,9 +21,9 @@ public class ThrowableProjectile : MonoBehaviour
         hasHitSurface = true;
         
         // Use the existing SoundSystem to broadcast the noise event.
-        SoundEvents.EmitSound(transform.position, noiseRadius);
+        AudioManager.Instance.PlayRandomSound(hitSounds, transform.position, volume, noiseRadius);
         
         // Optional: Destroy the projectile after a short delay to clean up the scene.
-        Destroy(gameObject, 3f); 
+        Destroy(gameObject, 2f); 
     }
 }

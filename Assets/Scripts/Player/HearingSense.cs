@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using playerChar;
 
 public class HearingSense : SenseBase
 {
@@ -24,11 +25,47 @@ public class HearingSense : SenseBase
     private List<SoundEmitterHint> activeEmitters = new List<SoundEmitterHint>();
     private List<SwitchLayer> activeSwitchableObjects = new List<SwitchLayer>();
 
+    private bool isSenseActive = false;
+    private PlayerCharacterController playerController;
+
     protected override float EffectDuration => revealTime;
+
+    void OnEnable()
+    {
+        BossScreamManager.OnScreamStarted += HandleScreamStarted;
+    }
+
+    void OnDisable()
+    {
+        BossScreamManager.OnScreamStarted -= HandleScreamStarted;
+    }
+
+    private void HandleScreamStarted()
+    {
+        if (isSenseActive)
+        {
+            Debug.Log("Player stunned by scream while using hearing sense!");
+            if (playerController != null)
+            {
+                playerController.Stun(3f);
+                effectsManager.TriggerStunEffect(3f, 0.5f, new Color(1, 0.545f, 0.545f));
+            }
+        }
+        else
+        {
+            Debug.Log("Player affected by scream while not using hearing sense!");
+            if (playerController != null)
+            {
+                playerController.Stun(1f);
+                effectsManager.TriggerStunEffect(1f, 0.2f, new Color(0.996f, 0.757f, 0.765f));
+            }
+        }
+    }
 
     protected override void Start()
     {
         base.Start();
+        playerController = GetComponentInParent<PlayerCharacterController>();
         CacheSoundEmitters();
         CacheSwitchableObjects();
 
@@ -50,6 +87,8 @@ public class HearingSense : SenseBase
 
     protected override void ActivateSense()
     {
+        isSenseActive = true;
+
         // Trigger screen visual effects
         if (effectsManager != null)
         {
@@ -97,6 +136,8 @@ public class HearingSense : SenseBase
     System.Collections.IEnumerator StopEffectsAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
+
+        isSenseActive = false;
 
         // Deactivate effects on all emitters that were activated by this pulse
         foreach (var emitter in activeEmitters)
