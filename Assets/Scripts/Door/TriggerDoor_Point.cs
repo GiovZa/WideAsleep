@@ -57,6 +57,7 @@ public class TriggerDoor_Point : Interactable
 
     private void OpenDoor()
     {
+        StopAllCoroutines();
         doorAnimator.SetTrigger("Open");
         if (!IsLocked)
         {
@@ -68,6 +69,7 @@ public class TriggerDoor_Point : Interactable
     
     private void CloseDoor()   
     {
+        StopAllCoroutines();
         doorAnimator.SetTrigger("Close");
         doorAnimator.SetBool("IsClosed", true);
         StartCoroutine(CloseOcclusionPortal());

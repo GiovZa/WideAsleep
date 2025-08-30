@@ -534,7 +534,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &13024866
 Transform:
   m_ObjectHideFlags: 0
@@ -33720,6 +33720,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PillBottle01 (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 3491303132119564599, guid: d61e999b9a273c54c999cf900ecb96f8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 4267241048377547661, guid: d61e999b9a273c54c999cf900ecb96f8, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.9589996
@@ -33759,6 +33763,30 @@ PrefabInstance:
     - target: {fileID: 4267241048377547661, guid: d61e999b9a273c54c999cf900ecb96f8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4587114025719852580, guid: d61e999b9a273c54c999cf900ecb96f8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 5029362195505993812, guid: d61e999b9a273c54c999cf900ecb96f8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 5307779405949329630, guid: d61e999b9a273c54c999cf900ecb96f8, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 6804013428685577779, guid: d61e999b9a273c54c999cf900ecb96f8, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6804013428685577779, guid: d61e999b9a273c54c999cf900ecb96f8, type: 3}
+      propertyPath: m_ProvidesContacts
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6804013428685577779, guid: d61e999b9a273c54c999cf900ecb96f8, type: 3}
+      propertyPath: m_LayerOverridePriority
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -55910,6 +55938,22 @@ PrefabInstance:
     - target: {fileID: 6700985936480113284, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6806078760192323123, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
+      propertyPath: m_BackGroundColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6806078760192323123, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
+      propertyPath: m_BackGroundColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6806078760192323123, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
+      propertyPath: m_BackGroundColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6806078760192323123, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
+      propertyPath: m_BackGroundColor.r
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7198970837452929405, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
       propertyPath: detectionIcon
