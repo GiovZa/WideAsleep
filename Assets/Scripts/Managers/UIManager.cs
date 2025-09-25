@@ -2,7 +2,6 @@ using System.Collections;
 using playerChar;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using DG.Tweening;
 using UnityEngine.InputSystem;
 
@@ -17,11 +16,6 @@ public class UIManager : MonoBehaviour
     private PlayerInteraction playerInteraction;
     private CustomInput m_Input;
 
-    [Header("Fade In and Out")]
-    [SerializeField] CanvasGroup canvasGroup;
-    [SerializeField] float fadeTime = 0.5f;
-    [SerializeField] float loadWaitTime;
-    
     [Header("Notes")]
     [SerializeField] int notesCollected = 0;
     [SerializeField] int totalNotes = 5;
@@ -76,7 +70,6 @@ public class UIManager : MonoBehaviour
             playerInteraction = player.GetComponent<PlayerInteraction>();
             UpdateStaminaEffects(player.CurrentStamina / player.MaxStamina);
         }
-        canvasGroup = FindAnyObjectByType<CanvasGroup>();
     }
 
     private void Update() 
@@ -126,52 +119,6 @@ public class UIManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Fade in and
-    /// </summary>
-    public void FadeOut()
-    {
-       canvasGroup.DOFade(1,fadeTime);
-    }
-
-    public void FadeIn()
-    {
-        canvasGroup.DOFade(0,fadeTime);
-    }
-
-    IEnumerator FadeOutAndFadeIn()
-    {
-        FadeOut();
-        yield return new WaitForSeconds(1);
-        FadeIn();
-    }
-
-    IEnumerator FadeAndLoad(int scneneIndexToLoad)
-    {
-        Debug.Log(scneneIndexToLoad);
-        FadeOut();
-        yield return new WaitForSeconds(loadWaitTime);
-        SceneManager.LoadSceneAsync(scneneIndexToLoad);
-    }
-
-    /// <summary>
-    /// Main Menu
-    /// </summary>
-    public void PlayGame()
-    {
-        StartCoroutine(FadeAndLoad(1));
-    }
-
-    public void QuitGame()
-    {
-        Application.Quit();
-    }
-
-    public void LoadNextScene()
-    {
-        StartCoroutine(FadeAndLoad(SceneManager.GetActiveScene().buildIndex + 1));
-    }
-
-    /// <summary>
     /// Pause Menu
     /// </summary>
     public void CallPauseMenu()
@@ -210,13 +157,7 @@ public class UIManager : MonoBehaviour
 
     public void ExitToMainMenu()
     {
-        Time.timeScale = 1.0f; //have to make the game keep running in order for coroutine to work
-        StartCoroutine(FadeAndLoad(0));
-    }
-
-    public void FadeAndReloadCurrentScene()
-    {
-        StartCoroutine(FadeAndLoad(SceneManager.GetActiveScene().buildIndex));
+        SceneSwapManager.Instance.ExitToMainMenu();
     }
 
     /// <summary>
@@ -230,6 +171,11 @@ public class UIManager : MonoBehaviour
     public void EnableHUD()
     {
         HUD.SetActive(true);
+    }
+
+    public void DisablePauseMenu()
+    {
+        pauseMenu.SetActive(false);
     }
 
     private void UpdateStaminaEffects(float staminaPercentage)

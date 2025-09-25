@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Main Menu.unity
     guid: d17efc2c27a414256a5619b2b8918d7b
   - enabled: 1
-    path: Assets/Scenes/WIDE ASLEEP SUILIN/WIDE ASLEEP SUILIN.unity
+    path: Assets/Scenes/Level2_Hearing/Level2_Hearing.unity
     guid: 6636a1820a6b848aca6e044b12e329c8
   - enabled: 1
     path: Assets/Scenes/LevelHearing_BossPrototype/LevelHearing_BossPrototype.unity

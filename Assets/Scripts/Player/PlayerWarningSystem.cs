@@ -74,15 +74,22 @@ public class PlayerWarningSystem : MonoBehaviour
         // Stop heartbeat and hide icon only when the last enemy has lost us
         if (spottingEnemies.Count == 0)
         {
-            if (detectionIcon != null)
-            {
-                detectionIcon.enabled = false;
-            }
+            ResetState();
+        }
+    }
 
-            if (heartbeatAudioSource != null && heartbeatAudioSource.isPlaying)
-            {
-                heartbeatAudioSource.Stop();
-            }
+    public void ResetState()
+    {
+        spottingEnemies.Clear();
+
+        if (detectionIcon != null)
+        {
+            detectionIcon.enabled = false;
+        }
+
+        if (heartbeatAudioSource != null && heartbeatAudioSource.isPlaying)
+        {
+            heartbeatAudioSource.Stop();
         }
     }
 }

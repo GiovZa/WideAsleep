@@ -11,6 +11,7 @@ TagManager:
   - DoorBack
   - NoisySurface
   - StaminaAudioSource
+  - SpawnLocation
   layers:
   - Default
   - TransparentFX

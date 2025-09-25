@@ -14,9 +14,7 @@ public class NoteManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-
         Instance = this;
-        DontDestroyOnLoad(gameObject);
     }
 
     public void CollectNote()

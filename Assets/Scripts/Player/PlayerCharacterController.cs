@@ -124,7 +124,6 @@ namespace playerChar
         public Vector3 CharacterVelocity { get; set; }
         public bool IsGrounded { get; private set; }
         public bool HasJumpedThisFrame { get; private set; }
-        public bool IsDead { get; private set; }
         public bool IsCrouching { get; private set; }
         public bool IsHiding { get; private set; }
         public float CurrentStamina { get; private set; }
@@ -198,11 +197,9 @@ namespace playerChar
         void Update()
         {
             // check for Y kill
-            if (!IsDead && transform.position.y < KillHeight)
+            if (!Player.Instance.IsDead && transform.position.y < KillHeight)
             {
-                // m_Health.Kill();
-                Debug.LogWarning("Death by Kill Height Not Implemented, resetting Player position");
-                transform.transform.position = new Vector3(10,0,-10);
+                Player.Instance.Die();
             }
 
             if (lookTarget != null)
@@ -247,14 +244,6 @@ namespace playerChar
             UpdateCharacterHeight(false);
 
             HandleMovement();
-        }
-
-        void OnDie()
-        {
-            IsDead = true;
-            Debug.LogWarning("Ya Died!");
-
-            // EventManager.Broadcast(Events.PlayerDeathEvent);
         }
 
         private void HandleGameStateChanged(GameState newState)
@@ -731,5 +720,32 @@ namespace playerChar
             Cursor.visible = false;
         }
         */
+
+        public void Respawn(Vector3 position, Quaternion rotation)
+        {
+            // Reset state flags
+            IsHiding = false;
+            isStunned = false;
+
+            // Reset physics, position, and orientation
+            CharacterVelocity = Vector3.zero;
+            m_CameraVerticalAngle = 0f;
+            PlayerCamera.transform.localEulerAngles = Vector3.zero;
+
+            // Use a temporary disable/enable of the CharacterController to properly teleport the player
+            m_Controller.enabled = false;
+            transform.position = position;
+            transform.rotation = rotation;
+            m_Controller.enabled = true;
+
+            // Reset stats
+            CurrentStamina = MaxStamina;
+
+            // Re-sync with the current game state to ensure movement is correctly enabled/disabled
+            HandleGameStateChanged(GameStateManager.Instance.CurrentState);
+            UIManager.Instance.EnableHUD();
+
+            Debug.Log("Player has respawned.");
+        }
     }
 }

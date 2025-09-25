@@ -84,6 +84,12 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
+    private void HandleGameStateChanged(GameState newState)
+    {
+        bool isGameplay = newState == GameState.Gameplay;
+        SetCrosshairVisible(isGameplay);
+    }
+
     public void SetInteracting(bool interacting)
     {
         isInteracting = interacting;
@@ -146,10 +152,7 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
     
-    /// <summary>
-    /// Crosshair related methods
-    /// </summary>
-    /// <param name="type"></param>
+    #region Crosshair related methods
     void SetCrosshairType(CrosshairType type)
     {
         if (currentCrosshairType == type) return;
@@ -184,19 +187,6 @@ public class PlayerInteraction : MonoBehaviour
             crosshairImage.color = color;
         }
     }
-    
-    private void HandleGameStateChanged(GameState newState)
-    {
-        bool isGameplay = newState == GameState.Gameplay;
-        SetCrosshairVisible(isGameplay);
-
-        if (!isGameplay && currentInteractable)
-        {
-            currentInteractable.ReleaseOutline();
-            currentInteractable = null;
-            SetCrosshairType(CrosshairType.Default);
-        }
-    }
 
     public void SetCrosshairVisible(bool visible)
     {
@@ -205,16 +195,16 @@ public class PlayerInteraction : MonoBehaviour
             crosshairImage.enabled = visible;
         }
     }
-    
-    // void EnsureCrosshairCentered()
-    // {
-    //     if (crosshairImage != null)
-    //     {
-    //         RectTransform rect = crosshairImage.GetComponent<RectTransform>();
-    //         rect.anchorMin = new Vector2(0.5f, 0.5f);
-    //         rect.anchorMax = new Vector2(0.5f, 0.5f);
-    //         rect.anchoredPosition = Vector2.zero;
-    //         crosshairImage.gameObject.SetActive(true);
-    //     }
-    // }
+    #endregion
+
+    public void ResetInteraction()
+    {
+        if (currentInteractable)
+        {
+            currentInteractable.ReleaseOutline();
+            currentInteractable = null;
+        }
+        SetCrosshairVisible(true);
+        SetCrosshairType(CrosshairType.Default);
+    }
 }

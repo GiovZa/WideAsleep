@@ -43,14 +43,21 @@ public class EffectsManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {
             Destroy(gameObject);
             return;
         }
+    }
 
+    private void Start()
+    {
+        InitializeForNewScene();
+    }
+
+    public void InitializeForNewScene()
+    {
         // Find the post-processing volume in the scene
         postProcessVolume = FindObjectOfType<Volume>();
 
@@ -62,6 +69,14 @@ public class EffectsManager : MonoBehaviour
             postProcessVolume.profile.TryGet(out colorAdjustments);
             // postProcessVolume.profile.TryGet(out chromaticAberration);
             postProcessVolume.profile.TryGet(out whiteBalance);
+        }
+        else
+        {
+            // Nullify references if no volume is found
+            vignette = null;
+            depthOfField = null;
+            colorAdjustments = null;
+            whiteBalance = null;
         }
 
         if (vignette == null)
