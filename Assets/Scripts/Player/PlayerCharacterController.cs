@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using SoundSystem;
+using UnityEngine.InputSystem;
 
 namespace playerChar
 {
@@ -66,6 +67,9 @@ namespace playerChar
 
         [Range(0.1f, 1f)] [Tooltip("Rotation speed multiplier when aiming")]
         public float AimingRotationMultiplier = 0.4f;
+
+        [Tooltip("Sensitivity for mouse input.")]
+        public float MouseSensitivity = 1.0f;
 
         [Tooltip("Inverts Mouse Y controls")]
         public bool isInverted = false;
@@ -140,15 +144,28 @@ namespace playerChar
         float m_TargetCharacterHeight;
         float m_StaminaRegenerationTimer;
 
+        private CustomInput m_Input;
+
         const float k_JumpGroundingPreventionTime = 0.2f;
         const float k_GroundCheckDistanceInAir = 0.07f;
 
+        private void Awake()
+        {
+            m_Input = new CustomInput();
+        }
+
         private void OnEnable()
         {
+            m_Input.Player.Enable();
+            if (GameStateManager.Instance != null)
+            {
+                GameStateManager.Instance.OnGameStateChanged += HandleGameStateChanged;
+            }
         }
 
         private void OnDisable()
         {
+            m_Input.Player.Disable();
             if (GameStateManager.Instance != null)
             {
                 GameStateManager.Instance.OnGameStateChanged -= HandleGameStateChanged;
@@ -161,11 +178,7 @@ namespace playerChar
             m_Controller = GetComponent<CharacterController>();
             audioSource = GetComponent<AudioSource>();
 
-            if (GameStateManager.Instance != null)
-            {
-                GameStateManager.Instance.OnGameStateChanged += HandleGameStateChanged;
-            }
-            else
+            if (GameStateManager.Instance == null)
             {
                 Debug.LogError("GameStateManager instance not found.");
             }
@@ -226,7 +239,7 @@ namespace playerChar
             }
 
             // crouching
-            if (Input.GetButtonDown("Crouch"))
+            if (m_Input.Player.Crouch.triggered)
             {
                 SetCrouchingState(!IsCrouching, false);
             }
@@ -265,14 +278,16 @@ namespace playerChar
             if (GameStateManager.Instance.CurrentState == GameState.Gameplay)
             {
                 if (lookTarget != null) return;
+
+                Vector2 look = m_Input.Player.Look.ReadValue<Vector2>();
                 // horizontal character rotation
                 // rotate the transform with the input speed around its local Y axis
                 transform.Rotate(
-                    new Vector3(0f, Input.GetAxis("Mouse X") * RotationSpeed, 0f), Space.Self);
+                    new Vector3(0f, look.x * RotationSpeed * MouseSensitivity * Time.deltaTime, 0f), Space.Self);
             
                 // vertical camera rotation
                 // add vertical inputs to the camera's vertical angle
-                m_CameraVerticalAngle += Input.GetAxis("Mouse Y") * RotationSpeed * (isInverted ? 1f : -1f);
+                m_CameraVerticalAngle += look.y * RotationSpeed * MouseSensitivity * Time.deltaTime * (isInverted ? 1f : -1f);
 
                 // limit the camera's vertical angle to min/max
                 m_CameraVerticalAngle = Mathf.Clamp(m_CameraVerticalAngle, -89f, 89f);
@@ -347,10 +362,11 @@ namespace playerChar
 
         void HandleMovement()
         {
-            Vector3 moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
+            Vector2 move = m_Input.Player.Move.ReadValue<Vector2>();
+            Vector3 moveInput = new Vector3(move.x, 0f, move.y);
 
             // --- Stamina Logic ---
-            bool wantsToSprint = Input.GetButton("Sprint");
+            bool wantsToSprint = m_Input.Player.Sprint.IsPressed();
             bool isSprinting = wantsToSprint && CurrentStamina > 0f && IsGrounded && !IsCrouching;
             
             // If the player wants to sprint, but is crouching, try to stand up
@@ -407,7 +423,7 @@ namespace playerChar
                     // Debug.Log($"IsGrounded Block: {CharacterVelocity}");
 
                     // jumping
-                    if (IsGrounded && Input.GetButtonDown("Jump"))
+                    if (IsGrounded && m_Input.Player.Jump.triggered)
                     {
                         // force the crouch state to false
                         if (SetCrouchingState(false, false))

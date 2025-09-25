@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// Base class for player senses like vision and hearing.
@@ -10,10 +11,6 @@ public abstract class SenseBase : MonoBehaviour
     // Defines the possible states of the sense ability.
     protected enum SenseState { Ready, Active, Cooldown }
     protected SenseState currentState = SenseState.Ready;
-
-    [Header("Input Settings")]
-    [Tooltip("The key to press to activate this sense.")]
-    public KeyCode activateKey;
 
     [Header("Cooldown Settings")]
     [Tooltip("How long to wait before this sense can be used again.")]
@@ -31,10 +28,34 @@ public abstract class SenseBase : MonoBehaviour
     private float cooldownEndTime;
     private bool isSensesActive = true;
 
+    protected CustomInput m_Input;
+
     /// <summary>
     /// The duration of the sense's effect. To be implemented by subclasses.
     /// </summary>
     protected abstract float EffectDuration { get; }
+
+    /// <summary>
+    /// The input action to activate the sense. To be implemented by subclasses.
+    /// </summary>
+    protected abstract InputAction ActivationAction { get; }
+
+    private void Awake()
+    {
+        m_Input = new CustomInput();
+    }
+    
+    protected virtual void OnEnable()
+    {
+        m_Input.Player.Enable();
+        
+        if (GameStateManager.Instance != null)
+        {
+            GameStateManager.Instance.OnGameStateChanged += HandleGameStateChanged;
+            // Initialize based on the current state in case this script starts after the initial state is set
+            HandleGameStateChanged(GameStateManager.Instance.CurrentState);
+        }
+    }
 
     protected virtual void Start()
     {
@@ -44,13 +65,7 @@ public abstract class SenseBase : MonoBehaviour
             Debug.LogError("EffectsManager instance not found. Make sure an EffectsManager is active in the scene.");
         }
 
-        if (GameStateManager.Instance != null)
-        {
-            GameStateManager.Instance.OnGameStateChanged += HandleGameStateChanged;
-            // Initialize based on the current state in case this script starts after the initial state is set
-            HandleGameStateChanged(GameStateManager.Instance.CurrentState);
-        }
-        else
+        if (GameStateManager.Instance == null)
         {
             Debug.LogError("GameStateManager instance not found. Senses will not respond to game state changes.");
         }
@@ -83,7 +98,7 @@ public abstract class SenseBase : MonoBehaviour
     /// </summary>
     private void HandleReadyState()
     {
-        if (isSensesActive && Input.GetKeyDown(activateKey))
+        if (isSensesActive && ActivationAction.triggered)
         {
             ActivateSense();
             currentState = SenseState.Active;
@@ -156,8 +171,10 @@ public abstract class SenseBase : MonoBehaviour
         isSensesActive = newState == GameState.Gameplay;
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
+        m_Input.Player.Disable();
+
         if (GameStateManager.Instance != null)
         {
             GameStateManager.Instance.OnGameStateChanged -= HandleGameStateChanged;

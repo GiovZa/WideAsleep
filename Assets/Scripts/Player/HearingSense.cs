@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using playerChar;
+using UnityEngine.InputSystem;
 
 public class HearingSense : SenseBase
 {
@@ -29,14 +30,18 @@ public class HearingSense : SenseBase
     private PlayerCharacterController playerController;
 
     protected override float EffectDuration => revealTime;
+    protected override InputAction ActivationAction => m_Input.Player.HearingSense;
 
-    void OnEnable()
+
+    protected override void OnEnable()
     {
+        base.OnEnable();
         BossScreamManager.OnScreamStarted += HandleScreamStarted;
     }
 
-    void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
         BossScreamManager.OnScreamStarted -= HandleScreamStarted;
     }
 
@@ -102,6 +107,10 @@ public class HearingSense : SenseBase
         // Clear the lists of active objects for this new pulse
         activeEmitters.Clear();
         activeSwitchableObjects.Clear();
+
+        // Remove any null or inactive objects from the lists before processing
+        soundEmitters.RemoveAll(item => item == null || !item.gameObject.activeInHierarchy);
+        switchableObjects.RemoveAll(item => item == null || !item.gameObject.activeInHierarchy);
 
         // Activate effects on sound emitters within range
         foreach (var emitter in soundEmitters)

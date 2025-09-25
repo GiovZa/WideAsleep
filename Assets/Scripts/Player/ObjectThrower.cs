@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class ObjectThrower : MonoBehaviour
 {
@@ -9,15 +10,27 @@ public class ObjectThrower : MonoBehaviour
     [Header("Throwing")]
     public float throwForce = 20f;
     public float throwAngle = 30f;
-
-    [Header("Input")]
-    public KeyCode throwKey = KeyCode.G;
-
+    private CustomInput m_Input;
     private int throwableCount = 0;
 
-    void Update()
+    private void Awake()
     {
-        if (Input.GetKeyDown(throwKey) && throwableCount > 0)
+        m_Input = new CustomInput();
+    }
+
+    private void OnEnable()
+    {
+        m_Input.Player.Enable();
+    }
+
+    private void OnDisable()
+    {
+        m_Input.Player.Disable();
+    }
+
+    private void Update()
+    {
+        if (m_Input.Player.Throw.triggered && throwableCount > 0)
         {
             ThrowObject();
         }

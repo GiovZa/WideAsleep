@@ -1,6 +1,7 @@
 using playerChar;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class PlayerInteraction : MonoBehaviour
 {
@@ -25,9 +26,16 @@ public class PlayerInteraction : MonoBehaviour
     bool isInteracting = false;
     CrosshairType currentCrosshairType = CrosshairType.Default;
     private PlayerCharacterController m_PlayerCharacterController;
+    private CustomInput m_Input;
+
+    private void Awake()
+    {
+        m_Input = new CustomInput();
+    }
 
     private void OnEnable()
     {
+        m_Input.Player.Enable();
         if (GameStateManager.Instance != null)
         {
             GameStateManager.Instance.OnGameStateChanged += HandleGameStateChanged;
@@ -36,6 +44,7 @@ public class PlayerInteraction : MonoBehaviour
 
     private void OnDisable()
     {
+        m_Input.Player.Disable();
         if (GameStateManager.Instance != null)
         {
             GameStateManager.Instance.OnGameStateChanged -= HandleGameStateChanged;
@@ -69,7 +78,7 @@ public class PlayerInteraction : MonoBehaviour
         }
 
         // Allow interaction if the key is pressed and there is a current interactable
-        if (Input.GetKeyDown(KeyCode.E) && currentInteractable != null)
+        if (m_Input.Player.Interact.triggered && currentInteractable != null)
         {
             currentInteractable.Interact(this.gameObject);
         }

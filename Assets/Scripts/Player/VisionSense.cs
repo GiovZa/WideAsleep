@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// Manages the player's "Vision Sense" ability, which clarifies the screen by disabling Depth of Field.
@@ -34,6 +35,17 @@ public class VisionSense : SenseBase
     private List<Interactable> highlightedObjects = new List<Interactable>();
 
     protected override float EffectDuration => effectDuration;
+    protected override InputAction ActivationAction => m_Input.Player.VisionSense;
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+    }
 
     protected override void Start()
     {

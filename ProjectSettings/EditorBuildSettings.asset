@@ -14,4 +14,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/LevelHearing_BossPrototype/LevelHearing_BossPrototype.unity
     guid: 95b5d79f972c5114f81e5cf66a2aa68c
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: 06b5592096b128149afd2784b1babc74, type: 2}

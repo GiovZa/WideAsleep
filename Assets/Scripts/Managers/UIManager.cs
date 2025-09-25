@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+using UnityEngine.InputSystem;
 
 public class UIManager : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject HUD;
     private PlayerCharacterController player;
     private PlayerInteraction playerInteraction;
+    private CustomInput m_Input;
 
     [Header("Fade In and Out")]
     [SerializeField] CanvasGroup canvasGroup;
@@ -31,10 +33,24 @@ public class UIManager : MonoBehaviour
     private AudioSource staminaAudioSource;
     [SerializeField, Range(0, 1)] private float staminaAudioThreshold = 0.3f;
 
-    void Start()
+    private void Awake()
     {
         Instance = this;
+        m_Input = new CustomInput();
+    }
 
+    private void OnEnable()
+    {
+        m_Input.UI.Enable();
+    }
+
+    private void OnDisable()
+    {
+        m_Input.UI.Disable();
+    }
+
+    void Start()
+    {
         // Find the stamina audio source by tag
         GameObject staminaAudioObject = GameObject.FindWithTag("StaminaAudioSource");
         if (staminaAudioObject != null)
@@ -65,7 +81,7 @@ public class UIManager : MonoBehaviour
 
     private void Update() 
     {
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if(m_Input.UI.Cancel.triggered)
         {
             if (GameStateManager.Instance.CurrentState == GameState.Paused)
             {
