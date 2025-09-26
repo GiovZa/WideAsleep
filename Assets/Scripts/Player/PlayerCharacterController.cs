@@ -171,7 +171,7 @@ namespace playerChar
             }
         }
 
-        void Start()
+        public void Initialize()
         {
             // fetch components on the same gameObject
             m_Controller = GetComponent<CharacterController>();
@@ -184,14 +184,17 @@ namespace playerChar
 
             m_Controller.enableOverlapRecovery = true;
 
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-
             // force the crouch state to false when starting
             SetCrouchingState(false, true);
             UpdateCharacterHeight(true);
 
             CurrentStamina = MaxStamina;
+        }
+
+        void Start()
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
 
         void Update()
@@ -743,7 +746,6 @@ namespace playerChar
 
             // Re-sync with the current game state to ensure movement is correctly enabled/disabled
             HandleGameStateChanged(GameStateManager.Instance.CurrentState);
-            UIManager.Instance.EnableHUD();
 
             Debug.Log("Player has respawned.");
         }

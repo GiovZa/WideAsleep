@@ -15,14 +15,10 @@ public abstract class SenseBase : MonoBehaviour
     [Header("Cooldown Settings")]
     [Tooltip("How long to wait before this sense can be used again.")]
     [SerializeField] private float cooldownDuration = 5f;
-
-    [Header("UI Settings")]
-    [Tooltip("The UI Image to use for the cooldown indicator. Must be a radial fill image.")]
-    [SerializeField] private Image cooldownImage;
-    [Tooltip("The color of the indicator when the sense is active.")]
-    [SerializeField] private Color activeColor = Color.yellow;
     
-    private Color originalColor;
+    public float FillAmount { get; private set; }
+    public bool IsActive { get; private set; }
+
     protected EffectsManager effectsManager;
     private float effectEndTime;
     private float cooldownEndTime;
@@ -70,11 +66,7 @@ public abstract class SenseBase : MonoBehaviour
             Debug.LogError("GameStateManager instance not found. Senses will not respond to game state changes.");
         }
 
-        if (cooldownImage != null)
-        {
-            originalColor = cooldownImage.color;
-            cooldownImage.fillAmount = 1; // Start with the indicator full
-        }
+        FillAmount = 1f;
     }
 
     protected virtual void Update()
@@ -103,11 +95,7 @@ public abstract class SenseBase : MonoBehaviour
             ActivateSense();
             currentState = SenseState.Active;
             effectEndTime = Time.time + EffectDuration;
-
-            if (cooldownImage != null)
-            {
-                cooldownImage.color = activeColor;
-            }
+            IsActive = true;
         }
     }
 
@@ -118,22 +106,15 @@ public abstract class SenseBase : MonoBehaviour
     {
         if (Time.time < effectEndTime)
         {
-            if (cooldownImage != null)
-            {
-                float remainingTime = effectEndTime - Time.time;
-                cooldownImage.fillAmount = remainingTime / EffectDuration;
-            }
+            float remainingTime = effectEndTime - Time.time;
+            FillAmount = remainingTime / EffectDuration;
         }
         else
         {
             currentState = SenseState.Cooldown;
             cooldownEndTime = Time.time + cooldownDuration;
-
-            if (cooldownImage != null)
-            {
-                cooldownImage.fillAmount = 0;
-                cooldownImage.color = originalColor; // Revert color
-            }
+            IsActive = false;
+            FillAmount = 0f;
         }
     }
 
@@ -144,20 +125,14 @@ public abstract class SenseBase : MonoBehaviour
     {
         if (Time.time < cooldownEndTime)
         {
-            if (cooldownImage != null)
-            {
-                float cooldownStartTime = cooldownEndTime - cooldownDuration;
-                float elapsedTime = Time.time - cooldownStartTime;
-                cooldownImage.fillAmount = elapsedTime / cooldownDuration;
-            }
+            float cooldownStartTime = cooldownEndTime - cooldownDuration;
+            float elapsedTime = Time.time - cooldownStartTime;
+            FillAmount = elapsedTime / cooldownDuration;
         }
         else
         {
             currentState = SenseState.Ready;
-            if (cooldownImage != null)
-            {
-                cooldownImage.fillAmount = 1;
-            }
+            FillAmount = 1f;
         }
     }
 

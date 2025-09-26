@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -12,35 +13,74 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject pauseMenu;
     [SerializeField] GameObject deathScreen;
     [SerializeField] GameObject HUD;
-    private PlayerCharacterController player;
-    private PlayerInteraction playerInteraction;
-    private CustomInput m_Input;
+    
+    [Header("Crosshair Settings")]
+    [SerializeField] private Image crosshairImage;
+    [SerializeField] private Sprite defaultCrosshair;
+    [SerializeField] private Sprite interactCrosshair;
+    [SerializeField] private Sprite pickupCrosshair;
+    [SerializeField] private Sprite doorCrosshair;
+    [SerializeField] private Color defaultColor = Color.white;
+    [SerializeField] private Color interactColor = Color.red;
 
-    [Header("Notes")]
-    [SerializeField] int notesCollected = 0;
-    [SerializeField] int totalNotes = 5;
-    public Sprite paperNote;
-    public Sprite emptyPaperNote;
-    public Image[] notes;
+    [Header("Senses UI Settings")]
+    [SerializeField] private Image visionCooldownImage;
+    [SerializeField] private Image hearingCooldownImage;
+    [SerializeField] private Color senseActiveColor = Color.yellow;
+    private Color visionOriginalColor;
+    private Color hearingOriginalColor;
+    
+    [Header("Player Warning")]
+    [SerializeField] private Image detectionIcon;
 
     [Header("Stamina")]
     private AudioSource staminaAudioSource;
     [SerializeField, Range(0, 1)] private float staminaAudioThreshold = 0.3f;
 
+    private PlayerCharacterController playerChar;
+    private PlayerInteraction playerInteraction;
+    private VisionSense visionSense;
+    private HearingSense hearingSense;
+    private PlayerWarningSystem playerWarningSystem;
+    private CustomInput m_Input;
+
     private void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        
         m_Input = new CustomInput();
     }
 
     private void OnEnable()
     {
         m_Input.UI.Enable();
+        SceneSwapManager.OnPlayerSpawned += HandlePlayerSpawned;
+        SceneSwapManager.OnPlayerWillBeDestroyed += HandlePlayerDestroyed;
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void OnDisable()
     {
         m_Input.UI.Disable();
+        SceneSwapManager.OnPlayerSpawned -= HandlePlayerSpawned;
+        SceneSwapManager.OnPlayerWillBeDestroyed -= HandlePlayerDestroyed;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Ensure HUD is disabled in menu scenes.
+        if (SceneSwapManager.Instance.MenuSceneNames.Contains(scene.name))
+        {
+            HandlePlayerDestroyed();
+        }
     }
 
     void Start()
@@ -60,16 +100,40 @@ public class UIManager : MonoBehaviour
             Debug.LogWarning("[UIManager] Could not find GameObject with tag 'StaminaAudioSource'. Stamina audio will not play.");
         }
 
-        notesCollected = NoteManager.Instance.GetNoteCount();
-        totalNotes = NoteManager.Instance.requiredNotes;
-        UpdateNotesHUD();
+        if (visionCooldownImage != null) visionOriginalColor = visionCooldownImage.color;
+        if (hearingCooldownImage != null) hearingOriginalColor = hearingCooldownImage.color;
+        if (detectionIcon != null) detectionIcon.enabled = false;
+    }
 
-        player = FindObjectOfType<PlayerCharacterController>();
-        if (player != null)
+    private void HandlePlayerSpawned(GameObject playerObject)
+    {
+        playerChar = playerObject.GetComponent<PlayerCharacterController>();
+        if (playerChar != null)
         {
-            playerInteraction = player.GetComponent<PlayerInteraction>();
-            UpdateStaminaEffects(player.CurrentStamina / player.MaxStamina);
+            playerInteraction = playerChar.GetComponent<PlayerInteraction>();
+            visionSense = playerChar.GetComponent<VisionSense>();
+            hearingSense = playerChar.GetComponent<HearingSense>();
+            playerWarningSystem = playerChar.GetComponent<PlayerWarningSystem>();
+            
+            UpdateStaminaEffects(playerChar.CurrentStamina / playerChar.MaxStamina);
+            EnableHUD();
         }
+    }
+
+    private void HandlePlayerDestroyed()
+    {
+        playerChar = null;
+        playerInteraction = null;
+        visionSense = null;
+        hearingSense = null;
+        playerWarningSystem = null;
+
+        if (detectionIcon != null)
+        {
+            detectionIcon.enabled = false;
+        }
+        
+        DisableHUD();
     }
 
     private void Update() 
@@ -86,35 +150,76 @@ public class UIManager : MonoBehaviour
             }
         }
 
-        if (player != null)
+        if (playerChar != null)
         {
-            float staminaPercentage = player.CurrentStamina / player.MaxStamina;
+            float staminaPercentage = playerChar.CurrentStamina / playerChar.MaxStamina;
             UpdateStaminaEffects(staminaPercentage);
+
+            UpdateSensesUI();
+            UpdateCrosshair();
+            UpdateWarningUI();
         }
     }
 
-    /// <summary>
-    /// Notes Collection
-    /// </summary>
-    public void OnNoteCollected()
+    private void UpdateSensesUI()
     {
-        notesCollected ++;
-        UpdateNotesHUD();
+        if (visionSense != null && visionCooldownImage != null)
+        {
+            visionCooldownImage.fillAmount = visionSense.FillAmount;
+            visionCooldownImage.color = visionSense.IsActive ? senseActiveColor : visionOriginalColor;
+        }
+
+        if (hearingSense != null && hearingCooldownImage != null)
+        {
+            hearingCooldownImage.fillAmount = hearingSense.FillAmount;
+            hearingCooldownImage.color = hearingSense.IsActive ? senseActiveColor : hearingOriginalColor;
+        }
     }
 
-    void UpdateNotesHUD()
+    private void UpdateWarningUI()
     {
-        for (int i = 0; i < notes.Length; i++)
+        if (playerWarningSystem != null && detectionIcon != null)
         {
-            if (i < notesCollected)
-                notes[i].sprite = paperNote;
-            else
-                notes[i].sprite = emptyPaperNote;
-            
-            if (i < totalNotes)
-                notes[i].enabled = true;
-            else
-                notes[i].enabled = false;
+            detectionIcon.enabled = playerWarningSystem.IsPlayerSpotted;
+        }
+    }
+
+    private void UpdateCrosshair()
+    {
+        if (playerInteraction == null || crosshairImage == null) return;
+
+        bool isGameplay = GameStateManager.Instance.CurrentState == GameState.Gameplay;
+        crosshairImage.enabled = isGameplay;
+
+        if (!isGameplay) return;
+
+        Sprite newSprite = defaultCrosshair;
+        Color newColor = defaultColor;
+
+        switch (playerInteraction.CurrentCrosshairType)
+        {
+            case CrosshairType.Interact:
+                newSprite = interactCrosshair;
+                newColor = interactColor;
+                break;
+            case CrosshairType.Pickup:
+                newSprite = pickupCrosshair;
+                newColor = interactColor;
+                break;
+
+            case CrosshairType.Door:
+                newSprite = doorCrosshair;
+                newColor = interactColor;
+                break;
+        }
+        
+        if (crosshairImage.sprite != newSprite)
+        {
+            crosshairImage.sprite = newSprite;
+        }
+        if (crosshairImage.color != newColor)
+        {
+            crosshairImage.color = newColor;
         }
     }
 
@@ -126,7 +231,6 @@ public class UIManager : MonoBehaviour
         GameStateManager.Instance.SetState(GameState.Paused);
         Time.timeScale = 0f;
         pauseMenu.SetActive(true);
-        playerInteraction.SetCrosshairVisible(false);
         DisableHUD();
         
         Cursor.lockState = CursorLockMode.None;
@@ -138,7 +242,6 @@ public class UIManager : MonoBehaviour
         GameStateManager.Instance.SetState(GameState.Gameplay);
         Time.timeScale = 1.0f;
         pauseMenu.SetActive(false);
-        playerInteraction.SetCrosshairVisible(true);
         EnableHUD();
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -148,16 +251,10 @@ public class UIManager : MonoBehaviour
     public void ShowDeathScreen()
     {
         deathScreen.SetActive(true);
-        playerInteraction.SetCrosshairVisible(false);
         DisableHUD();
         
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-    }
-
-    public void ExitToMainMenu()
-    {
-        SceneSwapManager.Instance.ExitToMainMenu();
     }
 
     /// <summary>

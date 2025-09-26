@@ -9,22 +9,10 @@ public class PlayerInteraction : MonoBehaviour
     public float playerReach = 3f;
     public Camera PlayerCamera;
 
-    [Header("Crosshair UI")]
-    [SerializeField] private Image crosshairImage;
-
-    [Header("Crosshair Sprite")]
-    [SerializeField] private Sprite defaultCrosshair;
-    [SerializeField] private Sprite interactCrosshair;
-    [SerializeField] private Sprite pickupCrosshair;
-    [SerializeField] private Sprite doorCrosshair;
-
-    [Header("Crosshair Color")]
-    [SerializeField] private Color defaultColor = Color.white;
-    [SerializeField] private Color interactColor = Color.red;
-
+    public CrosshairType CurrentCrosshairType { get; private set; } = CrosshairType.Default;
+    
     Interactable currentInteractable;
     bool isInteracting = false;
-    CrosshairType currentCrosshairType = CrosshairType.Default;
     private PlayerCharacterController m_PlayerCharacterController;
     private CustomInput m_Input;
 
@@ -60,7 +48,7 @@ public class PlayerInteraction : MonoBehaviour
         }
 
         // Initialize Crosshair
-        SetCrosshairType(CrosshairType.Default);
+        CurrentCrosshairType = CrosshairType.Default;
     }
 
     // Update is called once per frame
@@ -86,8 +74,8 @@ public class PlayerInteraction : MonoBehaviour
 
     private void HandleGameStateChanged(GameState newState)
     {
-        bool isGameplay = newState == GameState.Gameplay;
-        SetCrosshairVisible(isGameplay);
+        // UIManager will handle crosshair visibility based on player spawn/destroy events
+        // and its own game state logic. This script no longer needs to manage it directly.
     }
 
     public void SetInteracting(bool interacting)
@@ -144,59 +132,14 @@ public class PlayerInteraction : MonoBehaviour
         // Update crosshair based on whether we are looking at an interactable.
         if (currentInteractable != null)
         {
-            SetCrosshairType(currentInteractable.GetCrosshairType());
+            CurrentCrosshairType = currentInteractable.GetCrosshairType();
         }
         else
         {
-            SetCrosshairType(CrosshairType.Default);
+            CurrentCrosshairType = CrosshairType.Default;
         }
     }
     
-    #region Crosshair related methods
-    void SetCrosshairType(CrosshairType type)
-    {
-        if (currentCrosshairType == type) return;
-        
-        currentCrosshairType = type;
-        
-        switch (type)
-        {
-            case CrosshairType.Default:
-                UpdateCrosshair(defaultCrosshair, defaultColor);
-                break;
-            case CrosshairType.Interact:
-                UpdateCrosshair(interactCrosshair, interactColor);
-                break;
-            case CrosshairType.Pickup:
-                UpdateCrosshair(pickupCrosshair, interactColor);
-                break;
-            case CrosshairType.Door:
-                UpdateCrosshair(doorCrosshair, interactColor);
-                break;
-        }
-    }
-    
-    void UpdateCrosshair(Sprite sprite, Color color)
-    {
-        if (crosshairImage != null)
-        {
-            if (sprite != null)
-            {
-                crosshairImage.sprite = sprite;
-            }
-            crosshairImage.color = color;
-        }
-    }
-
-    public void SetCrosshairVisible(bool visible)
-    {
-        if (crosshairImage != null)
-        {
-            crosshairImage.enabled = visible;
-        }
-    }
-    #endregion
-
     public void ResetInteraction()
     {
         if (currentInteractable)
@@ -204,7 +147,6 @@ public class PlayerInteraction : MonoBehaviour
             currentInteractable.ReleaseOutline();
             currentInteractable = null;
         }
-        SetCrosshairVisible(true);
-        SetCrosshairType(CrosshairType.Default);
+        CurrentCrosshairType = CrosshairType.Default;
     }
 }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class NoteManager : MonoBehaviour
 {
@@ -6,6 +7,9 @@ public class NoteManager : MonoBehaviour
 
     public int notesCollected = 0;
     public int requiredNotes = 5; // Adjust as needed
+    public Sprite paperNote;
+    public Sprite emptyPaperNote;
+    public Image[] notes;
 
     private void Awake()
     {
@@ -15,6 +19,8 @@ public class NoteManager : MonoBehaviour
             return;
         }
         Instance = this;
+
+        UpdateNotesHUD();
     }
 
     public void CollectNote()
@@ -27,7 +33,7 @@ public class NoteManager : MonoBehaviour
             Debug.Log("[Piano] Collected all notes!");
         }
 
-        UIManager.Instance.OnNoteCollected();
+        UpdateNotesHUD();
     }
 
     public bool HasEnoughNotes()
@@ -38,5 +44,21 @@ public class NoteManager : MonoBehaviour
     public int GetNoteCount()
     {
         return notesCollected;
+    }
+
+    void UpdateNotesHUD()
+    {
+        for (int i = 0; i < notes.Length; i++)
+        {
+            if (i < notesCollected)
+                notes[i].sprite = paperNote;
+            else
+                notes[i].sprite = emptyPaperNote;
+            
+            if (i < requiredNotes)
+                notes[i].enabled = true;
+            else
+                notes[i].enabled = false;
+        }
     }
 }

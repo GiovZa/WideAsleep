@@ -4,8 +4,7 @@ using System.Collections.Generic;
 
 public class PlayerWarningSystem : MonoBehaviour
 {
-    [Header("UI")]
-    [SerializeField] private Image detectionIcon;
+    public bool IsPlayerSpotted { get; private set; }
 
     [Header("Audio")]
     [SerializeField] private AudioSource heartbeatAudioSource;
@@ -16,10 +15,7 @@ public class PlayerWarningSystem : MonoBehaviour
 
     void Start()
     {
-        if (detectionIcon != null)
-        {
-            detectionIcon.enabled = false;
-        }
+        IsPlayerSpotted = false;
     }
 
     void OnEnable()
@@ -50,10 +46,7 @@ public class PlayerWarningSystem : MonoBehaviour
         // Start heartbeat and show icon only when the first enemy spots us
         if (spottingEnemies.Count == 1)
         {
-            if (detectionIcon != null)
-            {
-                detectionIcon.enabled = true;
-            }
+            IsPlayerSpotted = true;
 
             if (heartbeatAudioSource != null && heartbeatSound != null)
             {
@@ -81,11 +74,7 @@ public class PlayerWarningSystem : MonoBehaviour
     public void ResetState()
     {
         spottingEnemies.Clear();
-
-        if (detectionIcon != null)
-        {
-            detectionIcon.enabled = false;
-        }
+        IsPlayerSpotted = false;
 
         if (heartbeatAudioSource != null && heartbeatAudioSource.isPlaying)
         {

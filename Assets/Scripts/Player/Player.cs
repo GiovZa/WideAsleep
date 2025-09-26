@@ -32,6 +32,8 @@ public class Player : MonoBehaviour
         CharacterController = GetComponent<PlayerCharacterController>();
         Interaction = GetComponent<PlayerInteraction>();
         WarningSystem = GetComponent<PlayerWarningSystem>();
+
+        CharacterController.Initialize();
     }
 
     public void Die()

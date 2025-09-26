@@ -1,16 +1,25 @@
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+using System;
 
 public class SceneSwapManager : MonoBehaviour
 {
     public static SceneSwapManager Instance { get; private set; }
+    public static GameObject PlayerInstance { get; private set; }
+
+    public static event Action<GameObject> OnPlayerSpawned;
+    public static event Action OnPlayerWillBeDestroyed;
 
     private static bool _loadFromRespawn;
-    private GameObject _player;
     private Vector3 _spwnplayerPosition;
     private Quaternion _spawnplayerRotation;
+
+    [Header("Player Prefab")]
+    [SerializeField] private GameObject playerPrefab;
 
     [Header("Fade Settings")]
     [SerializeField] private CanvasGroup canvasGroup;
@@ -19,7 +28,10 @@ public class SceneSwapManager : MonoBehaviour
 
     [Header("Scene Categories")]
     [SerializeField] private SceneField[] gameplayScenes;
-    [SerializeField] private SceneField[] menuuScenes;
+    [SerializeField] private SceneField[] menuScenes;
+
+    public HashSet<string> GameplaySceneNames { get; private set; }
+    public HashSet<string> MenuSceneNames { get; private set; }
 
     private void Awake()
     {
@@ -31,6 +43,9 @@ public class SceneSwapManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        GameplaySceneNames = new HashSet<string>(gameplayScenes.Select(s => s.SceneName));
+        MenuSceneNames = new HashSet<string>(menuScenes.Select(s => s.SceneName));
     }
 
     private void OnEnable()
@@ -54,7 +69,6 @@ public class SceneSwapManager : MonoBehaviour
                 return;
             }
         }
-        _player = GameObject.FindWithTag("Player");
         FadeIn();
     }
 
@@ -87,11 +101,6 @@ public class SceneSwapManager : MonoBehaviour
         StartCoroutine(FadeAndLoadInt(1));
     }
 
-    public void QuitGame()
-    {
-        Application.Quit();
-    }
-
     public void LoadNextScene()
     {
         StartCoroutine(FadeAndLoadInt(SceneManager.GetActiveScene().buildIndex + 1));
@@ -113,6 +122,7 @@ public class SceneSwapManager : MonoBehaviour
     public void RespawnAndReloadScene()
     {
         FindSpawnPoint();
+        _loadFromRespawn = true; // The flag should only be set when we are explicitly respawning.
         StartCoroutine(FadeAndLoadInt(SceneManager.GetActiveScene().buildIndex));
         GameStateManager.Instance.SetState(GameState.Gameplay);
     }
@@ -124,27 +134,58 @@ public class SceneSwapManager : MonoBehaviour
         // Notify other managers that the scene has changed
         EffectsManager.Instance.InitializeForNewScene();
 
+        HandlePlayerLifecycle(scene);
+    }
 
-        if (_loadFromRespawn)
+    private void HandlePlayerLifecycle(Scene scene)
+    {
+        bool isGameplayScene = GameplaySceneNames.Contains(scene.name);
+        bool isMenuScene = MenuSceneNames.Contains(scene.name);
+
+        if (isMenuScene)
         {
-            if (_player != null)
+            if (PlayerInstance != null)
             {
-                var playerHub = _player.GetComponent<Player>();
-                if (playerHub != null)
+                OnPlayerWillBeDestroyed?.Invoke();
+                Destroy(PlayerInstance);
+                PlayerInstance = null;
+            }
+        }
+        else if (isGameplayScene)
+        {
+            if (PlayerInstance == null)
+            {
+                if (playerPrefab != null)
                 {
-                    playerHub.Respawn(_spwnplayerPosition, _spawnplayerRotation);
+                    PlayerInstance = Instantiate(playerPrefab);
+                    OnPlayerSpawned?.Invoke(PlayerInstance);
                 }
                 else
                 {
-                    Debug.LogError("[SceneSwapManager] Player script not found on the player object. Cannot respawn.");
+                    Debug.LogError("[SceneSwapManager] Player Prefab is not assigned!");
+                    return;
                 }
+            }
+
+            if (_loadFromRespawn)
+            {
+                // On a respawn, use the coordinates we stored before reloading.
+                PlayerInstance.GetComponent<Player>().Respawn(_spwnplayerPosition, _spawnplayerRotation);
+                _loadFromRespawn = false;
             }
             else
             {
-                Debug.LogError("[SceneSwapManager] Player reference was lost. Cannot respawn.");
+                // On a normal scene load, find the spawn point in the new scene.
+                GameObject spawnPoint = GameObject.FindWithTag("SpawnLocation");
+                if (spawnPoint != null)
+                {
+                    PlayerInstance.GetComponent<Player>().Respawn(spawnPoint.transform.position, spawnPoint.transform.rotation);
+                }
+                else
+                {
+                    Debug.LogWarning("No 'SpawnLocation' tag found in this scene. Player will use its default position.");
+                }
             }
-            
-            _loadFromRespawn = false;
         }
     }
 
@@ -162,7 +203,5 @@ public class SceneSwapManager : MonoBehaviour
             _spwnplayerPosition = Vector3.zero;
             _spawnplayerRotation = Quaternion.identity;
         }
-        
-        _loadFromRespawn = true;
     }
 }

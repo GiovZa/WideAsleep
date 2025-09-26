@@ -63,21 +63,10 @@ public class Piano : Interactable
         {
             sheetPuzzleUI.SetActive(false);
         }
-
-        // baseSheet.GetComponentInChildren<Image>().sprite = sheets[actualSheet];
-
-        if (keyboard == null)
-        {
-            keyboard = GameObject.Find("Keyboard");
-        }
-
+        
         if (keyboard != null)
         {
-            keyboard.SetActive(isPianoActive);
-        }
-        else
-        {
-            Debug.LogWarning("[Piano] Keyboard UI not found!");
+            keyboard.SetActive(false);
         }
     }
 
@@ -111,6 +100,11 @@ public class Piano : Interactable
         {
             sheetPuzzleUI.SetActive(true);
         }
+        
+        if (keyboard != null)
+        {
+            keyboard.SetActive(true);
+        }
 
         Debug.Log("[Piano] Piano activated! Press ESC to exit.");
         
@@ -118,16 +112,11 @@ public class Piano : Interactable
         playerInteraction.SetInteracting(true);
         UIManager.Instance.DisableHUD();
 
-        if (keyboard != null)
-        {
-            keyboard.SetActive(isPianoActive);
-        }
-
         // Disable player movement while playing
-        if (playerCharacterController == null)
-        {
-            playerCharacterController = FindObjectOfType<PlayerCharacterController>();
-        }
+        // if (playerCharacterController == null)
+        // {
+        //     playerCharacterController = FindObjectOfType<PlayerCharacterController>();
+        // }
         
         // Player movement is now handled by the GameStateManager.
         /*
@@ -145,15 +134,15 @@ public class Piano : Interactable
         {
             sheetPuzzleUI.SetActive(false);
         }
+
+        if (keyboard != null)
+        {
+            keyboard.SetActive(false);
+        }
         
         GameStateManager.Instance.SetState(GameState.Gameplay);
         playerInteraction.SetInteracting(false);
         UIManager.Instance.EnableHUD();
-
-        if (keyboard != null)
-        {
-            keyboard.SetActive(isPianoActive);
-        }
 
         recordedKeys.Clear();
 
