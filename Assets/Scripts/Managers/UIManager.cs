@@ -1,10 +1,9 @@
-using System.Collections;
 using playerChar;
 using UnityEngine;
 using UnityEngine.UI;
-using DG.Tweening;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class UIManager : MonoBehaviour
 {
@@ -33,16 +32,19 @@ public class UIManager : MonoBehaviour
     [Header("Player Warning")]
     [SerializeField] private Image detectionIcon;
 
-    [Header("Stamina")]
-    private AudioSource staminaAudioSource;
-    [SerializeField, Range(0, 1)] private float staminaAudioThreshold = 0.3f;
+    [Header("Inventory")]
+    [SerializeField] private TextMeshProUGUI throwableCountText;
 
+    [Header("Stamina")]
+    [SerializeField, Range(0, 1)] private float staminaAudioThreshold = 0.3f;
+    
     private PlayerCharacterController playerChar;
     private PlayerInteraction playerInteraction;
     private VisionSense visionSense;
     private HearingSense hearingSense;
     private PlayerWarningSystem playerWarningSystem;
     private CustomInput m_Input;
+    private AudioSource staminaAudioSource;
 
     private void Awake()
     {
@@ -72,6 +74,10 @@ public class UIManager : MonoBehaviour
         SceneSwapManager.OnPlayerSpawned -= HandlePlayerSpawned;
         SceneSwapManager.OnPlayerWillBeDestroyed -= HandlePlayerDestroyed;
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        if (Inventory.Instance != null)
+        {
+            Inventory.Instance.OnThrowableCountChanged -= UpdateThrowableCountUI;
+        }
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -85,6 +91,9 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
+        // Subscribe to events here to ensure other singletons have been initialized in their Awake() methods.
+        Inventory.Instance.OnThrowableCountChanged += UpdateThrowableCountUI;
+
         // Find the stamina audio source by tag
         GameObject staminaAudioObject = GameObject.FindWithTag("StaminaAudioSource");
         if (staminaAudioObject != null)
@@ -117,6 +126,9 @@ public class UIManager : MonoBehaviour
             
             UpdateStaminaEffects(playerChar.CurrentStamina / playerChar.MaxStamina);
             EnableHUD();
+
+            // When the player spawns, update the UI with the current throwable count.
+            UpdateThrowableCountUI(Inventory.Instance.ThrowableCount);
         }
     }
 
@@ -158,6 +170,14 @@ public class UIManager : MonoBehaviour
             UpdateSensesUI();
             UpdateCrosshair();
             UpdateWarningUI();
+        }
+    }
+
+    private void UpdateThrowableCountUI(int count)
+    {
+        if (throwableCountText != null)
+        {
+            throwableCountText.text = count.ToString();
         }
     }
 

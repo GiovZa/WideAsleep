@@ -23,9 +23,14 @@ public class Vision : MonoBehaviour
         {
             float distance = Vector3.Distance(transform.position, player.position);
 
-            if (!Physics.Raycast(transform.position, dirToPlayer, distance, obstructionMask))
+            // Check if the player is within the view distance
+            if (distance <= viewDistance)
             {
-                return true;
+                // Check for obstructions
+                if (!Physics.Raycast(transform.position, dirToPlayer, distance, obstructionMask))
+                {
+                    return true;
+                }
             }
         }
 

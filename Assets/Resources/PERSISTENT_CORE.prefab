@@ -476,6 +476,7 @@ MonoBehaviour:
   hearingCooldownImage: {fileID: 450387353984631134}
   senseActiveColor: {r: 1, g: 1, b: 1, a: 1}
   detectionIcon: {fileID: 5346431284063424356}
+  throwableCountText: {fileID: 3016496876059861605}
   staminaAudioThreshold: 0.3
 --- !u!1 &2954825567534629096
 GameObject:
@@ -1830,6 +1831,7 @@ Transform:
   - {fileID: 3876076967045751907}
   - {fileID: 685475456429817541}
   - {fileID: 2827163043109163507}
+  - {fileID: 6608200915198898042}
   m_Father: {fileID: 4954763884023165643}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6805291635918747672
@@ -2375,6 +2377,8 @@ MonoBehaviour:
   fadeTime: 0.5
   loadWaitTime: 1
   gameplayScenes:
+  - _sceneAsset: {fileID: 102900000, guid: 190aabafba5c27942a35c7550c883391, type: 3}
+    _sceneName: LevelVision_PROTOTYPE
   - _sceneAsset: {fileID: 102900000, guid: 6636a1820a6b848aca6e044b12e329c8, type: 3}
     _sceneName: Level2_Hearing
   - _sceneAsset: {fileID: 102900000, guid: 95b5d79f972c5114f81e5cf66a2aa68c, type: 3}
@@ -2979,6 +2983,50 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!1 &8371513760046625838
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6608200915198898042}
+  - component: {fileID: 2982044690232627526}
+  m_Layer: 0
+  m_Name: Inventory
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6608200915198898042
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8371513760046625838}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6295086641050156551}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2982044690232627526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8371513760046625838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c5d146043aecc646b5ed43f03949e4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8372817535839962178
 GameObject:
   m_ObjectHideFlags: 0
@@ -3380,6 +3428,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3016496876059861605 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3262401799333496152, guid: eb896f535a355a3498d204ea00ee4019, type: 3}
+  m_PrefabInstance: {fileID: 331822490055731005}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &5346431284063424356 stripped

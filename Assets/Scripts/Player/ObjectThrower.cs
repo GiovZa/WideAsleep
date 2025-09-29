@@ -11,7 +11,6 @@ public class ObjectThrower : MonoBehaviour
     public float throwForce = 20f;
     public float throwAngle = 30f;
     private CustomInput m_Input;
-    private int throwableCount = 0;
 
     private void Awake()
     {
@@ -30,16 +29,10 @@ public class ObjectThrower : MonoBehaviour
 
     private void Update()
     {
-        if (m_Input.Player.Throw.triggered && throwableCount > 0)
+        if (m_Input.Player.Throw.triggered && Inventory.Instance.ThrowableCount > 0)
         {
             ThrowObject();
         }
-    }
-
-    public void AddThrowable()
-    {
-        throwableCount++;
-        Debug.Log($"Picked up throwable. Total: {throwableCount}");
     }
 
     private void ThrowObject()
@@ -50,23 +43,24 @@ public class ObjectThrower : MonoBehaviour
             return;
         }
 
-        throwableCount--;
-
-        GameObject thrownObject = Instantiate(objectToThrowPrefab, throwPoint.position, throwPoint.rotation);
-        Rigidbody rb = thrownObject.GetComponent<Rigidbody>();
-
-        if (rb != null)
+        // Attempt to use a throwable from the inventory.
+        if (Inventory.Instance.UseThrowable())
         {
-            // Calculate the throw direction with an upward angle.
-            Vector3 throwDirection = Quaternion.AngleAxis(-throwAngle, throwPoint.right) * throwPoint.forward;
-            
-            // Throw the object in the new direction.
-            rb.AddForce(throwDirection * throwForce, ForceMode.VelocityChange);
+            GameObject thrownObject = Instantiate(objectToThrowPrefab, throwPoint.position, throwPoint.rotation);
+            Rigidbody rb = thrownObject.GetComponent<Rigidbody>();
+
+            if (rb != null)
+            {
+                // Calculate the throw direction with an upward angle.
+                Vector3 throwDirection = Quaternion.AngleAxis(-throwAngle, throwPoint.right) * throwPoint.forward;
+                
+                // Throw the object in the new direction.
+                rb.AddForce(throwDirection * throwForce, ForceMode.VelocityChange);
+            }
+            else
+            {
+                Debug.LogWarning("The thrown object prefab is missing a Rigidbody component.");
+            }
         }
-        else
-        {
-            Debug.LogWarning("The thrown object prefab is missing a Rigidbody component.");
-        }
-        Debug.Log($"Threw object. Remaining: {throwableCount}");
     }
 }

@@ -99,6 +99,7 @@ MonoBehaviour:
   IsLocked: 0
   openSfx: {fileID: 8300000, guid: c08ef59ef7f156b41b3ed3d63421708a, type: 3}
   closeSfx: {fileID: 8300000, guid: dfd2a5aab3db5944b892bc15f849453b, type: 3}
+  lockedSfx: {fileID: 8300000, guid: e4b1256728f3d0347829f53ab76ec3ab, type: 3}
   SfxRadius: 3
 --- !u!1 &2392747741677945900
 GameObject:

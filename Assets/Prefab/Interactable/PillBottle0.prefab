@@ -64,6 +64,22 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -2503966196923740130, guid: f19217632ae0b034681e3f15e1e7ee85, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -902013183589053379, guid: f19217632ae0b034681e3f15e1e7ee85, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -470324724403608526, guid: f19217632ae0b034681e3f15e1e7ee85, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 223565372333314626, guid: f19217632ae0b034681e3f15e1e7ee85, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: f19217632ae0b034681e3f15e1e7ee85, type: 3}
       propertyPath: m_Name
       value: PillBottle0
@@ -71,6 +87,18 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: f19217632ae0b034681e3f15e1e7ee85, type: 3}
       propertyPath: m_TagString
       value: Interactable
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f19217632ae0b034681e3f15e1e7ee85, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1049181022809450274, guid: f19217632ae0b034681e3f15e1e7ee85, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8438608110356094136, guid: f19217632ae0b034681e3f15e1e7ee85, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

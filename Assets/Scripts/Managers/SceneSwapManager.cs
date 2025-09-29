@@ -144,6 +144,7 @@ public class SceneSwapManager : MonoBehaviour
 
         if (isMenuScene)
         {
+            GameStateManager.Instance.SetState(GameState.InteractingWithUI);
             if (PlayerInstance != null)
             {
                 OnPlayerWillBeDestroyed?.Invoke();
@@ -153,6 +154,7 @@ public class SceneSwapManager : MonoBehaviour
         }
         else if (isGameplayScene)
         {
+            GameStateManager.Instance.SetState(GameState.Gameplay);
             if (PlayerInstance == null)
             {
                 if (playerPrefab != null)

@@ -13,6 +13,7 @@ public class TriggerDoor_Point : Interactable
     [Header("Audio")]
     public AudioClip openSfx;
     public AudioClip closeSfx;
+    public AudioClip lockedSfx;
     [SerializeField] float SfxRadius = 3f;
     void Awake()
     {
@@ -63,8 +64,12 @@ public class TriggerDoor_Point : Interactable
         {
             doorAnimator.SetBool("IsClosed", false);
             occlusionPortal.open = true;
+            AudioManager.Instance.Play(openSfx, transform.position, 1f, SfxRadius);
         }
-        AudioManager.Instance.Play(openSfx, transform.position, 1f, SfxRadius);
+        else
+        {
+            AudioManager.Instance.Play(lockedSfx, transform.position, 1f, SfxRadius);
+        }
     }
     
     private void CloseDoor()   

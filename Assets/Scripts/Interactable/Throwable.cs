@@ -8,20 +8,10 @@ public class Throwable : Interactable
     {
         base.Interact(interactor);
 
-        // Try to get the ObjectThrower component from the interactor (the player).
-        ObjectThrower objectThrower = interactor.GetComponent<ObjectThrower>();
+        // Add a throwable to the central inventory.
+        Inventory.Instance.AddThrowable();
 
-        if (objectThrower != null)
-        {
-            // Add a throwable to the player's inventory.
-            objectThrower.AddThrowable();
-
-            // Destroy the object that was picked up.
-            Destroy(gameObject);
-        }
-        else
-        {
-            Debug.LogWarning("The object interacting with the throwable does not have an ObjectThrower component.");
-        }
+        // Destroy the object that was picked up.
+        Destroy(gameObject);
     }
 }

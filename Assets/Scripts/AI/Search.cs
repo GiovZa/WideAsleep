@@ -35,7 +35,37 @@ public class Search : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         vision = GetComponent<Vision>();
-        player = GameObject.FindWithTag("Player").transform;
+    }
+
+    void OnEnable()
+    {
+        SceneSwapManager.OnPlayerSpawned += HandlePlayerSpawned;
+        SceneSwapManager.OnPlayerWillBeDestroyed += HandlePlayerDestroyed;
+
+        // If the player already exists when this AI is enabled, get the reference immediately.
+        if (SceneSwapManager.PlayerInstance != null)
+        {
+            player = SceneSwapManager.PlayerInstance.transform;
+        }
+    }
+
+    void OnDisable()
+    {
+        SceneSwapManager.OnPlayerSpawned -= HandlePlayerSpawned;
+        SceneSwapManager.OnPlayerWillBeDestroyed -= HandlePlayerDestroyed;
+    }
+
+    private void HandlePlayerSpawned(GameObject playerObject)
+    {
+        if (playerObject != null)
+        {
+            player = playerObject.transform;
+        }
+    }
+
+    private void HandlePlayerDestroyed()
+    {
+        player = null;
     }
 
     public void StartSearch(Vector3 fromPosition, Vector3 perceivedDirection)
@@ -69,7 +99,7 @@ public class Search : MonoBehaviour
     {
         if (!isSearching) return;
 
-        if (vision != null && vision.CanSeePlayer(player))
+        if (vision != null && player != null && vision.CanSeePlayer(player))
         {
             Debug.Log("[Search] Player spotted during search!");
             isSearching = false;

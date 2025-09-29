@@ -1,3 +1,4 @@
+using System;
 using playerChar;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -15,6 +16,8 @@ public class Player : MonoBehaviour
     public PlayerCharacterController CharacterController { get; private set; }
     public PlayerInteraction Interaction { get; private set; }
     public PlayerWarningSystem WarningSystem { get; private set; }
+
+    public event Action OnPlayerSpawned;
 
     private void Awake()
     {
@@ -54,6 +57,8 @@ public class Player : MonoBehaviour
         CharacterController.Respawn(position, rotation);
         WarningSystem.ResetState();
         Interaction.ResetInteraction();
+
+        OnPlayerSpawned?.Invoke();
     }
 }
 

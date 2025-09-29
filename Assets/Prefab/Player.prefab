@@ -253,13 +253,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerReach: 3
   PlayerCamera: {fileID: 0}
-  crosshairImage: {fileID: 0}
-  defaultCrosshair: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  interactCrosshair: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  pickupCrosshair: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  doorCrosshair: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  defaultColor: {r: 1, g: 1, b: 1, a: 1}
-  interactColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!114 &4339248304144422593
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -273,8 +266,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldownDuration: 4
-  cooldownImage: {fileID: 0}
-  activeColor: {r: 1, g: 1, b: 1, a: 1}
   mutedVolume: 0.1
   normalVolume: 1
   maxDistance: 30
@@ -297,8 +288,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldownDuration: 3
-  cooldownImage: {fileID: 0}
-  activeColor: {r: 1, g: 1, b: 1, a: 1}
   effectDuration: 2.5
   FadeInTime: 0.5
   FadeOutTime: 0.5
@@ -335,7 +324,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52427bd4cd32b7e4eb6781e6c69a9a9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectionIcon: {fileID: 0}
   heartbeatAudioSource: {fileID: 9092502506809099772}
   heartbeatSound: {fileID: 8300000, guid: fb99e77e73637604ab6b1c1ccdc87a8e, type: 3}
   aiSpottedSound: {fileID: 8300000, guid: 5582bccb1efff41be8649836559d52f3, type: 3}
@@ -435,8 +423,8 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 40
+  near clip plane: 0.2
+  far clip plane: 50
   field of view: 60
   orthographic: 0
   orthographic size: 5

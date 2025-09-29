@@ -26,7 +26,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.7
+      value: 1.6999996
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
       propertyPath: m_LocalScale.y
@@ -34,23 +34,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.7
+      value: 1.6999996
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.05
+      value: -35.318
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.001468
+      value: -17.013193
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 82
+      value: -19.319
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.21603042
+      value: 0.21603043
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
       propertyPath: m_LocalRotation.x
@@ -58,7 +58,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.9763866
+      value: -0.97638667
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
       propertyPath: m_LocalRotation.z
@@ -112,6 +112,10 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: -0.10753399
       objectReference: {fileID: 0}
+    - target: {fileID: -8017449571587430431, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
+      propertyPath: m_DynamicOccludee
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -7849023741047487955, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.9894354
@@ -127,6 +131,14 @@ PrefabInstance:
     - target: {fileID: -7849023741047487955, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
       propertyPath: m_LocalRotation.z
       value: -0.037755597
+      objectReference: {fileID: 0}
+    - target: {fileID: -7248827071515774946, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
+      propertyPath: m_DynamicOccludee
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7033322453554612219, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
+      propertyPath: m_DynamicOccludee
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -5215189881324386867, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
       propertyPath: m_LocalRotation.w
@@ -223,6 +235,10 @@ PrefabInstance:
     - target: {fileID: -3721710529265481588, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0.7081995
+      objectReference: {fileID: 0}
+    - target: {fileID: -2641288237696090860, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
+      propertyPath: m_DynamicOccludee
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -2164967320534041943, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
       propertyPath: m_LocalRotation.w
@@ -451,7 +467,7 @@ PrefabInstance:
     - target: {fileID: 5866666021909216657, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: a3b497b02ffa9684894d66014230167c, type: 2}
+      objectReference: {fileID: 9100000, guid: f57687d158faef44a842439d4fca13e2, type: 2}
     - target: {fileID: 7914940132383061924, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.9999999
@@ -570,6 +586,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ca427eb4493df1468a85ad377432773, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hasSpottedPlayer: 0
   search: {fileID: 0}
   killRange: 1.5
 --- !u!114 &3447486784220686702
@@ -588,7 +605,7 @@ MonoBehaviour:
   arriveThreshold: 1
   waitTimeAtWaypoint: 3
   yRotationDegrees: 0
-  applyRotation: 1
+  applyRotation: 0
   isPatrolling: 1
 --- !u!114 &7644795208852356168
 MonoBehaviour:
@@ -628,12 +645,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b587d5463ccf4f42b4ebf74f5acc916, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSearchPointDistance: 6
-  minSearchPointDistance: 4
-  maxSearchAttempts: 10
+  maxSearchPointDistance: 4
+  minSearchPointDistance: 2
+  maxSearchAttempts: 5
   searchDurationAtPoint: 0.5
   angleSpread: 30
-  numPointsToTry: 3
+  numPointsToTry: 2
 --- !u!114 &913150443022887199
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -646,8 +663,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68ba4db1ca068224f883ac4ce3ac10cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewDistance: 8
-  viewAngle: 70
+  viewDistance: 10
+  viewAngle: 80
   playerMask:
     serializedVersion: 2
     m_Bits: 0
@@ -666,7 +683,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab01aa8bd336a2041ae8c7a614007727, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hearingRadius: 20
+  hearingRadius: 15
   playerMask:
     serializedVersion: 2
     m_Bits: 0
@@ -707,5 +724,5 @@ MonoBehaviour:
     - {fileID: 8300000, guid: baaabbac02112c6479207fdbca57ebe8, type: 3}
     - {fileID: 8300000, guid: 43760c14638de194580fbab20a5f4ff3, type: 3}
     - {fileID: 8300000, guid: 8ff17fcf9bba8f6438f1e25c6002992b, type: 3}
-    volume: 1
+    volume: 0.15
   raycastDistance: 1
