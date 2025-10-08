@@ -57,6 +57,9 @@ public class Player : MonoBehaviour
         CharacterController.Respawn(position, rotation);
         WarningSystem.ResetState();
         Interaction.ResetInteraction();
+        
+        // Reset inventory
+        Inventory.Instance.Reset();
 
         OnPlayerSpawned?.Invoke();
     }

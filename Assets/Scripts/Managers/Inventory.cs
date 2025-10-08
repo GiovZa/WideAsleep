@@ -59,4 +59,11 @@ public class Inventory : MonoBehaviour
         }
         return false;
     }
+
+    public void Reset()
+    {
+        ThrowableCount = 0;
+        OnThrowableCountChanged?.Invoke(ThrowableCount);
+        Debug.Log("Inventory: Reset throwables to zero.");
+    }
 }
