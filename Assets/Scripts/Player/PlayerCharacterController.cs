@@ -233,7 +233,7 @@ namespace playerChar
             {
                 if (LandSfx != null)
                 {
-                    AudioManager.Instance.PlayRandomSoundForPlayerOnly(LandSfx, transform.position);
+                    AudioManager.Instance.PlayRandomSoundForPlayerOnly(LandSfx, transform.position, 1f, true, AudioManager.Instance.SFXMixerGroup);
                 }
                 SoundEvents.EmitSound(transform.position, 0.8f * noiseMeter);
             }
@@ -431,7 +431,7 @@ namespace playerChar
                             {
                                 // int index = UnityEngine.Random.Range(0, JumpSfx.Length);
                                 // audioSource.PlayOneShot(JumpSfx[index]);
-                                AudioManager.Instance.PlayRandomSoundForPlayerOnly(JumpSfx, transform.position, 0.5f);
+                                AudioManager.Instance.PlayRandomSoundForPlayerOnly(JumpSfx, transform.position, 0.5f, true, AudioManager.Instance.SFXMixerGroup);
                                 SoundEvents.EmitSound(transform.position, 1.0f * noiseMeter);
                             }
 

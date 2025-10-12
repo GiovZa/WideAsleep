@@ -15,7 +15,6 @@ public class EffectsManager : MonoBehaviour
     private DepthOfField depthOfField;
     private Coroutine visionSenseCoroutine;
     private ColorAdjustments colorAdjustments;
-    private ChromaticAberration chromaticAberration;
     private WhiteBalance whiteBalance;
 
     [Header("Effect Settings")]
@@ -29,11 +28,6 @@ public class EffectsManager : MonoBehaviour
 
     [Tooltip("How quickly the stamina effect fades in and out.")]
     public float staminaEffectSmoothTime = 0.5f;
-    
-    // private float baseChromaticAberrationIntensity;
-    // private float targetChromaticAberrationIntensity;
-    // private float chromaticAberrationVelocity;
-
     private float baseTemperature;
     private float targetTemperature;
     private float temperatureVelocity;
@@ -94,16 +88,6 @@ public class EffectsManager : MonoBehaviour
             Debug.LogWarning("ColorAdjustments not found on a Post Process Volume in the scene. The black and white effect will not work.");
         }
 
-        // if (chromaticAberration != null)
-        // {
-        //     baseChromaticAberrationIntensity = chromaticAberration.intensity.value;
-        //     targetChromaticAberrationIntensity = baseChromaticAberrationIntensity;
-        // }
-        // else
-        // {
-        //     Debug.LogWarning("ChromaticAberration not found on a Post Process Volume in the scene. The stamina effect will not work.");
-        // }
-
         if (whiteBalance != null)
         {
             baseTemperature = whiteBalance.temperature.value;
@@ -117,13 +101,6 @@ public class EffectsManager : MonoBehaviour
 
     private void Update()
     {
-        // if (chromaticAberration != null)
-        // {
-        //     float currentIntensity = chromaticAberration.intensity.value;
-        //     float newIntensity = Mathf.SmoothDamp(currentIntensity, targetChromaticAberrationIntensity, ref chromaticAberrationVelocity, staminaEffectSmoothTime);
-        //     chromaticAberration.intensity.Override(newIntensity);
-        // }
-
         if (whiteBalance != null)
         {
             float currentTemperature = whiteBalance.temperature.value;
@@ -134,14 +111,6 @@ public class EffectsManager : MonoBehaviour
 
     public void UpdateStaminaEffect(float staminaPercentage)
     {
-        // if (chromaticAberration != null)
-        // {
-        //     // Invert the percentage: low stamina = high effect intensity
-        //     // Calculate the *additional* intensity based on stamina drain
-        //     float intensityDelta = (1.0f - staminaPercentage) * maxStaminaChromaticAberration;
-        //     targetChromaticAberrationIntensity = baseChromaticAberrationIntensity + intensityDelta;
-        // }
-        
         if (whiteBalance != null)
         {
             // Invert the percentage: low stamina = colder temperature
@@ -328,6 +297,57 @@ public class EffectsManager : MonoBehaviour
             yield return null;
         }
         colorAdjustments.saturation.Override(originalSaturation);
+    }
+    #endregion
+
+    #region Post Exposure Adjustment
+    /// <summary>
+    /// Triggers a post exposure adjustment.
+    /// </summary>
+    /// <param name="duration">How long the effect should last in seconds.</param>
+    /// <param name="fadeTime">How long the fade in and fade out should last in seconds.</param>
+    /// <param name="setPostExposure">The post exposure to use for the effect.</param>
+    public void TriggerPostExposureAdjustment(float duration, float fadeTime, float setPostExposure)
+    {
+        if (colorAdjustments != null)
+        {
+            StartCoroutine(PostExposureAdjustmentCoroutine(duration, fadeTime, setPostExposure));
+        }
+    }
+
+    private IEnumerator PostExposureAdjustmentCoroutine(float duration, float fadeTime, float setPostExposure)
+    {
+        // Store original post exposure
+        float originalPostExposure = colorAdjustments.postExposure.value;
+        
+        // set fade in and out times
+        float fadeInTime = fadeTime;
+        float fadeOutTime = fadeTime;
+
+        // Fade in
+        float elapsedTime = 0f;
+        while (elapsedTime < fadeInTime)
+        {
+            float postExposure = Mathf.Lerp(originalPostExposure, setPostExposure, elapsedTime / fadeInTime);
+            colorAdjustments.postExposure.Override(postExposure);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        colorAdjustments.postExposure.Override(setPostExposure);
+
+        // Hold at post exposure
+        yield return new WaitForSeconds(duration);
+
+        // Fade out
+        elapsedTime = 0f;
+        while (elapsedTime < fadeOutTime)
+        {
+            float postExposure = Mathf.Lerp(setPostExposure, originalPostExposure, elapsedTime / fadeOutTime);
+            colorAdjustments.postExposure.Override(postExposure);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        colorAdjustments.postExposure.Override(originalPostExposure);
     }
     #endregion
 

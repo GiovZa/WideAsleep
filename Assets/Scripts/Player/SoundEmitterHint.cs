@@ -40,6 +40,6 @@ public class SoundEmitterHint : MonoBehaviour
             Debug.LogError("No sound clip assigned to " + gameObject.name);
             return;
         }
-        AudioManager.Instance.PlaySoundForPlayerOnly(soundClip, transform.position, volume, true);
+        AudioManager.Instance.PlaySoundForPlayerOnly(soundClip, transform.position, volume, true, AudioManager.Instance.SFXMixerGroup);
     }
 }

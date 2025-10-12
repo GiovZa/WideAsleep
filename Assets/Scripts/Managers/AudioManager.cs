@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using SoundSystem;
 using System.Collections.Generic;
+using System.Collections;
 
 [System.Serializable]
 public class NoisySurfaceSound
@@ -17,6 +18,14 @@ public class NoisySurfaceSound
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance;
+
+    [Header("Audio Mixer Groups")]
+    public AudioMixerGroup SFXMixerGroup;
+    public AudioMixerGroup UIMixerGroup;
+
+    [Header("Audio Sources")]
+    [SerializeField] private AudioSource bgmSource;
+    [SerializeField] private float crossfadeDuration = 1.0f;
 
     [Header("Noisy Surface Sounds")]
     public List<NoisySurfaceSound> noisySurfaceSounds;
@@ -36,7 +45,73 @@ public class AudioManager : MonoBehaviour
                 surfaceSoundDictionary.Add(sound.surfaceType, sound);
             }
         }
+
+        // Ensure there is a BGM source
+        if (bgmSource == null)
+        {
+            bgmSource = gameObject.AddComponent<AudioSource>();
+            bgmSource.loop = true;
+            bgmSource.spatialBlend = 0f; // 2D sound
+        }
     }
+
+    #region BGM Management
+    public void PlayBGM(AudioClip clip, bool loop = true, bool crossfade = true)
+    {
+        if (clip == null)
+        {
+            Debug.LogWarning("[AudioManager] BGM clip is null.");
+            return;
+        }
+
+        if (bgmSource.isPlaying && bgmSource.clip == clip)
+        {
+            // The requested BGM is already playing.
+            return;
+        }
+
+        bgmSource.loop = loop;
+
+        if (crossfade && bgmSource.isPlaying)
+        {
+            StartCoroutine(CrossfadeBGM(clip));
+        }
+        else
+        {
+            bgmSource.clip = clip;
+            bgmSource.Play();
+        }
+    }
+
+    private IEnumerator CrossfadeBGM(AudioClip newClip)
+    {
+        float timer = 0f;
+        float startVolume = bgmSource.volume;
+
+        // Fade out
+        while (timer < crossfadeDuration)
+        {
+            bgmSource.volume = Mathf.Lerp(startVolume, 0, timer / crossfadeDuration);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        bgmSource.Stop();
+
+        // Start new clip
+        bgmSource.clip = newClip;
+        bgmSource.Play();
+
+        // Fade in
+        timer = 0f;
+        while (timer < crossfadeDuration)
+        {
+            bgmSource.volume = Mathf.Lerp(0, startVolume, timer / crossfadeDuration);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        bgmSource.volume = startVolume; // Ensure it ends at the correct volume
+    }
+    #endregion
 
     #region Play sounds for both Player and AI
     /// <summary>
@@ -90,9 +165,8 @@ public class AudioManager : MonoBehaviour
 
     public void PlayRandomSoundForPlayerOnly(AudioClip[] clips, Vector3 position, float volume = 1f, bool spatial = true, AudioMixerGroup mixerGroup = null)
     {
+        if (clips == null || clips.Length == 0) return;
         int rand = Random.Range(0, clips.Length);
-
-        if (clips == null) return;
 
         GameObject tempGO = new GameObject("TempAudio");
         tempGO.transform.position = position;
@@ -124,7 +198,7 @@ public class AudioManager : MonoBehaviour
                 float radius = surface.overrideDefaults ? surface.soundRadius : surfaceSound.soundRadius;
 
                 // Play it using the existing Play method with the determined values
-                Play(clipToPlay, position, volume, radius, true);
+                Play(clipToPlay, position, volume, radius, true, SFXMixerGroup);
             }
         }
         else

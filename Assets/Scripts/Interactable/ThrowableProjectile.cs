@@ -21,7 +21,7 @@ public class ThrowableProjectile : MonoBehaviour
         hasHitSurface = true;
         
         // Use the existing SoundSystem to broadcast the noise event.
-        AudioManager.Instance.PlayRandomSound(hitSounds, transform.position, volume, noiseRadius);
+        AudioManager.Instance.PlayRandomSound(hitSounds, transform.position, volume, noiseRadius, true, AudioManager.Instance.SFXMixerGroup);
         
         // Optional: Destroy the projectile after a short delay to clean up the scene.
         Destroy(gameObject, 2f); 

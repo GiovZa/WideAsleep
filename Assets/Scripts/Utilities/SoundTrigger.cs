@@ -7,7 +7,7 @@ public class SoundTrigger : MonoBehaviour
     public float volume = 1f;
     public float soundRadius = 5f;
     public bool spatial = true;
-    public AudioMixerGroup mixerGroup;
+    public AudioMixerGroup mixerGroup = AudioManager.Instance.SFXMixerGroup;
 
     [Header("Step Trigger")]
     public AudioClip stepClip;

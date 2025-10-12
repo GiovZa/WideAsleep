@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
+using playerChar;
 
 /// <summary>
 /// Manages the player's "Vision Sense" ability, which clarifies the screen by disabling Depth of Field.
@@ -28,9 +29,14 @@ public class VisionSense : SenseBase
     [Tooltip("The maximum intensity of the vignette (0 to 1).")]
     [Range(0, 1)]
     public float vignetteIntensity = 0.15f;
+    [Tooltip("The post exposure to use for the effect.")]
+    public float postExposureIntensity = 1.2f;
 
     [Header("Highlight Settings")]
     [SerializeField] private float highlightDistance = 20f;
+    [SerializeField] private LayerMask obstructionMask;
+    private Camera playerCamera;
+    private PlayerCharacterController m_PlayerCharacterController;
     private List<Interactable> highlightableObjects = new List<Interactable>();
     private List<Interactable> highlightedObjects = new List<Interactable>();
 
@@ -50,6 +56,12 @@ public class VisionSense : SenseBase
     protected override void Start()
     {
         base.Start();
+
+        m_PlayerCharacterController = GetComponent<PlayerCharacterController>(); 
+        if (m_PlayerCharacterController != null)
+        {
+            playerCamera = m_PlayerCharacterController.PlayerCamera;
+        }
         
         VisionSenseHighlight[] targets = FindObjectsOfType<VisionSenseHighlight>();
         foreach (var target in targets)
@@ -69,6 +81,7 @@ public class VisionSense : SenseBase
         {
             effectsManager.TriggerVisionSense(effectDuration, FadeInTime, clearStart, clearEnd, clearMaxRadius);
             effectsManager.PulseVignette(FadeInTime, effectDuration, FadeOutTime, vignetteIntensity);
+            effectsManager.TriggerPostExposureAdjustment(effectDuration, FadeInTime, postExposureIntensity);
         }
 
         Vector3 playerPosition = transform.position;
@@ -78,8 +91,15 @@ public class VisionSense : SenseBase
         {
             if (interactable != null && Vector3.Distance(playerPosition, interactable.transform.position) <= highlightDistance)
             {
-                interactable.RequestOutline();
-                highlightedObjects.Add(interactable);
+                Vector3 directionToObject = interactable.transform.position - playerCamera.transform.position;
+                float distanceToObject = directionToObject.magnitude;
+
+                // Check for a clear line of sight
+                if (!Physics.Raycast(playerCamera.transform.position, directionToObject.normalized, distanceToObject, obstructionMask))
+                {
+                    interactable.RequestOutline();
+                    highlightedObjects.Add(interactable);
+                }
             }
         }
 

@@ -7,6 +7,7 @@ public class TEST_Trigger : MonoBehaviour
     bool hasTriggered = false;
     BoxCollider boxCollider;
     [SerializeField] TEST_ActorObject objectToTrigger;
+    [SerializeField] AudioClip triggerSound;
     
     void Start()
     {
@@ -19,6 +20,10 @@ public class TEST_Trigger : MonoBehaviour
         {
             hasTriggered = true;
             objectToTrigger.Trigger();
+            if (triggerSound != null)
+            {
+                AudioManager.Instance.Play(triggerSound, transform.position, 1f, 5f, true, AudioManager.Instance.SFXMixerGroup);
+            }
         }
     }
 }

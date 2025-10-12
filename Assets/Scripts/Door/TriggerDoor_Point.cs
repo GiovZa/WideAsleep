@@ -64,11 +64,11 @@ public class TriggerDoor_Point : Interactable
         {
             doorAnimator.SetBool("IsClosed", false);
             occlusionPortal.open = true;
-            AudioManager.Instance.Play(openSfx, transform.position, 1f, SfxRadius);
+            AudioManager.Instance.Play(openSfx, transform.position, 1f, SfxRadius, true, AudioManager.Instance.SFXMixerGroup);
         }
         else
         {
-            AudioManager.Instance.Play(lockedSfx, transform.position, 1f, SfxRadius);
+            AudioManager.Instance.Play(lockedSfx, transform.position, 1f, SfxRadius, true, AudioManager.Instance.SFXMixerGroup);
         }
     }
     
@@ -78,7 +78,7 @@ public class TriggerDoor_Point : Interactable
         doorAnimator.SetTrigger("Close");
         doorAnimator.SetBool("IsClosed", true);
         StartCoroutine(CloseOcclusionPortal());
-        AudioManager.Instance.Play(closeSfx, transform.position, 1f, SfxRadius);
+        AudioManager.Instance.Play(closeSfx, transform.position, 1f, SfxRadius, true, AudioManager.Instance.SFXMixerGroup);
     }
 
     //Visual Effects

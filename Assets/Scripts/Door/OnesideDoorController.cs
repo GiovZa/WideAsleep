@@ -70,13 +70,13 @@ public class OnesideDoorController : MonoBehaviour
             //StartCoroutine(CloseOcclusionPortal());
         }
 
-        AudioManager.Instance.Play(openSfx, transform.position, 1f, SfxRadius);
+        AudioManager.Instance.Play(openSfx, transform.position, 1f, SfxRadius, true, AudioManager.Instance.SFXMixerGroup);
     }
 
     private void PlayLockedFeedback()
     {
         doorAnimator.SetTrigger("Open");
-        AudioManager.Instance.Play(lockedSfx, transform.position, 1f, SfxRadius);
+        AudioManager.Instance.Play(lockedSfx, transform.position, 1f, SfxRadius, true, AudioManager.Instance.SFXMixerGroup);
     }
 
     // IEnumerator CloseOcclusionPortal()

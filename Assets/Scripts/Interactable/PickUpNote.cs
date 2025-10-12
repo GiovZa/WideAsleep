@@ -13,7 +13,7 @@ public class PickupNote : Interactable
 
         if (pickupSound != null)
         {
-            AudioManager.Instance.PlaySoundForPlayerOnly(pickupSound, transform.position, 1f, true);
+            AudioManager.Instance.PlaySoundForPlayerOnly(pickupSound, transform.position, 1f, true, AudioManager.Instance.SFXMixerGroup);
         }
 
         gameObject.SetActive(false); // Disables the note

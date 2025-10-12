@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Throwable : Interactable
 {
-    // This script will be for objects that the player can pick up and throw.
+    [SerializeField] private AudioClip[] pickupSounds;
 
     public override void Interact(GameObject interactor)
     {
@@ -10,6 +10,11 @@ public class Throwable : Interactable
 
         // Add a throwable to the central inventory.
         Inventory.Instance.AddThrowable();
+
+        if (pickupSounds != null)
+        {
+            AudioManager.Instance.PlayRandomSoundForPlayerOnly(pickupSounds, transform.position, 1f, true, AudioManager.Instance.SFXMixerGroup);
+        }
 
         // Destroy the object that was picked up.
         Destroy(gameObject);

@@ -40,7 +40,7 @@ public class PlayerWarningSystem : MonoBehaviour
         // Play vocalization from the specific enemy who spotted us
         if (aiSpottedSound != null)
         {
-            AudioManager.Instance.PlaySoundForPlayerOnly(aiSpottedSound, enemy.transform.position, 0.5f);
+            AudioManager.Instance.PlaySoundForPlayerOnly(aiSpottedSound, enemy.transform.position, 0.5f, true, AudioManager.Instance.SFXMixerGroup);
         }
 
         // Start heartbeat and show icon only when the first enemy spots us

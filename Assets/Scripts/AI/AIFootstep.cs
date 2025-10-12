@@ -40,7 +40,7 @@ public class AIFootstep : MonoBehaviour
                     // Pick a random clip from the array
                     if (surfaceSound.audioClips.Length > 0)
                     {
-                            AudioManager.Instance.PlayRandomSoundForPlayerOnly(surfaceSound.audioClips, footstepSource.position, surfaceSound.volume);
+                            AudioManager.Instance.PlayRandomSoundForPlayerOnly(surfaceSound.audioClips, footstepSource.position, surfaceSound.volume, true, AudioManager.Instance.SFXMixerGroup);
                     }
                     break;
                 }

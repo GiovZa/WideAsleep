@@ -12,12 +12,8 @@ public class CSE_PopUpTexts : CutSceneElementBase
 
     public override void Execute()
     {
+        base.Execute();
         popUpText.text = dialouge;
         animator.Play("FadeIn");
-    }
-
-    public override void FadeOut()
-    {
-        animator.Play("FadeOut");
     }
 }
