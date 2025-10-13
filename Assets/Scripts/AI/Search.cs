@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
+using Pathfinding;
 
 public class Search : MonoBehaviour
 {
-    private NavMeshAgent agent;
+    private RichAI agent;
     private Vision vision;
     private Transform player;
 
@@ -16,15 +16,24 @@ public class Search : MonoBehaviour
     public float maxSearchPointDistance = 6f;
     public float minSearchPointDistance = 3f;
     public int maxSearchAttempts = 10;
-    public float searchDurationAtPoint = 2f;
     public float angleSpread = 30f;
     public int numPointsToTry = 2;
+    
+    [Header("Give Up Settings")]
+    [Tooltip("If true, skip look-around when path is blocked and move to next point")]
+    public bool skipLookAroundWhenBlocked = true;
+    [Tooltip("Max time to wait for reaching a search point before giving up on it")]
+    public float searchPointTimeout = 5f;
+    [Tooltip("Distance threshold to consider a search point 'reached'")]
+    public float arriveThreshold = 1.5f;
 
     private Quaternion[] scanRotations;
     private int currentScanIndex = 0;
     private float scanPauseDuration = 0.4f;
     private float scanPauseTimer = 0f;
     private float rotationSpeed = 120f;
+    
+    private float timeSpentOnCurrentPoint = 0f;
 
     public System.Action OnPlayerSpotted;
 
@@ -33,7 +42,7 @@ public class Search : MonoBehaviour
 
     void Awake()
     {
-        agent = GetComponent<NavMeshAgent>();
+        agent = GetComponent<RichAI>();
         vision = GetComponent<Vision>();
     }
 
@@ -75,17 +84,24 @@ public class Search : MonoBehaviour
         searchIndex = 0;
         isSearching = false;
         isLookingAround = false;
+        timeSpentOnCurrentPoint = 0f;
 
         GenerateSearchPoints(fromPosition);
 
         if (searchPoints.Count > 0)
         {
             isSearching = true;
-            agent.SetDestination(searchPoints[searchIndex]);
+            agent.canMove = true;
+            agent.destination = searchPoints[searchIndex];
+            Debug.Log($"[Search] Starting search with {searchPoints.Count} points.");
         }
         else
         {
-            Debug.Log("[Search] No valid search points generated.");
+            Debug.LogWarning("[Search] No valid search points generated. Beginning look-around at current position.");
+            // If we can't find search points, at least do a look-around from current position
+            isSearching = true;
+            isLookingAround = true;
+            BeginLookAround();
         }
     }
 
@@ -113,14 +129,52 @@ public class Search : MonoBehaviour
             return;
         }
 
-        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+        // Track time spent trying to reach this search point
+        timeSpentOnCurrentPoint += Time.deltaTime;
+
+        // Check if we've reached the end of the path
+        if (agent.reachedEndOfPath)
         {
-            BeginLookAround();
+            // Check if we actually reached the destination or if the path is blocked
+            Vector3 currentDestination = searchPoints[searchIndex];
+            float distanceToDestination = Vector3.Distance(transform.position, currentDestination);
+            bool actuallyReached = distanceToDestination <= arriveThreshold;
+
+            if (actuallyReached)
+            {
+                // We successfully reached the search point, do a look-around
+                Debug.Log($"[Search] Reached search point {searchIndex + 1}/{searchPoints.Count}");
+                BeginLookAround();
+            }
+            else if (skipLookAroundWhenBlocked)
+            {
+                // Path is blocked, skip look-around and move to next point
+                Debug.Log($"[Search] Path to search point {searchIndex + 1} is blocked (distance: {distanceToDestination:F2}). Skipping to next point.");
+                MoveToNextSearchPoint();
+            }
+            else
+            {
+                // Path is blocked but we still do a look-around from where we are
+                Debug.Log($"[Search] Path blocked but doing look-around from current position.");
+                BeginLookAround();
+            }
+        }
+        // Timeout check: if we've been trying to reach this point for too long, give up
+        else if (timeSpentOnCurrentPoint >= searchPointTimeout)
+        {
+            Debug.LogWarning($"[Search] Timeout reaching search point {searchIndex + 1}. Moving to next point.");
+            MoveToNextSearchPoint();
         }
     }
 
     void GenerateSearchPoints(Vector3 origin)
     {
+        if (AstarPath.active == null)
+        {
+            Debug.LogError("[Search] AstarPath.active is null. Cannot generate search points.");
+            return;
+        }
+
         for (int i = 0; i < maxSearchAttempts && searchPoints.Count < numPointsToTry; i++)
         {
             float angle = Random.Range(-angleSpread, angleSpread);
@@ -128,21 +182,48 @@ public class Search : MonoBehaviour
             float distance = Random.Range(minSearchPointDistance, maxSearchPointDistance);
             Vector3 candidate = origin + rotatedDir.normalized * distance;
 
-            if (NavMesh.SamplePosition(candidate, out NavMeshHit hit, 2f, NavMesh.AllAreas))
-            {
-                NavMeshPath path = new();
-                if (agent.CalculatePath(hit.position, path) && path.status == NavMeshPathStatus.PathComplete)
-                {
-                    float totalDist = 0f;
-                    for (int j = 1; j < path.corners.Length; j++)
-                        totalDist += Vector3.Distance(path.corners[j - 1], path.corners[j]);
+            var nninfo = AstarPath.active.GetNearest(candidate, NNConstraint.Walkable);
+            Vector3 closestPoint = nninfo.position;
 
-                    if (totalDist <= maxSearchPointDistance && totalDist >= minSearchPointDistance)
+            if (nninfo.node != null && Vector3.Distance(candidate, closestPoint) < 2f)
+            {
+                try
+                {
+                    var path = ABPath.Construct(origin, closestPoint);
+                    AstarPath.StartPath(path);  // Must start the path before blocking
+                    AstarPath.BlockUntilCalculated(path);
+                    
+                    if (!path.error)
                     {
-                        searchPoints.Add(hit.position);
+                        float totalDist = path.GetTotalLength();
+                        if (totalDist <= maxSearchPointDistance && totalDist >= minSearchPointDistance)
+                        {
+                            searchPoints.Add(closestPoint);
+                        }
                     }
                 }
+                catch (System.Exception e)
+                {
+                    Debug.LogWarning($"[Search] Failed to calculate path for search point: {e.Message}");
+                }
             }
+        }
+    }
+
+    void MoveToNextSearchPoint()
+    {
+        searchIndex++;
+        timeSpentOnCurrentPoint = 0f;
+
+        if (searchIndex >= searchPoints.Count)
+        {
+            Debug.Log("[Search] Finished all search points.");
+            isSearching = false;
+        }
+        else
+        {
+            agent.destination = searchPoints[searchIndex];
+            Debug.Log($"[Search] Moving to search point {searchIndex + 1}/{searchPoints.Count}");
         }
     }
 
@@ -181,18 +262,9 @@ public class Search : MonoBehaviour
 
                 if (currentScanIndex >= scanRotations.Length)
                 {
+                    // Finished looking around at this point
                     isLookingAround = false;
-                    searchIndex++;
-
-                    if (searchIndex >= searchPoints.Count)
-                    {
-                        Debug.Log("[Search] Finished all search points.");
-                        isSearching = false;
-                    }
-                    else
-                    {
-                        agent.SetDestination(searchPoints[searchIndex]);
-                    }
+                    MoveToNextSearchPoint();
                 }
             }
         }

@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.AI;
+using Pathfinding;
 
 public class AlertState : IState
 {
@@ -23,8 +23,8 @@ public class AlertState : IState
 
     private bool hasScanned = false;
 
-    // Reference to the NavMeshAgent for pathfinding
-    private NavMeshAgent navMeshAgent;
+    // Reference to the agent for pathfinding
+    private RichAI agent;
 
     public AlertState(NurseAI ai)
     {
@@ -32,7 +32,7 @@ public class AlertState : IState
         alert = ai.GetComponent<Alert>();
         vision = ai.GetComponent<Vision>();
         search = ai.GetComponent<Search>();
-        navMeshAgent = ai.GetComponent<NavMeshAgent>();  // Add the NavMeshAgent reference
+        agent = ai.GetComponent<RichAI>();  // Add the agent reference
         animator = ai.GetComponent<Animator>();
 
         player = GameObject.FindWithTag("Player").transform;
@@ -47,7 +47,7 @@ public class AlertState : IState
         reachedLastPosition = false;
         hasScanned = false;
 
-        navMeshAgent.isStopped = false;  // Ensure the agent is not stopped
+        agent.canMove = true;  // Ensure the agent is not stopped
 
         if (!overrideFromSound)
         {
@@ -124,7 +124,7 @@ public class AlertState : IState
                 isStaring = true;
                 stareTimer = stareTime;
                 Debug.Log("[AlertState] Player spotted. Beginning stare down...");
-                navMeshAgent.isStopped = true; // Stop moving
+                agent.canMove = false; // Stop moving
             }
 
             Vector3 dir = (player.position - nurseAI.transform.position).normalized;
@@ -141,7 +141,7 @@ public class AlertState : IState
         if (Vector3.Distance(nurseAI.transform.position, player.position) <= nurseAI.killRange)
         {
             Debug.Log("[AlertState] Player in kill range. Stopping and transitioning to KillState.");
-            navMeshAgent.isStopped = true;
+            agent.canMove = false;
             nurseAI.TransitionToState(nurseAI.killState);
         }
 
@@ -153,15 +153,26 @@ public class AlertState : IState
         {
             Debug.Log("[AlertState] Lost sight of player during stare. Resuming path.");
             isStaring = false;
-            navMeshAgent.isStopped = false;
+            agent.canMove = true;
         }
 
         if (!reachedLastPosition)
         {
-            float distanceToLastPos = Vector3.Distance(nurseAI.transform.position, lastKnownPosition);
-            if (distanceToLastPos <= alert.arriveThreshold)
+            // Check if we have arrived, either by distance or because the path is blocked.
+            bool hasArrived = Vector3.Distance(nurseAI.transform.position, lastKnownPosition) <= alert.arriveThreshold;
+            bool pathIsBlocked = agent.reachedEndOfPath && !hasArrived;
+
+            if (hasArrived || pathIsBlocked)
             {
-                Debug.Log("[AlertState] Reached last known position. Beginning search.");
+                if (pathIsBlocked)
+                {
+                    Debug.Log("[AlertState] Path to last known position is blocked. Beginning search from current position.");
+                }
+                else
+                {
+                    Debug.Log("[AlertState] Reached last known position. Beginning search.");
+                }
+
                 reachedLastPosition = true;
                 hasScanned = true;
 
@@ -182,16 +193,6 @@ public class AlertState : IState
                         playerMovementDir = (player.position - nurseAI.transform.position).normalized;
 
                     search.StartSearch(nurseAI.transform.position, playerMovementDir);
-                }
-            }
-            else
-            {
-                // If not reached, ensure pathfinding to the last known position
-                if (!navMeshAgent.hasPath || navMeshAgent.pathStatus == NavMeshPathStatus.PathInvalid)
-                {
-                    // Path is blocked or not valid, decide what to do next
-                    Debug.Log("[AlertState] Path to last known position is blocked, transitioning to search.");
-                    nurseAI.TransitionToState(nurseAI.patrolState);  // Or you can start a search state here
                 }
             }
         }

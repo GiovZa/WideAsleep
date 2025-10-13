@@ -1,21 +1,21 @@
 using UnityEngine;
-using UnityEngine.AI;
+using Pathfinding;
 
 public class Chase : MonoBehaviour
 {
-    private NavMeshAgent agent;
+    private RichAI agent;
 
     void Awake()
     {
-        agent = GetComponent<NavMeshAgent>();
+        agent = GetComponent<RichAI>();
     }
 
     public void StartChasing(Transform target)
     {
         if (target != null)
         {
-            agent.isStopped = false;
-            agent.SetDestination(target.position);
+            agent.canMove = true;
+            agent.destination = target.position;
         }
     }
 
@@ -23,12 +23,12 @@ public class Chase : MonoBehaviour
     {
         if (target != null)
         {
-            agent.SetDestination(target.position);
+            agent.destination = target.position;
         }
     }
 
     public void StopChasing()
     {
-        agent.isStopped = true;
+        agent.canMove = false;
     }
 }

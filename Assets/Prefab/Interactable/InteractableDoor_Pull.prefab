@@ -216,7 +216,7 @@ GameObject:
   - component: {fileID: 7660865846423214749}
   - component: {fileID: 5627086781494978080}
   - component: {fileID: 6872714112102696109}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Door.005
   m_TagString: Interactable
   m_Icon: {fileID: 0}
@@ -927,6 +927,7 @@ MonoBehaviour:
   onInteraction:
     m_PersistentCalls:
       m_Calls: []
+  graphUpdateScene: {fileID: 207411612844283076}
   IsOpenAtStart: 0
   IsLocked: 0
   openSfx: {fileID: 8300000, guid: d6a12a0cc9295f643a7931e4104cc819, type: 3}
@@ -1092,7 +1093,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4817149777576377572}
-  m_Layer: 0
+  - component: {fileID: 207411612844283076}
+  m_Layer: 7
   m_Name: InteractableDoor_Pull
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1116,3 +1118,38 @@ Transform:
   - {fileID: 9222397579239892377}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &207411612844283076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7272967524023977644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efee954c69f0d421086729bb8df1137f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1073741824
+  uniqueID: 2658492638078495985
+  points:
+  - {x: 0.1, y: 0.7, z: -0.6}
+  - {x: -1.4700003, y: 0.7, z: -0.6}
+  - {x: -1.47, y: 0.7, z: 0.6}
+  - {x: 0.1, y: 0.7, z: 0.6}
+  convex: 1
+  minBoundsHeight: 1
+  penaltyDelta: 0
+  modifyWalkability: 1
+  setWalkability: 0
+  applyOnStart: 1
+  applyOnScan: 1
+  updatePhysics: 0
+  resetPenaltyOnPhysics: 1
+  updateErosion: 1
+  modifyTag: 0
+  setTag:
+    value: 0
+  legacyMode: 0
+  legacyUseWorldSpace: 0
+  setTagCompatibility: -1

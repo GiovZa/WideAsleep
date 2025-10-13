@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using Pathfinding;
 
 public class OnesideDoorController : MonoBehaviour
 {
@@ -16,12 +17,14 @@ public class OnesideDoorController : MonoBehaviour
     [SerializeField] float SfxRadius = 3f;
     AudioSource audioSource;
     Animator doorAnimator;
+    [SerializeField] GraphUpdateScene graphUpdateScene;
     //OcclusionPortal occlusionPortal;
 
     private void Awake()
     {
         doorAnimator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
+        graphUpdateScene = GetComponent<GraphUpdateScene>();
         //occlusionPortal = GetComponentInChildren<OcclusionPortal>();
     }
 
@@ -62,12 +65,24 @@ public class OnesideDoorController : MonoBehaviour
             doorAnimator.SetTrigger("Open");
             doorAnimator.SetBool("IsClosed", false);
             //occlusionPortal.open = true;
+
+            if (graphUpdateScene != null)
+            {
+                graphUpdateScene.setWalkability = true;
+                graphUpdateScene.Apply();
+            }
         }
         else
         {
             doorAnimator.SetTrigger("Close");
             doorAnimator.SetBool("IsClosed", true);
             //StartCoroutine(CloseOcclusionPortal());
+            
+            if (graphUpdateScene != null)
+            {
+                graphUpdateScene.setWalkability = false;
+                graphUpdateScene.Apply();
+            }
         }
 
         AudioManager.Instance.Play(openSfx, transform.position, 1f, SfxRadius, true, AudioManager.Instance.SFXMixerGroup);

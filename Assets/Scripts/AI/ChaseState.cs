@@ -1,4 +1,5 @@
 using UnityEngine;
+using Pathfinding;
 
 public class ChaseState : IState
 {
@@ -7,7 +8,7 @@ public class ChaseState : IState
     private Vision vision;
     private Transform player;
     private Animator animator;
-    private UnityEngine.AI.NavMeshAgent agent;
+    private RichAI agent;
 
     public ChaseState(NurseAI ai)
     {
@@ -16,7 +17,7 @@ public class ChaseState : IState
         vision = ai.GetComponent<Vision>();
         player = GameObject.FindWithTag("Player").transform;
         animator = ai.GetComponent<Animator>();
-        agent = ai.GetComponent<UnityEngine.AI.NavMeshAgent>();
+        agent = ai.GetComponent<RichAI>();
     }
 
     public void Enter()
@@ -35,7 +36,7 @@ public class ChaseState : IState
         if (Vector3.Distance(nurseAI.transform.position, player.position) <= nurseAI.killRange)
         {
             Debug.Log("[ChaseState] Player in kill range. Stopping and transitioning to KillState.");
-            agent.isStopped = true;
+            agent.canMove = false;
             nurseAI.TransitionToState(nurseAI.killState);
             return;
         }

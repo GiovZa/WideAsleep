@@ -1,10 +1,12 @@
 using System.Collections;
 using UnityEngine;
+using Pathfinding;
 
 public class TriggerDoor_Point : Interactable
 {
     Animator doorAnimator;
     OcclusionPortal occlusionPortal;
+    [SerializeField] GraphUpdateScene graphUpdateScene;
 
     [Header("Initialization Setting")]
     [SerializeField] bool IsOpenAtStart;
@@ -19,6 +21,7 @@ public class TriggerDoor_Point : Interactable
     {
         doorAnimator = GetComponent<Animator>();
         occlusionPortal = GetComponent<OcclusionPortal>();
+        //graphUpdateScene = GetComponent<GraphUpdateScene>();
         if (occlusionPortal == null)
         {
             occlusionPortal = GetComponentInChildren<OcclusionPortal>();
@@ -64,6 +67,11 @@ public class TriggerDoor_Point : Interactable
         {
             doorAnimator.SetBool("IsClosed", false);
             occlusionPortal.open = true;
+            if (graphUpdateScene != null)
+            {
+                graphUpdateScene.setWalkability = true;
+                graphUpdateScene.Apply();
+            }
             AudioManager.Instance.Play(openSfx, transform.position, 1f, SfxRadius, true, AudioManager.Instance.SFXMixerGroup);
         }
         else
@@ -77,6 +85,11 @@ public class TriggerDoor_Point : Interactable
         StopAllCoroutines();
         doorAnimator.SetTrigger("Close");
         doorAnimator.SetBool("IsClosed", true);
+        if (graphUpdateScene != null)
+        {
+            graphUpdateScene.setWalkability = false;
+            graphUpdateScene.Apply();
+        }
         StartCoroutine(CloseOcclusionPortal());
         AudioManager.Instance.Play(closeSfx, transform.position, 1f, SfxRadius, true, AudioManager.Instance.SFXMixerGroup);
     }

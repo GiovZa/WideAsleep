@@ -1,9 +1,9 @@
 using UnityEngine;
-using UnityEngine.AI;
+using Pathfinding;
 
 public class Alert : MonoBehaviour
 {
-    private NavMeshAgent agent;
+    private RichAI agent;
     private Vector3 lastKnownPosition;
     private bool isSearching = false;
 
@@ -15,16 +15,16 @@ public class Alert : MonoBehaviour
 
     void Awake()
     {
-        agent = GetComponent<NavMeshAgent>();
+        agent = GetComponent<RichAI>();
     }
 
     public void GoToLastKnownPosition(Vector3 position)
     {
         if (agent == null)
-            agent = GetComponent<NavMeshAgent>();
+            agent = GetComponent<RichAI>();
 
-        agent.isStopped = false;
-        agent.SetDestination(position);
+        agent.canMove = true;
+        agent.destination = position;
     }
 
     void Update()
@@ -32,7 +32,7 @@ public class Alert : MonoBehaviour
         if (!isSearching)
             return;
 
-        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+        if (!agent.pathPending && agent.remainingDistance <= arriveThreshold)
         {
             searchTimer -= Time.deltaTime;
 

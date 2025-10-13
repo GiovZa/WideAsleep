@@ -7,8 +7,12 @@ public class HearingSense : SenseBase
 {
     [Header("Hearing Settings")]
     public float mutedVolume = 0.1f;
-    public float normalVolume = 1.0f;
-    public float maxDistance = 10f; // Max distance for visibility and volume adjustment
+    [Range(0.5f, 3.0f)]
+    public float normalVolume = 1.5f; // Volume multiplier for sound emitters (can go above 1.0 for louder sounds)
+    public float maxDistance = 25f; // Max distance for visibility and volume adjustment
+    [Tooltip("Controls how quickly volume falls off with distance. Lower = sounds stay louder at distance. Range 0.5-2.0")]
+    [Range(0.5f, 2.0f)]
+    public float volumeFalloffCurve = 1.0f;
 
     public float revealTime = 2f;
 
@@ -118,7 +122,18 @@ public class HearingSense : SenseBase
             float distance = Vector3.Distance(playerPosition, emitter.transform.position);
             if (distance <= maxDistance)
             {
-                float adjustedVolume = Mathf.Clamp01(1 - (distance / maxDistance)) * normalVolume;
+                // Improved volume falloff: use a power curve for more natural sound attenuation
+                // Lower volumeFalloffCurve = sounds stay louder at distance
+                float normalizedDistance = distance / maxDistance; // 0 to 1
+                float falloffFactor = Mathf.Pow(1 - normalizedDistance, volumeFalloffCurve);
+                float adjustedVolume = falloffFactor * normalVolume;
+                
+                // Ensure minimum audible volume for close sounds
+                if (distance < maxDistance * 0.5f)
+                {
+                    adjustedVolume = Mathf.Max(adjustedVolume, normalVolume * 0.7f);
+                }
+                
                 emitter.PlaySound(adjustedVolume);
                 emitter.SetVisible(true);
                 activeEmitters.Add(emitter);

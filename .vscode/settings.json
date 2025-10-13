@@ -51,5 +51,6 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "WideAsleep.sln"
+    "dotnet.defaultSolution": "WideAsleep.sln",
+    "dotrush.roslyn.projectOrSolutionFiles": []
 }

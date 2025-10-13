@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
+using Pathfinding;
 
 public class Patrol : MonoBehaviour
 {
@@ -12,7 +12,7 @@ public class Patrol : MonoBehaviour
     public bool applyRotation = true; // Whether or not to apply the Y rotation (toggleable)
 
     private List<Transform> waypoints = new();
-    private NavMeshAgent agent;
+    private RichAI agent;
     private Transform currentTarget;
     private int index = 0;
 
@@ -22,7 +22,7 @@ public class Patrol : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
-        agent = GetComponent<NavMeshAgent>();
+        agent = GetComponent<RichAI>();
 
         if (waypointParent == null)
         {
@@ -51,13 +51,13 @@ public class Patrol : MonoBehaviour
     public void Restart()
     {
         isPatrolling = true;
-        agent = GetComponent<NavMeshAgent>();
+        agent = GetComponent<RichAI>();
 
         // When restarting patrol after an interruption, always tell the agent to resume its path
         // to its last known target waypoint.
         if (currentTarget != null)
         {
-            agent.SetDestination(currentTarget.position);
+            agent.destination = currentTarget.position;
         }
         else
         {
@@ -96,7 +96,7 @@ public class Patrol : MonoBehaviour
         if (waypoints.Count == 1)
         {
             currentTarget = waypoints[0];
-            agent.SetDestination(currentTarget.position);
+            agent.destination = currentTarget.position;
             return;
         }
 
@@ -106,14 +106,14 @@ public class Patrol : MonoBehaviour
         // Set the new target
         currentTarget = waypoints[index];
 
-        agent.SetDestination(currentTarget.position);
+        agent.destination = currentTarget.position;
     }
 
     // Coroutine to wait for a set period before moving to the next waypoint
     IEnumerator WaitAtWaypoint(float waitTime)
     {
         isPatrolling = false; // Stop Update() from re-triggering this coroutine
-        agent.isStopped = true; // Pause the agent's movement
+        agent.canMove = false; // Pause the agent's movement
         animator.SetBool("isWaiting", true);
 
         yield return new WaitForSeconds(waitTime); // Wait at the current waypoint
@@ -121,7 +121,7 @@ public class Patrol : MonoBehaviour
         if (waypoints.Count > 1)
         {
             PickNewTarget(); // Once wait time is over, pick a new target
-            agent.isStopped = false; // Resume agent movement
+            agent.canMove = true; // Resume agent movement
             isPatrolling = true; // Allow Update() to trigger this again on arrival
             animator.SetBool("isWaiting", false);
         }

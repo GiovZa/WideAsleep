@@ -1,12 +1,12 @@
 using UnityEngine;
-using UnityEngine.AI;
+using Pathfinding;
 using UnityEngine.SceneManagement;
 using playerChar;
 
 public class KillState : IState
 {
     private NurseAI nurseAI;
-    private NavMeshAgent agent;
+    private RichAI agent;
     private Animator animator;
     private Player player;
     private PlayerCharacterController playerController;
@@ -21,7 +21,7 @@ public class KillState : IState
     public KillState(NurseAI ai)
     {
         nurseAI = ai;
-        agent = ai.GetComponent<NavMeshAgent>();
+        agent = ai.GetComponent<RichAI>();
         animator = ai.GetComponent<Animator>();
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
         playerController = player.GetComponent<PlayerCharacterController>();
@@ -38,7 +38,7 @@ public class KillState : IState
 
         Debug.Log("[KillState] Entering Kill State");
 
-        agent.isStopped = true;
+        agent.canMove = false;
 
         if (playerController != null)
         {
