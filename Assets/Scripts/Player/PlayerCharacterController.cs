@@ -160,6 +160,8 @@ namespace playerChar
             {
                 GameStateManager.Instance.OnGameStateChanged += HandleGameStateChanged;
             }
+            // Subscribe to the sensitivity change event
+            OptionsMenuController.OnSensitivityChanged += UpdateMouseSensitivity;
         }
 
         private void OnDisable()
@@ -169,6 +171,8 @@ namespace playerChar
             {
                 GameStateManager.Instance.OnGameStateChanged -= HandleGameStateChanged;
             }
+            // Unsubscribe to prevent memory leaks
+            OptionsMenuController.OnSensitivityChanged -= UpdateMouseSensitivity;
         }
 
         public void Initialize()
@@ -187,6 +191,9 @@ namespace playerChar
             // force the crouch state to false when starting
             SetCrouchingState(false, true);
             UpdateCharacterHeight(true);
+
+            // Load saved sensitivity on initialize
+            MouseSensitivity = PlayerPrefs.GetFloat("mouseSensitivity");
 
             CurrentStamina = MaxStamina;
         }
@@ -748,6 +755,12 @@ namespace playerChar
             HandleGameStateChanged(GameStateManager.Instance.CurrentState);
 
             Debug.Log("Player has respawned.");
+        }
+
+        // This method will be called by the event
+        private void UpdateMouseSensitivity(float newSensitivity)
+        {
+            MouseSensitivity = newSensitivity;
         }
     }
 }

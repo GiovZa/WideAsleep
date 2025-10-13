@@ -1,42 +1,83 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using UnityEngine;
-using TMPro;
-using UnityEngine.UI;
 using System.Linq;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class OptionsMenuController : MonoBehaviour
 {
-    [Header("Graphics Settings")]
-    private int _qualityLevel;
-    private bool _isFullscreen;
+    // Event that other scripts can subscribe to
+    public static event Action<float> OnSensitivityChanged;
 
-    [Header("Resolution Settings")]
+    [Header("UI References")]
+    public Button[] qualityButtons; // Assign in order: Low, Medium, High, Ultra
+    public Button fullscreenOnButton;
+    public Button fullscreenOffButton;
     public TMP_Dropdown resolutionDropdown;
+    public Slider sensitivitySlider;
+    public TMP_Text sensitivityPercent;
+    public TMP_Text audioMasterPercent;
+    public TMP_Text audioSFXPercent;
+    public TMP_Text audioMusicPercent;
+
+    [Header("Highlight Colors")]
+    public Color selectedColor = new Color(1f, 0.85f, 0.4f);
+    public Color normalColor = Color.white;
+
     private Resolution[] _resolutions;
 
     void Start()
     {
+        // One-time setup for resolution options
         _resolutions = Screen.resolutions.Select(resolution => new Resolution { width = resolution.width, height = resolution.height }).Distinct().ToArray();
+        System.Array.Reverse(_resolutions); // Reverse the array to show highest resolutions first
         resolutionDropdown.ClearOptions();
         
         List<string> options = new List<string>();
-
-        int currentResolutionIndex = 0;
         for (int i = 0; i < _resolutions.Length; i++)
         {
             string option = _resolutions[i].width + " x " + _resolutions[i].height;
             options.Add(option);
+        }
+        resolutionDropdown.AddOptions(options);
+    }
 
+    private void OnEnable()
+    {
+        // Load and apply settings every time the menu is opened
+        LoadAndHighlightSettings();
+    }
+
+    private void LoadAndHighlightSettings()
+    {
+        // Load and Highlight Quality
+        int qualityLevel = PlayerPrefs.GetInt("masterQuality", QualitySettings.GetQualityLevel());
+        HighlightQualityButton(qualityLevel);
+
+        // Load and Highlight Fullscreen
+        bool isFullscreen = PlayerPrefs.GetInt("masterFullscreen", Screen.fullScreen ? 1 : 0) == 1;
+        HighlightFullscreenButton(isFullscreen);
+
+        // Load Resolution
+        int currentResolutionIndex = 0;
+        for (int i = 0; i < _resolutions.Length; i++)
+        {
             if (_resolutions[i].width == Screen.width && _resolutions[i].height == Screen.height)
             {
                 currentResolutionIndex = i;
+                break;
             }
         }
-
-        resolutionDropdown.AddOptions(options);
         resolutionDropdown.value = currentResolutionIndex;
         resolutionDropdown.RefreshShownValue();
+
+        // Load and Apply Sensitivity
+        float sensitivity = PlayerPrefs.GetFloat("mouseSensitivity");
+        if (sensitivitySlider != null)
+        {
+            sensitivitySlider.value = sensitivity;
+        }
     }
 
     public void SetResolution(int resolutionIndex)
@@ -47,15 +88,57 @@ public class OptionsMenuController : MonoBehaviour
 
     public void SetFullScreen(bool isFullscreen)
     {
-        _isFullscreen = isFullscreen;
-        PlayerPrefs.SetInt("masterFullscreen", _isFullscreen ? 1 : 0);
-        Screen.fullScreen = _isFullscreen;
+        Screen.fullScreen = isFullscreen;
+        PlayerPrefs.SetInt("masterFullscreen", isFullscreen ? 1 : 0);
+        HighlightFullscreenButton(isFullscreen);
     }
 
     public void SetQuality(int qualityIndex)
     {
-        _qualityLevel = qualityIndex;
-        PlayerPrefs.SetInt("masterQuality", _qualityLevel);
-        QualitySettings.SetQualityLevel(_qualityLevel);
+        QualitySettings.SetQualityLevel(qualityIndex);
+        PlayerPrefs.SetInt("masterQuality", qualityIndex);
+        HighlightQualityButton(qualityIndex);
+    }
+
+    public void SetSensitivity(float sensitivity)
+    {
+        PlayerPrefs.SetFloat("mouseSensitivity", sensitivity);
+        sensitivityPercent.text = Math.Ceiling(sensitivity/ 4.0f * 100f).ToString() + "%";
+        OnSensitivityChanged?.Invoke(sensitivity);
+    }
+
+    private void HighlightQualityButton(int qualityIndex)
+    {
+        for (int i = 0; i < qualityButtons.Length; i++)
+        {
+            if (qualityButtons[i] != null)
+            {
+                qualityButtons[i].GetComponent<Image>().color = (i == qualityIndex) ? selectedColor : normalColor;
+            }
+        }
+    }
+
+    private void HighlightFullscreenButton(bool isFullscreen)
+    {
+        if (fullscreenOnButton != null && fullscreenOffButton != null)
+        {
+            fullscreenOnButton.GetComponent<Image>().color = isFullscreen ? selectedColor : normalColor;
+            fullscreenOffButton.GetComponent<Image>().color = !isFullscreen ? selectedColor : normalColor;
+        }
+    }
+    
+    public void SetAudioMasterVolumeDisplay(float volume)
+    {
+        audioMasterPercent.text = Math.Round(volume * 100f).ToString() + "%";
+    }
+
+    public void SetAudioMusicVolumeDisplay(float volume)
+    {
+        audioMusicPercent.text = Math.Round(volume * 100f).ToString() + "%";
+    }
+
+    public void SetAudioSFXVolumeDisplay(float volume)
+    {
+        audioSFXPercent.text = Math.Round(volume * 100f).ToString() + "%";
     }
 }

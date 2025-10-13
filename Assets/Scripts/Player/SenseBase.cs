@@ -12,6 +12,9 @@ public abstract class SenseBase : MonoBehaviour
     protected enum SenseState { Ready, Active, Cooldown }
     protected SenseState currentState = SenseState.Ready;
 
+    // Static flag to ensure only one sense is active at a time across all instances.
+    private static bool isAnySenseActive = false;
+
     [Header("Cooldown Settings")]
     [Tooltip("How long to wait before this sense can be used again.")]
     [SerializeField] private float cooldownDuration = 5f;
@@ -90,12 +93,14 @@ public abstract class SenseBase : MonoBehaviour
     /// </summary>
     private void HandleReadyState()
     {
-        if (isSensesActive && ActivationAction.triggered)
+        // Can only activate if senses are generally enabled, input is triggered, AND no other sense is currently active.
+        if (isSensesActive && ActivationAction.triggered && !isAnySenseActive)
         {
             ActivateSense();
             currentState = SenseState.Active;
             effectEndTime = Time.time + EffectDuration;
             IsActive = true;
+            isAnySenseActive = true; // Set the global lock
         }
     }
 
@@ -114,6 +119,7 @@ public abstract class SenseBase : MonoBehaviour
             currentState = SenseState.Cooldown;
             cooldownEndTime = Time.time + cooldownDuration;
             IsActive = false;
+            isAnySenseActive = false; // Release the global lock
             FillAmount = 0f;
         }
     }
@@ -153,6 +159,12 @@ public abstract class SenseBase : MonoBehaviour
         if (GameStateManager.Instance != null)
         {
             GameStateManager.Instance.OnGameStateChanged -= HandleGameStateChanged;
+        }
+
+        // Safeguard: If this sense instance is disabled while active, release the global lock.
+        if (IsActive)
+        {
+            isAnySenseActive = false;
         }
     }
 }

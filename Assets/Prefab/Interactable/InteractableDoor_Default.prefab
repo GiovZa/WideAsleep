@@ -775,12 +775,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   version: 1073741824
-  uniqueID: 1136776273691536522
+  uniqueID: 1448348924762975853
   points:
-  - {x: 0.6, y: 0.7, z: -1}
-  - {x: -0.72, y: 0.7, z: -1}
-  - {x: -0.72, y: 0.7, z: 0.6}
-  - {x: 0.6, y: 0.7, z: 0.6}
+  - {x: 0.6, y: 0.7, z: -1.1}
+  - {x: -0.72, y: 0.7, z: -1.1}
+  - {x: -0.72, y: 0.7, z: 1.09}
+  - {x: 0.6, y: 0.7, z: 1.09}
   convex: 1
   minBoundsHeight: 1
   penaltyDelta: 0
