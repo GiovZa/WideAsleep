@@ -88,6 +88,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   surfaceType: 1
+  overrideDefaults: 0
+  volume: 1
+  soundRadius: 10
 --- !u!1001 &5252970692101076966
 PrefabInstance:
   m_ObjectHideFlags: 0

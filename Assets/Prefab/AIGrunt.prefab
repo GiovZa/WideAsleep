@@ -967,10 +967,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSearchPointDistance: 4
   minSearchPointDistance: 2
-  maxSearchAttempts: 5
-  searchDurationAtPoint: 0.5
+  maxSearchAttempts: 4
   angleSpread: 30
   numPointsToTry: 2
+  skipLookAroundWhenBlocked: 1
+  searchPointTimeout: 3
+  arriveThreshold: 1.5
 --- !u!114 &913150443022887199
 MonoBehaviour:
   m_ObjectHideFlags: 0

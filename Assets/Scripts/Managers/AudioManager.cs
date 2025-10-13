@@ -12,7 +12,7 @@ public class NoisySurfaceSound
     [Range(0, 2)]
     public float volume = 1f;
     [Range(0, 30)]
-    public float soundRadius = 5f;
+    public float soundRadius = 10f;
 }
 
 public class AudioManager : MonoBehaviour
@@ -158,7 +158,7 @@ public class AudioManager : MonoBehaviour
         source.volume = volume;
         source.spatialBlend = spatial ? 1f : 0f;
         source.outputAudioMixerGroup = mixerGroup;
-        source.Play();
+        source.PlayOneShot(clip, volume);
 
         Destroy(tempGO, clip.length);
     }
@@ -176,9 +176,9 @@ public class AudioManager : MonoBehaviour
         source.volume = volume;
         source.spatialBlend = spatial ? 1f : 0f;
         source.outputAudioMixerGroup = mixerGroup;
-        source.Play();
+        source.PlayOneShot(source.clip, volume);
 
-        Destroy(tempGO, clips[rand].length);
+        Destroy(tempGO, source.clip.length);
     }
     #endregion
 

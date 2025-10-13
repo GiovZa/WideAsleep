@@ -267,7 +267,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cooldownDuration: 4
   mutedVolume: 0.1
-  normalVolume: 1
+  normalVolume: 4
   maxDistance: 30
   revealTime: 3
   vignetteFadeInTime: 0.5

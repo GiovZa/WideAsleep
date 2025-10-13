@@ -11,7 +11,7 @@ public class NoisySurface : MonoBehaviour
     [Tooltip("Check this to use the volume and radius settings below instead of the defaults in the AudioManager.")]
     public bool overrideDefaults = false;
     [Range(0, 2)] public float volume = 1f;
-    [Range(0, 30)] public float soundRadius = 5f;
+    [Range(0, 30)] public float soundRadius = 10f;
 
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected()
