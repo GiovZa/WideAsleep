@@ -24,7 +24,10 @@ public class Inventory : MonoBehaviour
 
     private void Start()
     {
-        Player.Instance.OnPlayerSpawned += HandlePlayerSpawned;
+        if (Player.Instance != null)
+        {
+            Player.Instance.OnPlayerSpawned += HandlePlayerSpawned;
+        }
     }
 
     private void OnDisable()

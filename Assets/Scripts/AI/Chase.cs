@@ -4,6 +4,8 @@ using Pathfinding;
 public class Chase : MonoBehaviour
 {
     private RichAI agent;
+    [SerializeField] private float slowDownTime = 0f;
+    [SerializeField] private float rotationSpeed = 360f;
 
     void Awake()
     {
@@ -16,6 +18,10 @@ public class Chase : MonoBehaviour
         {
             agent.canMove = true;
             agent.destination = target.position;
+
+            agent.slowdownTime = slowDownTime;
+            agent.slowWhenNotFacingTarget = false;
+            agent.rotationSpeed = rotationSpeed;
         }
     }
 

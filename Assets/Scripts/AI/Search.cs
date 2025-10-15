@@ -15,9 +15,11 @@ public class Search : MonoBehaviour
     private bool isLookingAround = false;
     public float maxSearchPointDistance = 6f;
     public float minSearchPointDistance = 3f;
-    public int maxSearchAttempts = 10;
+    [Tooltip("Maximum attempts to generate random search points (some may fail validation)")]
+    public int maxGenerationAttempts = 10;
     public float angleSpread = 30f;
-    public int numPointsToTry = 2;
+    [Tooltip("Target number of valid search points to find")]
+    public int targetSearchPoints = 2;
     
     [Header("Give Up Settings")]
     [Tooltip("If true, skip look-around when path is blocked and move to next point")]
@@ -175,7 +177,7 @@ public class Search : MonoBehaviour
             return;
         }
 
-        for (int i = 0; i < maxSearchAttempts && searchPoints.Count < numPointsToTry; i++)
+        for (int i = 0; i < maxGenerationAttempts && searchPoints.Count < targetSearchPoints; i++)
         {
             float angle = Random.Range(-angleSpread, angleSpread);
             Vector3 rotatedDir = Quaternion.Euler(0, angle, 0) * lastSeenDirection;

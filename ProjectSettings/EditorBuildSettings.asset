@@ -11,8 +11,11 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Level2_Hearing/Level2_Hearing.unity
     guid: 6636a1820a6b848aca6e044b12e329c8
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/LevelHearing_BossPrototype/LevelHearing_BossPrototype.unity
     guid: 95b5d79f972c5114f81e5cf66a2aa68c
+  - enabled: 1
+    path: Assets/Scenes/GameEnd.unity
+    guid: 85fc76375aeb0cb4eb4457afedaa8962
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 06b5592096b128149afd2784b1babc74, type: 2}

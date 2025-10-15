@@ -6,6 +6,8 @@ using Pathfinding;
 public class Patrol : MonoBehaviour
 {
     public Transform waypointParent;
+    [SerializeField] private float slowDownTime = 0.2f;
+    [SerializeField] private float rotationSpeed = 250f;
     public float arriveThreshold = 1.0f;
     public float waitTimeAtWaypoint = 3.0f; // Time to wait at each waypoint in seconds
     public float yRotationDegrees = 0f; // The desired Y rotation in degrees (set in the inspector)
@@ -52,6 +54,10 @@ public class Patrol : MonoBehaviour
     {
         isPatrolling = true;
         agent = GetComponent<RichAI>();
+
+        agent.slowdownTime = slowDownTime;
+        agent.slowWhenNotFacingTarget = true;
+        agent.rotationSpeed = rotationSpeed;
 
         // When restarting patrol after an interruption, always tell the agent to resume its path
         // to its last known target waypoint.

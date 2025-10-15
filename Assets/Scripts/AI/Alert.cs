@@ -6,8 +6,6 @@ public class Alert : MonoBehaviour
     private RichAI agent;
     private Vector3 lastKnownPosition;
     private bool isSearching = false;
-
-    public float searchDuration = 2f;
     private float searchTimer;
 
     public float arriveThreshold = 1.0f; // Can be adjusted per AI

@@ -860,7 +860,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   version: 1073741824
-  radius: 0.6
+  radius: 0.5
   height: 2
   canMove: 1
   maxSpeed: 5
@@ -868,7 +868,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  endReachedDistance: 0.2
+  endReachedDistance: 1.5
   whenCloseToDestination: 1
   rvoDensityBehavior:
     enabled: 1
@@ -886,9 +886,9 @@ MonoBehaviour:
     sensitivity: 10
     maximumPeriod: 2
     visualizeSensitivity: 0
-  acceleration: 4
-  rotationSpeed: 250
-  slowdownTime: 0
+  acceleration: 7
+  rotationSpeed: 360
+  slowdownTime: 1
   wallForce: 3
   wallDist: 1
   funnelSimplification: 0
@@ -922,6 +922,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waypointParent: {fileID: 0}
+  slowDownTime: 1
+  rotationSpeed: 360
   arriveThreshold: 1
   waitTimeAtWaypoint: 3
   yRotationDegrees: 0
@@ -939,7 +941,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52c49eff02a7057448d18ff969470f03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  searchDuration: 1.5
   arriveThreshold: 1
 --- !u!114 &6126904294037448343
 MonoBehaviour:
@@ -953,6 +954,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9248013aa044054297be51092addde7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slowDownTime: 0
+  rotationSpeed: 360
 --- !u!114 &2672642234055967814
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -967,11 +970,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSearchPointDistance: 4
   minSearchPointDistance: 2
-  maxSearchAttempts: 4
+  maxGenerationAttempts: 10
   angleSpread: 30
-  numPointsToTry: 2
-  skipLookAroundWhenBlocked: 1
-  searchPointTimeout: 3
+  targetSearchPoints: 2
+  skipLookAroundWhenBlocked: 0
+  searchPointTimeout: 2
   arriveThreshold: 1.5
 --- !u!114 &913150443022887199
 MonoBehaviour:

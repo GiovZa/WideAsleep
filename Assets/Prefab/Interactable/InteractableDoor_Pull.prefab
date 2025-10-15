@@ -930,9 +930,9 @@ MonoBehaviour:
   graphUpdateScene: {fileID: 207411612844283076}
   IsOpenAtStart: 0
   IsLocked: 0
-  openSfx: {fileID: 8300000, guid: d6a12a0cc9295f643a7931e4104cc819, type: 3}
-  closeSfx: {fileID: 8300000, guid: d6a12a0cc9295f643a7931e4104cc819, type: 3}
-  lockedSfx: {fileID: 0}
+  openSfx: {fileID: 8300000, guid: 79c316507a74a704bb9fb8dfd1d648a4, type: 3}
+  closeSfx: {fileID: 8300000, guid: 79c316507a74a704bb9fb8dfd1d648a4, type: 3}
+  lockedSfx: {fileID: 8300000, guid: e48a1113a5c5be045baf0429835a663f, type: 3}
   SfxRadius: 3
 --- !u!1 &6074228651551501779
 GameObject:

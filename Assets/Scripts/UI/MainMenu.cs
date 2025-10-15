@@ -14,6 +14,7 @@ public class MainMenu : MonoBehaviour
     [Header("Scenes")]
     [SerializeField] private SceneField[] gameplayScenes;
     [SerializeField] private int levelToSelect;
+    [SerializeField] private SceneField[] menuScenes;
     
     public void PlayGame()
     {
@@ -25,6 +26,11 @@ public class MainMenu : MonoBehaviour
         canvasGroup.DOFade(1, fadeTime);
         yield return new WaitForSeconds(loadWaitTime);
         SceneManager.LoadSceneAsync(sceneNameToLoad);
+    }
+
+    public void LoadMenuScene(int sceneIndex)
+    {
+        StartCoroutine(FadeAndLoadString(menuScenes[sceneIndex].SceneName));
     }
     
     public void QuitGame()
