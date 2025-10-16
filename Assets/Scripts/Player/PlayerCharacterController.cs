@@ -260,7 +260,7 @@ namespace playerChar
         {
             CanMove = newState == GameState.Gameplay;
 
-            if (newState == GameState.InteractingWithUI || newState == GameState.Paused)
+            if (newState == GameState.InteractingWithUI || newState == GameState.Paused || newState == GameState.MainMenu)
             {
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;

@@ -114,8 +114,8 @@ public class SceneSwapManager : MonoBehaviour
     public void ExitToMainMenu()
     {
         Time.timeScale = 1.0f; // Ensure time is not paused
-        GameStateManager.Instance.SetState(GameState.InteractingWithUI);
-        UIManager.Instance.DisablePauseMenu();
+        GameStateManager.Instance.SetState(GameState.MainMenu);
+        UIManager.Instance.ExitPauseMenu();
         StartCoroutine(FadeAndLoadInt(0));
     }
 
@@ -144,7 +144,7 @@ public class SceneSwapManager : MonoBehaviour
 
         if (isMenuScene)
         {
-            GameStateManager.Instance.SetState(GameState.InteractingWithUI);
+            GameStateManager.Instance.SetState(GameState.MainMenu);
             if (PlayerInstance != null)
             {
                 OnPlayerWillBeDestroyed?.Invoke();

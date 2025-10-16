@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
 
-public class MainMenu : MonoBehaviour
+public class MainMenuController : MonoBehaviour
 {
     [Header("Fade Settings")]
     [SerializeField] private CanvasGroup canvasGroup;
@@ -36,5 +36,15 @@ public class MainMenu : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void OpenSubMenu(GameObject uiPanelObject)
+    {
+        UIManager.Instance.OpenUIPanel(uiPanelObject);
+    }
+
+    public void CloseSubMenu()
+    {
+        UIManager.Instance.CloseActiveUI();
     }
 }

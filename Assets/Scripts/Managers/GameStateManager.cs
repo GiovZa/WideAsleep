@@ -5,7 +5,8 @@ public enum GameState
 {
     Gameplay,
     Paused,
-    InteractingWithUI
+    InteractingWithUI,
+    MainMenu
 }
 
 public class GameStateManager : MonoBehaviour

@@ -11,7 +11,7 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set;}
     [Header("Menus")]
-    [SerializeField] GameObject pauseMenu;
+    [SerializeField] GameObject pauseMenuObject;
     [SerializeField] GameObject deathScreen;
     [SerializeField] GameObject HUD;
     
@@ -158,11 +158,13 @@ public class UIManager : MonoBehaviour
     {
         if(m_Input.UI.Cancel.triggered)
         {
-            if (GameStateManager.Instance.CurrentState == GameState.Paused)
+            // If the stack has any UI open, close the top one.
+            if (uiStack.Count > 0)
             {
-                ExitPauseMenu();
+                CloseActiveUI();
             }
-            else if (GameStateManager.Instance.CurrentState == GameState.Gameplay && !GameStateManager.Instance.IsEscapeKeyConsumed())
+            // If the stack is empty and we are in gameplay, open the pause menu.
+            else if (GameStateManager.Instance.CurrentState == GameState.Gameplay)
             {
                 CallPauseMenu();
             }
@@ -254,26 +256,31 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void CallPauseMenu()
     {
-        GameStateManager.Instance.SetState(GameState.Paused);
-        Time.timeScale = 0f;
-        pauseMenu.SetActive(true);
-        DisableHUD();
-        
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        if (pauseMenuObject != null)
+        {
+            IGenericUI pauseMenu = pauseMenuObject.GetComponent<IGenericUI>();
+            if (pauseMenu != null)
+            {
+                OpenUI(pauseMenu);
+                GameStateManager.Instance.SetState(GameState.Paused);
+                Time.timeScale = 0f;
+                DisableHUD();
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
+            else
+            {
+                Debug.LogError("Pause Menu GameObject is missing a script that implements IGenericUI.");
+            }
+        }
     }
 
     public void ExitPauseMenu()
     {
-        GameStateManager.Instance.SetState(GameState.Gameplay);
-        Time.timeScale = 1.0f;
-        pauseMenu.SetActive(false);
-        EnableHUD();
-
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        // This button is now redundant, but we'll have it call the main closing logic.
+        CloseActiveUI();
     }
-
+    
     public void ShowDeathScreen()
     {
         deathScreen.SetActive(true);
@@ -300,7 +307,8 @@ public class UIManager : MonoBehaviour
 
     public void DisablePauseMenu()
     {
-        pauseMenu.SetActive(false);
+        // This method is no longer needed as CallPauseMenu and ExitPauseMenu handle the stack.
+        // Keeping it for now, but it might be removed if not used elsewhere.
     }
 
     private void UpdateStaminaEffects(float staminaPercentage)
@@ -335,4 +343,108 @@ public class UIManager : MonoBehaviour
             }
         }
     }
+
+    // --- New UI Stack Management ---
+
+    /// <summary>
+    /// A helper method that is visible in the Unity Inspector for OnClick events.
+    /// It finds the IGenericUI component on the passed GameObject and opens it.
+    /// </summary>
+    public void OpenUIPanel(GameObject uiPanelObject)
+    {
+        if (uiPanelObject != null)
+        {
+            IGenericUI uiPanel = uiPanelObject.GetComponent<IGenericUI>();
+            if (uiPanel != null)
+            {
+                OpenUI(uiPanel);
+            }
+            else
+            {
+                Debug.LogError($"[UIManager] The GameObject '{uiPanelObject.name}' does not have a component that implements the IGenericUI interface.", uiPanelObject);
+            }
+        }
+    }
+    
+    public void OpenUI(IGenericUI uiToOpen)
+    {
+        if (uiToOpen == null)
+        {
+            Debug.LogError("Attempted to open a null UI.");
+            return;
+        }
+
+        // If another UI is already open, you might want to hide it.
+        // For a stack-based system, we'll assume the new UI overlays the old one.
+        
+        uiStack.Push(uiToOpen);
+        uiToOpen.Open();
+
+        // Opening any UI should pause the game or put it into a UI state.
+        //GameStateManager.Instance.SetState(GameState.Paused);
+
+#if UNITY_EDITOR
+        Debug_PrintUIStack();
+#endif
+    }
+    
+    public void CloseActiveUI()
+    {
+        if (uiStack.Count > 0)
+        {
+            IGenericUI uiToClose = uiStack.Pop();
+            uiToClose.Close();
+            GameStateManager.Instance.ConsumeEscapeKeyForThisFrame();
+        }
+
+        if (GameStateManager.Instance.CurrentState == GameState.MainMenu)
+        {
+            return;
+        }
+
+        // If the stack is now empty, we are no longer in a menu.
+        if (uiStack.Count == 0 && GameStateManager.Instance.CurrentState != GameState.Gameplay)
+        {
+            // Resume gameplay
+            GameStateManager.Instance.SetState(GameState.Gameplay);
+            Time.timeScale = 1.0f;
+            EnableHUD();
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+
+#if UNITY_EDITOR
+        Debug_PrintUIStack();
+#endif
+    }
+    
+    // --- End New UI Stack Management ---
+
+    // --- Debug ---
+#if UNITY_EDITOR
+    private void Debug_PrintUIStack()
+    {
+        int index = 0;
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine("--- UI Stack State ---");
+        if (uiStack.Count == 0)
+        {
+            sb.AppendLine("(Stack is empty)");
+        }
+        else
+        {
+            foreach (var ui in uiStack)
+            {
+                // Since IGenericUI is implemented on MonoBehaviours, we can cast to get the GameObject name.
+                var monoBehaviour = ui as MonoBehaviour;
+                string gameObjectName = monoBehaviour != null ? monoBehaviour.gameObject.name : "Unknown GameObject";
+                sb.AppendLine($"[{index}] {ui.GetType().Name} on '{gameObjectName}'");
+                index++;
+            }
+        }
+        sb.AppendLine("----------------------");
+        Debug.Log(sb.ToString());
+    }
+#endif
+    // --- End Debug ---
 }

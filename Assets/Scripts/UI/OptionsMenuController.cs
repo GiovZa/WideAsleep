@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class OptionsMenuController : MonoBehaviour
+public class OptionsMenuController : MonoBehaviour, IGenericUI
 {
     // Event that other scripts can subscribe to
     public static event Action<float> OnSensitivityChanged;
@@ -27,6 +27,23 @@ public class OptionsMenuController : MonoBehaviour
 
     private Resolution[] _resolutions;
 
+    // --- IGenericUI Implementation ---
+    public void Open()
+    {
+        gameObject.SetActive(true);
+    }
+
+    public void Close()
+    {
+        gameObject.SetActive(false);
+    }
+
+    public bool IsActive()
+    {
+        return gameObject.activeSelf;
+    }
+    // --- End IGenericUI Implementation ---
+
     void Start()
     {
         // One-time setup for resolution options
@@ -47,6 +64,19 @@ public class OptionsMenuController : MonoBehaviour
     {
         // Load and apply settings every time the menu is opened
         LoadAndHighlightSettings();
+    }
+
+    /// <summary>
+    /// UIManager helper methods
+    /// </summary>
+    public void OpenSubMenu(GameObject uiPanelObject)
+    {
+        UIManager.Instance.OpenUIPanel(uiPanelObject);
+    }
+
+    public void CloseSubMenu()
+    {
+        UIManager.Instance.CloseActiveUI();
     }
 
     private void LoadAndHighlightSettings()
