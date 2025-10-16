@@ -56,7 +56,8 @@ public class Piano : Interactable
         isPianoActive = false;
 
         audioSource = GetComponent<AudioSource>();
-        playerInteraction = FindObjectOfType<PlayerInteraction>();
+        // We will get the PlayerInteraction component from the interactor, so this is no longer needed.
+        // playerInteraction = FindObjectOfType<PlayerInteraction>();
 
         personalSheet.SetActive(isPianoActive);
         if (sheetPuzzleUI != null)
@@ -73,6 +74,14 @@ public class Piano : Interactable
     #region Interaction Implementation
     public override void Interact(GameObject interactor)
     {
+        // Get the PlayerInteraction component from the object that is interacting with us.
+        playerInteraction = interactor.GetComponent<PlayerInteraction>();
+        if (playerInteraction == null)
+        {
+            Debug.LogError("[Piano] The object that interacted with the piano is missing a PlayerInteraction component.", interactor);
+            return;
+        }
+        
         if (isPianoActive)
         {
             // If the piano is on, turn it off.

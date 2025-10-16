@@ -7,6 +7,7 @@ public class NoteManager : MonoBehaviour
 
     public int notesCollected = 0;
     public int requiredNotes = 5; // Adjust as needed
+    public GameObject notesHUD;
     public Sprite paperNote;
     public Sprite emptyPaperNote;
     public Image[] notes;
@@ -21,6 +22,18 @@ public class NoteManager : MonoBehaviour
         Instance = this;
 
         UpdateNotesHUD();
+    }
+
+    private void OnEnable()
+    {
+        UIManager.Instance.OnHUDEnabled += EnableNotesHUD;
+        UIManager.Instance.OnHUDDisabled += DisableNotesHUD;
+    }
+
+    private void OnDisable()
+    {
+        UIManager.Instance.OnHUDEnabled -= EnableNotesHUD;
+        UIManager.Instance.OnHUDDisabled -= DisableNotesHUD;
     }
 
     public void CollectNote()
@@ -60,5 +73,15 @@ public class NoteManager : MonoBehaviour
             else
                 notes[i].enabled = false;
         }
+    }
+
+    void EnableNotesHUD()
+    {
+        notesHUD.SetActive(true);
+    }
+
+    void DisableNotesHUD()
+    {
+        notesHUD.SetActive(false);
     }
 }

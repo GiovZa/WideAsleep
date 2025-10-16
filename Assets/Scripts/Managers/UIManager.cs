@@ -4,6 +4,8 @@ using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System.Collections.Generic;
+using System;
 
 public class UIManager : MonoBehaviour
 {
@@ -45,6 +47,10 @@ public class UIManager : MonoBehaviour
     private PlayerWarningSystem playerWarningSystem;
     private CustomInput m_Input;
     private AudioSource staminaAudioSource;
+    private Stack<IGenericUI> uiStack = new Stack<IGenericUI>();
+
+    public event Action OnHUDEnabled;
+    public event Action OnHUDDisabled;
 
     private void Awake()
     {
@@ -283,11 +289,13 @@ public class UIManager : MonoBehaviour
     public void DisableHUD()
     {
         HUD.SetActive(false);
+        OnHUDDisabled?.Invoke();
     }
 
     public void EnableHUD()
     {
         HUD.SetActive(true);
+        OnHUDEnabled?.Invoke();
     }
 
     public void DisablePauseMenu()
