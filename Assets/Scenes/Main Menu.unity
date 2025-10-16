@@ -257,6 +257,11 @@ MonoBehaviour:
     _sceneName: Main Menu
   - _sceneAsset: {fileID: 102900000, guid: 85fc76375aeb0cb4eb4457afedaa8962, type: 3}
     _sceneName: GameEnd
+--- !u!1 &416234948 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6320645572424837168, guid: fc1ba6e025770e34ea5155111633f58c, type: 3}
+  m_PrefabInstance: {fileID: 2676686626384859641}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &445335036
 GameObject:
   m_ObjectHideFlags: 0
@@ -2269,7 +2274,7 @@ MonoBehaviour:
         m_MethodName: OpenSubMenu
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 1906013739}
+          m_ObjectArgument: {fileID: 416234948}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -2601,11 +2606,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1791733987}
   m_CullTransparentMesh: 1
---- !u!1 &1906013739 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5920066192735638749, guid: fc1ba6e025770e34ea5155111633f58c, type: 3}
-  m_PrefabInstance: {fileID: 2676686626384859641}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2147006768
 GameObject:
   m_ObjectHideFlags: 0

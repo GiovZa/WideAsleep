@@ -307,6 +307,9 @@ MonoBehaviour:
   resolutionDropdown: {fileID: 0}
   sensitivitySlider: {fileID: 0}
   sensitivityPercent: {fileID: 0}
+  audioMasterSlider: {fileID: 0}
+  audioSFXSlider: {fileID: 0}
+  audioMusicSlider: {fileID: 0}
   audioMasterPercent: {fileID: 0}
   audioSFXPercent: {fileID: 0}
   audioMusicPercent: {fileID: 0}
@@ -976,7 +979,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4425118222665159816}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: OptionsMenuController, Assembly-CSharp
         m_MethodName: OpenSubMenu
         m_Mode: 2

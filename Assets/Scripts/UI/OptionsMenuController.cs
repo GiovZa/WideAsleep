@@ -4,19 +4,29 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class OptionsMenuController : MonoBehaviour, IGenericUI
 {
     // Event that other scripts can subscribe to
     public static event Action<float> OnSensitivityChanged;
+    public static event Action<float> OnAudioMasterVolumeChanged;
+    public static event Action<float> OnAudioMusicVolumeChanged;
+    public static event Action<float> OnAudioSFXVolumeChanged;
 
     [Header("UI References")]
+    [Header("Graphics")]
     public Button[] qualityButtons; // Assign in order: Low, Medium, High, Ultra
     public Button fullscreenOnButton;
     public Button fullscreenOffButton;
     public TMP_Dropdown resolutionDropdown;
+    [Header("Controls")]
     public Slider sensitivitySlider;
     public TMP_Text sensitivityPercent;
+    [Header("Audio")]
+    public Slider audioMasterSlider;
+    public Slider audioSFXSlider;
+    public Slider audioMusicSlider;
     public TMP_Text audioMasterPercent;
     public TMP_Text audioSFXPercent;
     public TMP_Text audioMusicPercent;
@@ -60,12 +70,6 @@ public class OptionsMenuController : MonoBehaviour, IGenericUI
         resolutionDropdown.AddOptions(options);
     }
 
-    private void OnEnable()
-    {
-        // Load and apply settings every time the menu is opened
-        LoadAndHighlightSettings();
-    }
-
     /// <summary>
     /// UIManager helper methods
     /// </summary>
@@ -77,37 +81,6 @@ public class OptionsMenuController : MonoBehaviour, IGenericUI
     public void CloseSubMenu()
     {
         UIManager.Instance.CloseActiveUI();
-    }
-
-    private void LoadAndHighlightSettings()
-    {
-        // Load and Highlight Quality
-        int qualityLevel = PlayerPrefs.GetInt("masterQuality", QualitySettings.GetQualityLevel());
-        HighlightQualityButton(qualityLevel);
-
-        // Load and Highlight Fullscreen
-        bool isFullscreen = PlayerPrefs.GetInt("masterFullscreen", Screen.fullScreen ? 1 : 0) == 1;
-        HighlightFullscreenButton(isFullscreen);
-
-        // Load Resolution
-        int currentResolutionIndex = 0;
-        for (int i = 0; i < _resolutions.Length; i++)
-        {
-            if (_resolutions[i].width == Screen.width && _resolutions[i].height == Screen.height)
-            {
-                currentResolutionIndex = i;
-                break;
-            }
-        }
-        resolutionDropdown.value = currentResolutionIndex;
-        resolutionDropdown.RefreshShownValue();
-
-        // Load and Apply Sensitivity
-        float sensitivity = PlayerPrefs.GetFloat("mouseSensitivity");
-        if (sensitivitySlider != null)
-        {
-            sensitivitySlider.value = sensitivity;
-        }
     }
 
     public void SetResolution(int resolutionIndex)
@@ -157,18 +130,111 @@ public class OptionsMenuController : MonoBehaviour, IGenericUI
         }
     }
     
-    public void SetAudioMasterVolumeDisplay(float volume)
+    public void SetAudioMasterVolume(float volume)
     {
+        PlayerPrefs.SetFloat("masterVolume", volume);
         audioMasterPercent.text = Math.Round(volume * 100f).ToString() + "%";
+        OnAudioMasterVolumeChanged?.Invoke(volume);
     }
 
-    public void SetAudioMusicVolumeDisplay(float volume)
+    public void SetAudioMusicVolume(float volume)
     {
+        PlayerPrefs.SetFloat("musicVolume", volume);
         audioMusicPercent.text = Math.Round(volume * 100f).ToString() + "%";
+        OnAudioMusicVolumeChanged?.Invoke(volume);
     }
 
-    public void SetAudioSFXVolumeDisplay(float volume)
+    public void SetAudioSFXVolume(float volume)
     {
+        PlayerPrefs.SetFloat("sfxVolume", volume);
         audioSFXPercent.text = Math.Round(volume * 100f).ToString() + "%";
+        OnAudioSFXVolumeChanged?.Invoke(volume);
     }
+
+    #region Load Settings Methods
+    private void LoadGraphicsSettings()
+    {
+        // Load and Highlight Quality
+        int qualityLevel = PlayerPrefs.GetInt("masterQuality", QualitySettings.GetQualityLevel());
+        HighlightQualityButton(qualityLevel);
+
+        // Load and Highlight Fullscreen
+        bool isFullscreen = PlayerPrefs.GetInt("masterFullscreen", Screen.fullScreen ? 1 : 0) == 1;
+        HighlightFullscreenButton(isFullscreen);
+
+        // Load Resolution
+        int currentResolutionIndex = 0;
+        for (int i = 0; i < _resolutions.Length; i++)
+        {
+            if (_resolutions[i].width == Screen.width && _resolutions[i].height == Screen.height)
+            {
+                currentResolutionIndex = i;
+                break;
+            }
+        }
+        resolutionDropdown.value = currentResolutionIndex;
+        resolutionDropdown.RefreshShownValue();
+    }
+
+    private void LoadGameplaySettings()
+    {
+        // Load and Apply Sensitivity
+        float sensitivity = PlayerPrefs.GetFloat("mouseSensitivity");
+        if (sensitivitySlider != null)
+        {
+            sensitivitySlider.value = sensitivity;
+            // Also update the percentage text on load
+            sensitivityPercent.text = Math.Ceiling(sensitivity / 4.0f * 100f).ToString() + "%";
+        }
+    }
+
+    private void LoadAudioSettings()
+    {
+        float masterVolume = PlayerPrefs.GetFloat("masterVolume");
+        float musicVolume = PlayerPrefs.GetFloat("musicVolume");
+        float sfxVolume = PlayerPrefs.GetFloat("sfxVolume");
+
+        if (audioMasterSlider != null)
+        {
+            audioMasterSlider.value = masterVolume;
+            audioMasterPercent.text = Math.Round(masterVolume * 100f).ToString() + "%";
+        }
+        if (audioMusicSlider != null)
+        {
+            audioMusicSlider.value = musicVolume;
+            audioMusicPercent.text = Math.Round(musicVolume * 100f).ToString() + "%";
+        }
+        if (audioSFXSlider != null)
+        {
+            audioSFXSlider.value = sfxVolume;
+            audioSFXPercent.text = Math.Round(sfxVolume * 100f).ToString() + "%";
+        }
+    }
+    #endregion
+
+    #region PrepareAndLoad Methods for OnClick Events
+    public void PrepareAndLoadGraphicsSettings(GameObject graphicsSubmenu)
+    {
+        StartCoroutine(LoadSettingsRoutine(graphicsSubmenu, LoadGraphicsSettings));
+    }
+
+    public void PrepareAndLoadAudioSettings(GameObject audioSubmenu)
+    {
+        StartCoroutine(LoadSettingsRoutine(audioSubmenu, LoadAudioSettings));
+    }
+
+    public void PrepareAndLoadGameplaySettings(GameObject gameplaySubmenu)
+    {
+        StartCoroutine(LoadSettingsRoutine(gameplaySubmenu, LoadGameplaySettings));
+    }
+
+    private IEnumerator LoadSettingsRoutine(GameObject submenu, Action loadSettingsAction)
+    {
+        UIManager.Instance.OpenUIPanel(submenu);
+
+        yield return null;
+
+        loadSettingsAction?.Invoke();
+    }
+    #endregion
 }
