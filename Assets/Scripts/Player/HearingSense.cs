@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using playerChar;
 using UnityEngine.InputSystem;
+using System;
 
 public class HearingSense : SenseBase
 {
@@ -13,13 +14,17 @@ public class HearingSense : SenseBase
 
     public float revealTime = 2f;
 
-    [Header("Vignette Settings")]
+    [Header("Visual Effects Settings")]
     [SerializeField] private float vignetteFadeInTime = 0.5f;
     [SerializeField] private float vignetteStayTime = 2.0f;
     [SerializeField] private float vignetteFadeOutTime = 0.5f;
     [SerializeField] [Range(0, 1)] private float vignetteMaxIntensity = 0.6f;
     [SerializeField] [Range(-100,100)] private int setSaturation = -60;
 
+    [Header("Sound Effects Settings")]
+    [SerializeField] private float soundEffectsFadeTime = 0.5f;
+    [SerializeField] [Range(0, 1)] private float targetBGMVolumePercent = 0.4f; // set to the percentage of the original volume
+    
     private List<SoundEmitterHint> soundEmitters = new List<SoundEmitterHint>();
     private List<SwitchLayer> switchableObjects = new List<SwitchLayer>();
     
@@ -32,6 +37,8 @@ public class HearingSense : SenseBase
 
     protected override float EffectDuration => revealTime;
     protected override InputAction ActivationAction => m_Input.Player.HearingSense;
+    public static event Action<float, float> OnHearingSenseActivated; // targetVolume, fadeDuration
+    public static event Action<float> OnHearingSenseDeactivated; // fadeDuration
 
 
     protected override void OnEnable()
@@ -93,6 +100,7 @@ public class HearingSense : SenseBase
 
     protected override void ActivateSense()
     {
+        OnHearingSenseActivated?.Invoke(targetBGMVolumePercent, soundEffectsFadeTime);
         isSenseActive = true;
 
         // Trigger screen visual effects
@@ -149,7 +157,7 @@ public class HearingSense : SenseBase
         yield return new WaitForSeconds(delay);
 
         isSenseActive = false;
-
+        OnHearingSenseDeactivated?.Invoke(soundEffectsFadeTime);
         // Deactivate effects on all emitters that were activated by this pulse
         foreach (var emitter in activeEmitters)
         {

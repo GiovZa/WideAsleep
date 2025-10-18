@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 using playerChar;
+using System;
 
 [RequireComponent(typeof(AudioSource))]
 public class Piano : Interactable
@@ -46,6 +46,8 @@ public class Piano : Interactable
     };
 
     private bool isPuzzleSolved = false;
+    public static event Action<float, float> OnPianoActivated; // targetVolumePercent, fadeDuration
+    public static event Action<float> OnPianoDeactivated; // fadeDuration
 
     #endregion
 
@@ -56,8 +58,6 @@ public class Piano : Interactable
         isPianoActive = false;
 
         audioSource = GetComponent<AudioSource>();
-        // We will get the PlayerInteraction component from the interactor, so this is no longer needed.
-        // playerInteraction = FindObjectOfType<PlayerInteraction>();
 
         personalSheet.SetActive(isPianoActive);
         if (sheetPuzzleUI != null)
@@ -96,7 +96,6 @@ public class Piano : Interactable
                 return; // Don't activate if the puzzle is already solved.
             }
 
-            // Always activate the piano.
             ActivatePiano();
         }
     }
@@ -121,19 +120,7 @@ public class Piano : Interactable
         playerInteraction.SetInteracting(true);
         UIManager.Instance.DisableHUD();
 
-        // Disable player movement while playing
-        // if (playerCharacterController == null)
-        // {
-        //     playerCharacterController = FindObjectOfType<PlayerCharacterController>();
-        // }
-        
-        // Player movement is now handled by the GameStateManager.
-        /*
-        if (playerCharacterController != null)
-        {
-            playerCharacterController.DisableMovement();
-        }
-        */
+        OnPianoActivated?.Invoke(0.1f, 0.5f);
     }
 
     private void DeactivatePiano()
@@ -165,6 +152,8 @@ public class Piano : Interactable
         */
 
         Debug.Log("[Piano] Piano deactivated!");
+
+        OnPianoDeactivated?.Invoke(0.5f);
     }
 
     private void Update()
@@ -788,7 +777,7 @@ public class Piano : Interactable
         {
             if (Input.anyKeyDown)
             {
-                particlesPiano[Random.Range(0, particlesPiano.Length)].Play();
+                particlesPiano[UnityEngine.Random.Range(0, particlesPiano.Length)].Play();
             }
         }
     }

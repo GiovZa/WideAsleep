@@ -8,6 +8,8 @@ public class TEST_Trigger : MonoBehaviour
     BoxCollider boxCollider;
     [SerializeField] TEST_ActorObject objectToTrigger;
     [SerializeField] AudioClip triggerSound;
+    [HideInInspector]
+    public int sequenceNumber { get; set; } = 0;
     
     void Start()
     {
@@ -16,6 +18,8 @@ public class TEST_Trigger : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        if (sequenceNumber != objectToTrigger.sequenceTriggered) return;
+        
         if (other.gameObject.CompareTag("Player") && !hasTriggered)
         {
             hasTriggered = true;

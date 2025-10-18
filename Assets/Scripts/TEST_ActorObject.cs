@@ -4,19 +4,25 @@ using UnityEngine;
 
 public class TEST_ActorObject : MonoBehaviour
 {
-    bool hasTriggered = false;
     Animator animator;
+    [SerializeField] TEST_Trigger[] triggers;
+    [HideInInspector]
+    public int sequenceTriggered { get; set; } = 0;
 
     void Start()
     {
         animator = GetComponent<Animator>();
+        for (int i = 0; i < triggers.Length; i++)
+        {
+            triggers[i].sequenceNumber = i;
+        }
     }
 
     public void Trigger()
     {
-        //if (hasTriggered) return;
+        if (sequenceTriggered >= triggers.Length) return;
         Debug.Log("Triggering " + gameObject.name);
-        hasTriggered = true;
         animator.SetTrigger("Trigger");
+        sequenceTriggered++;
     }
 }

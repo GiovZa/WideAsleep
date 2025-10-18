@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
+using Pathfinding.ECS;
 
 public class Patrol : MonoBehaviour
 {
@@ -130,6 +131,7 @@ public class Patrol : MonoBehaviour
             agent.canMove = true; // Resume agent movement
             isPatrolling = true; // Allow Update() to trigger this again on arrival
             animator.SetBool("isWaiting", false);
+            
         }
     }
 

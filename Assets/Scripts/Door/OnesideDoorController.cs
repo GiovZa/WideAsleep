@@ -71,6 +71,7 @@ public class OnesideDoorController : MonoBehaviour
             {
                 graphUpdateScene.setWalkability = true;
                 graphUpdateScene.Apply();
+                DoorEvents.DoorStateChanged(); // Notify listeners that a door changed state
             }
 
             AudioManager.Instance.Play(openSfx, transform.position, 1f, SfxRadius, true, AudioManager.Instance.SFXMixerGroup);
@@ -85,6 +86,7 @@ public class OnesideDoorController : MonoBehaviour
             {
                 graphUpdateScene.setWalkability = false;
                 graphUpdateScene.Apply();
+                DoorEvents.DoorStateChanged(); // Notify listeners that a door changed state
             }
 
             AudioManager.Instance.Play(closeSfx, transform.position, 1f, SfxRadius, true, AudioManager.Instance.SFXMixerGroup);

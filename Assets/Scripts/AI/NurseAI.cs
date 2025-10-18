@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Pathfinding;
 
 public class NurseAI : MonoBehaviour
 {
@@ -16,9 +17,21 @@ public class NurseAI : MonoBehaviour
     public Search search;
 
     public float killRange = 1.5f;
+    private RichAI agent;
+
+    private void OnEnable()
+    {
+        DoorEvents.OnDoorStateChanged += HandleDoorStateChanged;
+    }
+
+    private void OnDisable()
+    {
+        DoorEvents.OnDoorStateChanged -= HandleDoorStateChanged;
+    }
 
     void Start()
     {
+        agent = GetComponent<RichAI>();
         patrolState = new PatrolState(this);
         alertState = new AlertState(this);
         chaseState = new ChaseState(this);
@@ -32,6 +45,15 @@ public class NurseAI : MonoBehaviour
     void Update()
     {
         currentState?.Update();
+    }
+
+    private void HandleDoorStateChanged()
+    {
+        // If the AI is active and has a path, force it to recalculate.
+        if (agent != null && agent.hasPath)
+        {
+            agent.SearchPath();
+        }
     }
 
     public void TransitionToState(IState newState)

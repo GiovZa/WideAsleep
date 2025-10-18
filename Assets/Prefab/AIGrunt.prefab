@@ -782,6 +782,9 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 3238551004663626803}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 4533345381666423096}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
       insertIndex: -1
@@ -819,6 +822,29 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 1ecf1630dd27d68479bb90e4bbd39809, type: 3}
   m_PrefabInstance: {fileID: 5876158874265025915}
   m_PrefabAsset: {fileID: 0}
+--- !u!136 &3238551004663626803
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6723072205973766186}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &4533345381666423096
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -890,7 +916,7 @@ MonoBehaviour:
   rotationSpeed: 360
   slowdownTime: 1
   wallForce: 3
-  wallDist: 1
+  wallDist: 3
   funnelSimplification: 0
   slowWhenNotFacingTarget: 1
   preventMovingBackwards: 0
@@ -973,7 +999,7 @@ MonoBehaviour:
   maxGenerationAttempts: 10
   angleSpread: 30
   targetSearchPoints: 2
-  skipLookAroundWhenBlocked: 0
+  skipLookAroundWhenBlocked: 1
   searchPointTimeout: 2
   arriveThreshold: 1.5
 --- !u!114 &913150443022887199

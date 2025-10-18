@@ -8,7 +8,6 @@ public class PlayerWarningSystem : MonoBehaviour
 
     [Header("Audio")]
     [SerializeField] private AudioSource heartbeatAudioSource;
-    [SerializeField] private AudioClip heartbeatSound;
     [SerializeField] private AudioClip aiSpottedSound;
 
     private List<GameObject> spottingEnemies = new List<GameObject>();
@@ -48,9 +47,8 @@ public class PlayerWarningSystem : MonoBehaviour
         {
             IsPlayerSpotted = true;
 
-            if (heartbeatAudioSource != null && heartbeatSound != null)
+            if (heartbeatAudioSource != null)
             {
-                heartbeatAudioSource.clip = heartbeatSound;
                 heartbeatAudioSource.loop = true;
                 heartbeatAudioSource.Play();
             }
