@@ -15,8 +15,8 @@ public class SceneSwapManager : MonoBehaviour
     public static event Action OnPlayerWillBeDestroyed;
 
     private static bool _loadFromRespawn;
-    private Vector3 _spwnplayerPosition;
-    private Quaternion _spawnplayerRotation;
+    private Vector3 _currentSpawnPosition;
+    private Quaternion _currentSpawnRotation;
 
     [Header("Player Prefab")]
     [SerializeField] private GameObject playerPrefab;
@@ -121,8 +121,7 @@ public class SceneSwapManager : MonoBehaviour
 
     public void RespawnAndReloadScene()
     {
-        FindSpawnPoint();
-        _loadFromRespawn = true; // The flag should only be set when we are explicitly respawning.
+        _loadFromRespawn = true; 
         StartCoroutine(FadeAndLoadInt(SceneManager.GetActiveScene().buildIndex));
         GameStateManager.Instance.SetState(GameState.Gameplay);
     }
@@ -171,17 +170,19 @@ public class SceneSwapManager : MonoBehaviour
 
             if (_loadFromRespawn)
             {
-                // On a respawn, use the coordinates we stored before reloading.
-                PlayerInstance.GetComponent<Player>().Respawn(_spwnplayerPosition, _spawnplayerRotation);
+                // On a respawn, use the coordinates we've been tracking.
+                PlayerInstance.GetComponent<Player>().Respawn(_currentSpawnPosition, _currentSpawnRotation);
                 _loadFromRespawn = false;
             }
             else
             {
-                // On a normal scene load, find the spawn point in the new scene.
+                // On a normal, fresh scene load, find the initial spawn point.
                 GameObject spawnPoint = GameObject.FindWithTag("SpawnLocation");
                 if (spawnPoint != null)
                 {
-                    PlayerInstance.GetComponent<Player>().Respawn(spawnPoint.transform.position, spawnPoint.transform.rotation);
+                    // This is now our initial spawn point for the level.
+                    UpdateSpawnPoint(spawnPoint.transform.position, spawnPoint.transform.rotation);
+                    PlayerInstance.GetComponent<Player>().Respawn(_currentSpawnPosition, _currentSpawnRotation);
                 }
                 else
                 {
@@ -191,19 +192,9 @@ public class SceneSwapManager : MonoBehaviour
         }
     }
 
-    private void FindSpawnPoint()
+    public void UpdateSpawnPoint(Vector3 newPosition, Quaternion newRotation)
     {
-        GameObject respawnPoint = GameObject.FindWithTag("SpawnLocation");
-        if (respawnPoint != null)
-        {
-            _spwnplayerPosition = respawnPoint.transform.position;
-            _spawnplayerRotation = respawnPoint.transform.rotation;
-        }
-        else
-        {
-            Debug.LogWarning("No 'Respawn' tag found in the scene. Storing world origin (0,0,0) for respawn.");
-            _spwnplayerPosition = Vector3.zero;
-            _spawnplayerRotation = Quaternion.identity;
-        }
+        _currentSpawnPosition = newPosition;
+        _currentSpawnRotation = newRotation;
     }
 }
