@@ -5,20 +5,13 @@ using UnityEngine.Audio;
 
 public class SoundMixerManager : MonoBehaviour
 {
+    public static SoundMixerManager Instance;
     [SerializeField] private AudioMixer audioMixer;
 
-    private void OnEnable()
+    private void Awake()
     {
-        OptionsMenuController.OnAudioMasterVolumeChanged += SetMasterVolume;
-        OptionsMenuController.OnAudioMusicVolumeChanged += SetMusicVolume;
-        OptionsMenuController.OnAudioSFXVolumeChanged += SetSFXVolume;
-    }
-
-    private void OnDisable()
-    {
-        OptionsMenuController.OnAudioMasterVolumeChanged -= SetMasterVolume;
-        OptionsMenuController.OnAudioMusicVolumeChanged -= SetMusicVolume;
-        OptionsMenuController.OnAudioSFXVolumeChanged -= SetSFXVolume;
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
     }
 
     public void SetMasterVolume(float level)

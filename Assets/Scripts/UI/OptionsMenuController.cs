@@ -10,9 +10,11 @@ public class OptionsMenuController : MonoBehaviour, IGenericUI
 {
     // Event that other scripts can subscribe to
     public static event Action<float> OnSensitivityChanged;
-    public static event Action<float> OnAudioMasterVolumeChanged;
-    public static event Action<float> OnAudioMusicVolumeChanged;
-    public static event Action<float> OnAudioSFXVolumeChanged;
+    // Static method to allow external classes to safely trigger the event.
+    public static void TriggerSensitivityChanged(float sensitivity)
+    {
+        OnSensitivityChanged?.Invoke(sensitivity);
+    }
 
     [Header("UI References")]
     [Header("Graphics")]
@@ -107,7 +109,8 @@ public class OptionsMenuController : MonoBehaviour, IGenericUI
     {
         PlayerPrefs.SetFloat("mouseSensitivity", sensitivity);
         sensitivityPercent.text = Math.Ceiling(sensitivity/ 4.0f * 100f).ToString() + "%";
-        OnSensitivityChanged?.Invoke(sensitivity);
+        // The public method now calls the internal trigger.
+        TriggerSensitivityChanged(sensitivity);
     }
 
     private void HighlightQualityButton(int qualityIndex)
@@ -134,21 +137,21 @@ public class OptionsMenuController : MonoBehaviour, IGenericUI
     {
         PlayerPrefs.SetFloat("masterVolume", volume);
         audioMasterPercent.text = Math.Round(volume * 100f).ToString() + "%";
-        OnAudioMasterVolumeChanged?.Invoke(volume);
+        SoundMixerManager.Instance.SetMasterVolume(volume);
     }
 
     public void SetAudioMusicVolume(float volume)
     {
         PlayerPrefs.SetFloat("musicVolume", volume);
         audioMusicPercent.text = Math.Round(volume * 100f).ToString() + "%";
-        OnAudioMusicVolumeChanged?.Invoke(volume);
+        SoundMixerManager.Instance.SetMusicVolume(volume);
     }
 
     public void SetAudioSFXVolume(float volume)
     {
         PlayerPrefs.SetFloat("sfxVolume", volume);
         audioSFXPercent.text = Math.Round(volume * 100f).ToString() + "%";
-        OnAudioSFXVolumeChanged?.Invoke(volume);
+        SoundMixerManager.Instance.SetSFXVolume(volume);
     }
 
     #region Load Settings Methods
