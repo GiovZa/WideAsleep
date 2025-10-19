@@ -179,7 +179,7 @@ public class OptionsMenuController : MonoBehaviour, IGenericUI
     private void LoadGameplaySettings()
     {
         // Load and Apply Sensitivity
-        float sensitivity = PlayerPrefs.GetFloat("mouseSensitivity");
+        float sensitivity = PlayerPrefs.GetFloat("mouseSensitivity", 4.0f);
         if (sensitivitySlider != null)
         {
             sensitivitySlider.value = sensitivity;
@@ -190,9 +190,9 @@ public class OptionsMenuController : MonoBehaviour, IGenericUI
 
     private void LoadAudioSettings()
     {
-        float masterVolume = PlayerPrefs.GetFloat("masterVolume");
-        float musicVolume = PlayerPrefs.GetFloat("musicVolume");
-        float sfxVolume = PlayerPrefs.GetFloat("sfxVolume");
+        float masterVolume = PlayerPrefs.GetFloat("masterVolume", 1.0f);
+        float musicVolume = PlayerPrefs.GetFloat("musicVolume", 1.0f);
+        float sfxVolume = PlayerPrefs.GetFloat("sfxVolume", 1.0f);
 
         if (audioMasterSlider != null)
         {
