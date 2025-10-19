@@ -6,15 +6,19 @@ public class ObjectThrower : MonoBehaviour
     [Header("References")]
     public GameObject objectToThrowPrefab;
     public Transform throwPoint;
+    public Camera playerCamera; // Reference to the player's camera
 
     [Header("Throwing")]
     public float throwForce = 20f;
-    public float throwAngle = 30f;
     private CustomInput m_Input;
 
     private void Awake()
     {
         m_Input = new CustomInput();
+        if (playerCamera == null)
+        {
+            playerCamera = Camera.main;
+        }
     }
 
     private void OnEnable()
@@ -37,9 +41,9 @@ public class ObjectThrower : MonoBehaviour
 
     private void ThrowObject()
     {
-        if (objectToThrowPrefab == null || throwPoint == null)
+        if (objectToThrowPrefab == null || throwPoint == null || playerCamera == null)
         {
-            Debug.LogError("ObjectToThrowPrefab or ThrowPoint is not assigned in the Inspector.");
+            Debug.LogError("ObjectToThrowPrefab, ThrowPoint, or PlayerCamera is not assigned in the Inspector.");
             return;
         }
 
@@ -51,8 +55,8 @@ public class ObjectThrower : MonoBehaviour
 
             if (rb != null)
             {
-                // Calculate the throw direction with an upward angle.
-                Vector3 throwDirection = Quaternion.AngleAxis(-throwAngle, throwPoint.right) * throwPoint.forward;
+                // The throw direction is now simply the camera's forward vector.
+                Vector3 throwDirection = playerCamera.transform.forward;
                 
                 // Throw the object in the new direction.
                 rb.AddForce(throwDirection * throwForce, ForceMode.VelocityChange);

@@ -276,6 +276,8 @@ MonoBehaviour:
   vignetteFadeOutTime: 0.5
   vignetteMaxIntensity: 0.6
   setSaturation: -60
+  soundEffectsFadeTime: 0.5
+  targetBGMVolumePercent: 0.4
 --- !u!114 &536183665020882965
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -315,8 +317,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectToThrowPrefab: {fileID: 3491303132119564599, guid: e1e074cf0e491684788645bad0cb769e, type: 3}
   throwPoint: {fileID: 6299546429172198232}
+  playerCamera: {fileID: 6806078760192323123}
   throwForce: 15
-  throwAngle: 15
 --- !u!114 &7198970837452929405
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -330,7 +332,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   heartbeatAudioSource: {fileID: 5198911793723392681}
-  heartbeatSound: {fileID: 8300000, guid: fb99e77e73637604ab6b1c1ccdc87a8e, type: 3}
   aiSpottedSound: {fileID: 8300000, guid: 5582bccb1efff41be8649836559d52f3, type: 3}
 --- !u!1 &6918150116661508190
 GameObject:
