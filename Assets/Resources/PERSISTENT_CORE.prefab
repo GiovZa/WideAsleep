@@ -610,10 +610,12 @@ MonoBehaviour:
   crosshairImage: {fileID: 835129155789598087}
   defaultCrosshair: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   interactCrosshair: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  pickupCrosshair: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  doorCrosshair: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  pickupCrosshair: {fileID: 21300000, guid: 04bb73a7d12ab6a4db1b09ad6595d4ce, type: 3}
+  doorCrosshair: {fileID: 21300000, guid: 6973bae1c6dbad74b813aca8a658086e, type: 3}
   defaultColor: {r: 1, g: 1, b: 1, a: 1}
   interactColor: {r: 1, g: 0, b: 0, a: 1}
+  pickupColor: {r: 1, g: 1, b: 1, a: 0.5019608}
+  doorColor: {r: 1, g: 1, b: 1, a: 0.49803922}
   visionCooldownImage: {fileID: 2252337158582227552}
   hearingCooldownImage: {fileID: 450387353984631134}
   senseActiveColor: {r: 1, g: 1, b: 1, a: 1}
@@ -2574,6 +2576,8 @@ MonoBehaviour:
   gameplayScenes:
   - _sceneAsset: {fileID: 102900000, guid: 190aabafba5c27942a35c7550c883391, type: 3}
     _sceneName: LevelVision_PROTOTYPE
+  - _sceneAsset: {fileID: 102900000, guid: 5f29406ac159bbb4388c9145bc18be7c, type: 3}
+    _sceneName: Level2_Tutorial
   - _sceneAsset: {fileID: 102900000, guid: 6636a1820a6b848aca6e044b12e329c8, type: 3}
     _sceneName: Level2_Hearing
   - _sceneAsset: {fileID: 102900000, guid: 95b5d79f972c5114f81e5cf66a2aa68c, type: 3}

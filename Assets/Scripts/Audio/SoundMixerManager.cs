@@ -28,4 +28,44 @@ public class SoundMixerManager : MonoBehaviour
     {
         audioMixer.SetFloat("SFX", Mathf.Log10(level) * 20f);
     }
+    
+    /// <summary>
+    /// Starts a coroutine to fade a mixer parameter from its current value to a target value over a given duration.
+    /// </summary>
+    /// <param name="parameterName">The name of the mixer parameter to fade.</param>
+    /// <param name="targetValue">The target value to fade to.</param>
+    /// <param name="duration">The duration of the fade in seconds.</param>
+    public void FadeMixerParameter(string parameterName, float targetValue, float duration)
+    {
+        StartCoroutine(FadeParameterRoutine(parameterName, targetValue, duration));
+    }
+
+    /// <summary>
+    /// Fades a mixer parameter from its current value to a target value over a given duration.
+    /// </summary>
+    /// <param name="parameterName">The name of the mixer parameter to fade.</param>
+    /// <param name="targetValue">The target value to fade to.</param>
+    /// <param name="duration">The duration of the fade in seconds.</param>
+    /// <returns>An enumerator that can be used to wait for the fade to complete.</returns>
+    private IEnumerator FadeParameterRoutine(string parameterName, float targetValue, float duration)
+    {
+        if (duration <= 0)
+        {
+            audioMixer.SetFloat(parameterName, targetValue);
+            yield break;
+        }
+
+        audioMixer.GetFloat(parameterName, out float startValue);
+        float time = 0;
+
+        while (time < duration)
+        {
+            float newValue = Mathf.Lerp(startValue, targetValue, time / duration);
+            audioMixer.SetFloat(parameterName, newValue);
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        audioMixer.SetFloat(parameterName, targetValue);
+    }
 }

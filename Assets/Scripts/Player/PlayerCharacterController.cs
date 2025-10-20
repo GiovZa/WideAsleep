@@ -17,6 +17,9 @@ namespace playerChar
 
         [Tooltip("Audio source for footsteps, jump, etc...")]
         public AudioSource audioSource;
+        
+        [Tooltip("Animator for the player")]
+        public Animator animator;
 
         [Header("General")] [Tooltip("Force applied downward when in the air")]
         public float GravityDownForce = 20f;
@@ -254,6 +257,8 @@ namespace playerChar
             UpdateCharacterHeight(false);
 
             HandleMovement();
+
+            UpdateAnimator();
         }
 
         private void HandleGameStateChanged(GameState newState)
@@ -674,6 +679,14 @@ namespace playerChar
             }
 
             IsCrouching = crouched;
+
+            // --- New Animator Logic ---
+            if (animator != null)
+            {
+                animator.SetBool("IsCrouching", IsCrouching);
+            }
+            // --- End New Animator Logic ---
+
             return true;
         }
 
@@ -761,6 +774,33 @@ namespace playerChar
         private void UpdateMouseSensitivity(float newSensitivity)
         {
             MouseSensitivity = newSensitivity;
+        }
+
+        private void UpdateAnimator()
+        {
+            if (animator == null) return;
+
+            // Transform the world-space velocity of the character controller to local space
+            Vector3 localVelocity = transform.InverseTransformDirection(m_Controller.velocity);
+            
+            Vector3 horizontalVelocity = new Vector3(localVelocity.x, 0, localVelocity.z);
+            float speed = horizontalVelocity.magnitude;
+            
+            // // Get the current animator values for smoothing
+            // float currentVelocityX = animator.GetFloat("VelocityX");
+            // float currentVelocityZ = animator.GetFloat("VelocityZ");
+
+            // // Smooth the transitions
+            // float smoothedVelocityX = Mathf.Lerp(currentVelocityX, localVelocity.x, Time.deltaTime * 10f);
+            // float smoothedVelocityZ = Mathf.Lerp(currentVelocityZ, localVelocity.z, Time.deltaTime * 10f);
+
+            // Set the animator parameters
+            // animator.SetFloat("VelocityX", smoothedVelocityX);
+            // animator.SetFloat("VelocityZ", smoothedVelocityZ);
+
+            animator.SetFloat("Velocity", speed);
+            animator.SetFloat("VelocityX", localVelocity.x);
+            animator.SetFloat("VelocityZ", localVelocity.z);
         }
     }
 }

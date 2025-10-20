@@ -11,4 +11,9 @@ public class Locket : Interactable
         base.Interact(interactor);
         SceneSwapManager.SwapScene(sceneToLoad);
     }
+
+    public override CrosshairType GetCrosshairType()
+    {
+        return CrosshairType.Pickup;
+    }
 }

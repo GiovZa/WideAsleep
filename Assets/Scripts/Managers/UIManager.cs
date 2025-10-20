@@ -23,6 +23,16 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Sprite doorCrosshair;
     [SerializeField] private Color defaultColor = Color.white;
     [SerializeField] private Color interactColor = Color.red;
+    [SerializeField] private Color pickupColor = Color.white;
+    [SerializeField] private Color doorColor = Color.white;
+    private float defaultCrosshairWidth = 10f;
+    private float defaultCrosshairHeight = 10f;
+    private float interactCrosshairWidth = 10f;
+    private float interactCrosshairHeight = 10f;
+    private float pickupCrosshairWidth = 80f;
+    private float pickupCrosshairHeight = 80f;
+    private float doorCrosshairWidth = 80f;
+    private float doorCrosshairHeight = 80f;
 
     [Header("Senses UI Settings")]
     [SerializeField] private Image visionCooldownImage;
@@ -223,21 +233,29 @@ public class UIManager : MonoBehaviour
 
         Sprite newSprite = defaultCrosshair;
         Color newColor = defaultColor;
+        float newWidth = defaultCrosshairWidth;
+        float newHeight = defaultCrosshairHeight;
 
         switch (playerInteraction.CurrentCrosshairType)
         {
             case CrosshairType.Interact:
                 newSprite = interactCrosshair;
                 newColor = interactColor;
+                newWidth = interactCrosshairWidth;
+                newHeight = interactCrosshairHeight;
                 break;
             case CrosshairType.Pickup:
                 newSprite = pickupCrosshair;
-                newColor = interactColor;
+                newColor = pickupColor;
+                newWidth = pickupCrosshairWidth;
+                newHeight = pickupCrosshairHeight;
                 break;
 
             case CrosshairType.Door:
                 newSprite = doorCrosshair;
-                newColor = interactColor;
+                newColor = doorColor;
+                newWidth = doorCrosshairWidth;
+                newHeight = doorCrosshairHeight;
                 break;
         }
         
@@ -248,6 +266,10 @@ public class UIManager : MonoBehaviour
         if (crosshairImage.color != newColor)
         {
             crosshairImage.color = newColor;
+        }
+        if (crosshairImage.rectTransform.sizeDelta != new Vector2(newWidth, newHeight))
+        {
+            crosshairImage.rectTransform.sizeDelta = new Vector2(newWidth, newHeight);
         }
     }
 

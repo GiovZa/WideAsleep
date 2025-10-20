@@ -18,4 +18,9 @@ public class PickupNote : Interactable
 
         gameObject.SetActive(false); // Disables the note
     }
+
+    public override CrosshairType GetCrosshairType()
+    {
+        return CrosshairType.Pickup;
+    }
 }

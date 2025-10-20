@@ -19,4 +19,9 @@ public class Throwable : Interactable
         // Destroy the object that was picked up.
         Destroy(gameObject);
     }
+
+    public override CrosshairType GetCrosshairType()
+    {
+        return CrosshairType.Pickup;
+    }
 }

@@ -183,6 +183,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   surfaceType: 0
+  overrideDefaults: 0
+  volume: 1
+  soundRadius: 10
 --- !u!1 &5625891497134622529
 GameObject:
   m_ObjectHideFlags: 0

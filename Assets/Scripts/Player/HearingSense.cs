@@ -109,6 +109,12 @@ public class HearingSense : SenseBase
             effectsManager.PulseVignette(vignetteFadeInTime, vignetteStayTime, vignetteFadeOutTime, vignetteMaxIntensity);
             effectsManager.TriggerBlackAndWhite(revealTime, vignetteFadeInTime, setSaturation); 
         }
+
+        // Trigger sound effects change
+        if (SoundMixerManager.Instance != null)
+        {
+            SoundMixerManager.Instance.FadeMixerParameter("masterLowpassFreq", 10000f, soundEffectsFadeTime);
+        }
         
         // Get the position of the player at the moment of activation
         Vector3 playerPosition = transform.position;
@@ -158,6 +164,13 @@ public class HearingSense : SenseBase
 
         isSenseActive = false;
         OnHearingSenseDeactivated?.Invoke(soundEffectsFadeTime);
+
+        // Trigger sound effects change
+        if (SoundMixerManager.Instance != null)
+        {
+            SoundMixerManager.Instance.FadeMixerParameter("masterLowpassFreq", 2000f, soundEffectsFadeTime);
+        }
+
         // Deactivate effects on all emitters that were activated by this pulse
         foreach (var emitter in activeEmitters)
         {
