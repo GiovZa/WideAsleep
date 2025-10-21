@@ -455,6 +455,9 @@ namespace playerChar
                             IsGrounded = false;
                             m_GroundNormal = Vector3.up;
                             // Debug.Log($"Jump Frame Block: {CharacterVelocity}");
+
+                            // Play jump animation
+                            animator.SetTrigger("Jump");
                         }
                     }
 

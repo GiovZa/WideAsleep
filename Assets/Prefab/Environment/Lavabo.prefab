@@ -10,15 +10,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: e1f7b000d58004cfebc415b24111ca82, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 15.02
+      value: 39.15
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e1f7b000d58004cfebc415b24111ca82, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.2
+      value: -1.364
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e1f7b000d58004cfebc415b24111ca82, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5.73
+      value: 21.64
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e1f7b000d58004cfebc415b24111ca82, type: 3}
       propertyPath: m_LocalRotation.w
@@ -48,9 +48,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -4324730228634371299, guid: e1f7b000d58004cfebc415b24111ca82, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: -2122284662806887831, guid: e1f7b000d58004cfebc415b24111ca82, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: e1f7b000d58004cfebc415b24111ca82, type: 3}
       propertyPath: m_Name
       value: Lavabo
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e1f7b000d58004cfebc415b24111ca82, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 7459653306571469580, guid: e1f7b000d58004cfebc415b24111ca82, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -84,5 +100,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.6434804, y: 0.25811338, z: 1}
-  m_Center: {x: 0.0003511906, y: 0.8485093, z: 1.1531423e-13}
+  m_Size: {x: 1.6434804, y: 0.25811338, z: 0.8110434}
+  m_Center: {x: 0.0003511906, y: 0.8485011, z: -0.094478294}
