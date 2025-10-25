@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using Unity.Collections;
 using SoundSystem;
 using UnityEngine.InputSystem;
 
@@ -20,6 +21,9 @@ namespace playerChar
         
         [Tooltip("Animator for the player")]
         public Animator animator;
+
+        [Tooltip("Transform of the player's character model")]
+        public Transform modelTransform;
 
         [Header("General")] [Tooltip("Force applied downward when in the air")]
         public float GravityDownForce = 20f;
@@ -73,6 +77,10 @@ namespace playerChar
 
         [Tooltip("Sensitivity for mouse input.")]
         public float MouseSensitivity = 1.0f;
+        [Tooltip("Maximum rotation angle of camera when looking down, Positive")]
+        public float maxDownwardsRotationAngle = 80f;
+        [Tooltip("Maximum rotation angle of camera when looking up, Negative")]
+        public float maxUpwardsRotationAngle = -89f;
 
         [Tooltip("Inverts Mouse Y controls")]
         public bool isInverted = false;
@@ -130,7 +138,7 @@ namespace playerChar
         public bool IsCrouching { get; private set; }
         public bool IsHiding { get; private set; }
         public float CurrentStamina { get; private set; }
-        private bool CanMove = true;
+        [SerializeField, ReadOnly] private bool CanMove = true;
         private bool isStunned = false;
         public Transform lookTarget;
         public Vector3 lookTargetOffset;
@@ -144,6 +152,7 @@ namespace playerChar
         float m_CameraVerticalAngle = 0f;
         float m_FootstepDistanceCounter;
         float m_TargetCharacterHeight;
+        private Vector3 _targetModelPosition;
         float m_StaminaRegenerationTimer;
 
         private CustomInput m_Input;
@@ -222,6 +231,12 @@ namespace playerChar
 
             HandleRotation();
 
+            // Smoothly update the model's position towards the target
+            if (modelTransform != null && modelTransform.localPosition != _targetModelPosition)
+            {
+                modelTransform.localPosition = Vector3.Lerp(modelTransform.localPosition, _targetModelPosition, CrouchingSharpness * Time.deltaTime);
+            }
+
             if (!CanMove)
             {
                 return;
@@ -294,7 +309,7 @@ namespace playerChar
                 m_CameraVerticalAngle += look.y * RotationSpeed * MouseSensitivity * Time.deltaTime * (isInverted ? 1f : -1f);
 
                 // limit the camera's vertical angle to min/max
-                m_CameraVerticalAngle = Mathf.Clamp(m_CameraVerticalAngle, -89f, 89f);
+                m_CameraVerticalAngle = Mathf.Clamp(m_CameraVerticalAngle, maxUpwardsRotationAngle, maxDownwardsRotationAngle);
 
                 // apply the vertical angle as a local rotation to the camera transform along its right axis (makes it pivot up and down)
                 PlayerCamera.transform.localEulerAngles = new Vector3(m_CameraVerticalAngle, 0, 0);
@@ -689,6 +704,12 @@ namespace playerChar
                 animator.SetBool("IsCrouching", IsCrouching);
             }
             // --- End New Animator Logic ---
+
+            // Set the target position for the model to lerp towards in Update()
+            if (modelTransform != null)
+            {
+                _targetModelPosition = IsCrouching ? new Vector3(0, 0, -0.2f) : new Vector3(0, 0, -0.1f);
+            }
 
             return true;
         }

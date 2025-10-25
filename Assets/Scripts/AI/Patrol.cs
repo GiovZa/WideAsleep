@@ -22,6 +22,10 @@ public class Patrol : MonoBehaviour
     public bool isPatrolling = true;
     private Animator animator;
 
+    // New state variables for the timer-based waiting system
+    private bool isWaiting = false;
+    private float waitTimer = 0f;
+
     void Start()
     {
         animator = GetComponent<Animator>();
@@ -53,6 +57,9 @@ public class Patrol : MonoBehaviour
 
     public void Restart()
     {
+        isWaiting = false; // Always reset the waiting state when restarting patrol
+        waitTimer = 0f;
+        agent.canMove = true; // Ensure the agent can move
         isPatrolling = true;
         agent = GetComponent<RichAI>();
 
@@ -75,21 +82,40 @@ public class Patrol : MonoBehaviour
 
     void Update()
     {
-        if (waypoints.Count == 1 && isPatrolling)
+        // If we are in the "waiting" state, handle the timer.
+        if (isWaiting)
         {
-            // If there's only one waypoint, just stay there (no movement)
-            if (!agent.pathPending && agent.remainingDistance <= arriveThreshold)
+            waitTimer -= Time.deltaTime;
+            if (waitTimer <= 0)
             {
-                StartCoroutine(WaitAtWaypoint(waitTimeAtWaypoint)); // Wait indefinitely at the waypoint
+                if (waypoints.Count > 1)
+                {
+                    PickNewTarget();
+                    agent.canMove = true;
+                    isWaiting = false;
+                    animator.SetBool("isWaiting", false);
+                }
             }
+            return; // Do nothing else while waiting
         }
-        else if (!agent.pathPending && agent.remainingDistance <= arriveThreshold && isPatrolling)
+        
+        // This part only runs if we are not waiting.
+        // If we've reached our destination (or are at our single point), start waiting.
+        if (isPatrolling && !agent.pathPending && agent.remainingDistance <= arriveThreshold)
         {
-            StartCoroutine(WaitAtWaypoint(waitTimeAtWaypoint)); // Wait at the current waypoint
+            isWaiting = true;
+            waitTimer = waitTimeAtWaypoint;
+            animator.SetBool("isWaiting", true);
         }
 
-        // Apply the rotation if rotation is enabled
-        if (applyRotation && currentTarget != null)
+        // --- New Rotation Logic ---
+        // If rotation is enabled and we have a single waypoint, always apply rotation when idle.
+        if (applyRotation && waypoints.Count == 1 && !agent.canMove)
+        {
+            ApplyRotation();
+        }
+        // Original rotation logic for multi-point patrols.
+        else if (applyRotation && currentTarget != null && waypoints.Count > 1)
         {
             ApplyRotation();
         }
@@ -116,11 +142,12 @@ public class Patrol : MonoBehaviour
         agent.destination = currentTarget.position;
     }
 
-    // Coroutine to wait for a set period before moving to the next waypoint
+    // The coroutine is no longer needed and will be removed.
+    /*
     IEnumerator WaitAtWaypoint(float waitTime)
     {
         isPatrolling = false; // Stop Update() from re-triggering this coroutine
-        agent.canMove = false; // Pause the agent's movement
+        //agent.canMove = false; // Pause the agent's movement
         animator.SetBool("isWaiting", true);
 
         yield return new WaitForSeconds(waitTime); // Wait at the current waypoint
@@ -128,13 +155,14 @@ public class Patrol : MonoBehaviour
         if (waypoints.Count > 1)
         {
             PickNewTarget(); // Once wait time is over, pick a new target
-            agent.canMove = true; // Resume agent movement
+            //agent.canMove = true; // Resume agent movement
             isPatrolling = true; // Allow Update() to trigger this again on arrival
             animator.SetBool("isWaiting", false);
             
         }
     }
-
+    */
+    
     // Method to apply the Y rotation based on the value in yRotationDegrees
     void ApplyRotation()
     {

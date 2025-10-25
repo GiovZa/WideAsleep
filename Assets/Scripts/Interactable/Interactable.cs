@@ -10,8 +10,8 @@ public abstract class Interactable : MonoBehaviour
     public string message;
 
     public UnityEvent onInteraction;
-
     private int outlineRequestCount = 0;
+    protected Animator animator;
 
     // Start is called before the first frame update
     public virtual void Start()
@@ -22,6 +22,11 @@ public abstract class Interactable : MonoBehaviour
             outline = GetComponentInChildren<QuickOutline>();
         }
         ReleaseOutline();
+
+        if (TryGetComponent<Animator>(out Animator anim))
+        {
+            animator = anim;
+        }
     }
 
     public virtual void Interact(GameObject interactor)

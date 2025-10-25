@@ -21,10 +21,12 @@ public class Closet : Interactable
         if (!isPlayerHiding)
         {
             HidePlayer();
+            animator.SetBool("IsOpen", false);
         }
         else
         {
             UnhidePlayer();
+            animator.SetBool("IsOpen", true);
         }
     }
 
@@ -38,6 +40,7 @@ public class Closet : Interactable
 
         player.transform.position = hidingSpot.position;
         player.transform.rotation = hidingSpot.rotation;
+        playerController.animator.SetBool("IsHiding", true);
         
         Player playerState = player.GetComponent<Player>();
         if (playerState != null)
@@ -50,13 +53,16 @@ public class Closet : Interactable
 
     private void UnhidePlayer()
     {
-        player.transform.position = exitSpot.position;
+
         
         PlayerCharacterController playerController = player.GetComponent<PlayerCharacterController>();
         if (playerController != null)
         {
             playerController.SetHidingState(false);
         }
+
+        player.transform.position = exitSpot.position;
+        playerController.animator.SetBool("IsHiding", false);
 
         Player playerState = player.GetComponent<Player>();
         if (playerState != null)

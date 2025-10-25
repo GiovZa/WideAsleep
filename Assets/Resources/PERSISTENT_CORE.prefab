@@ -2569,7 +2569,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c76c46c9c33a00f4cbbdc81c878afa35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 6700985936480113284, guid: f98ba42aa7d72cf4e91db71c2037c8f0, type: 3}
+  playerPrefab: {fileID: 6700985936480113284, guid: 8a81527699442f34dbcdf5a8b9757f50, type: 3}
   canvasGroup: {fileID: 8739204997591514285}
   fadeTime: 0.5
   loadWaitTime: 1
