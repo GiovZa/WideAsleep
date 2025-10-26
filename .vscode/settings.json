@@ -52,5 +52,7 @@
         "Temp/": true
     },
     "dotnet.defaultSolution": "WideAsleep.sln",
-    "dotrush.roslyn.projectOrSolutionFiles": []
+    "dotrush.roslyn.projectOrSolutionFiles": [
+        "e:\\Unity\\Version Control\\WideAsleep\\WideAsleep.sln"
+    ]
 }
