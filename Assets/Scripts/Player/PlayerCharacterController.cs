@@ -19,6 +19,9 @@ namespace playerChar
         [Tooltip("Audio source for footsteps, jump, etc...")]
         public AudioSource audioSource;
         
+        [Tooltip("Audio source for stamina audio")]
+        [SerializeField] private AudioSource staminaAudioSource;
+        
         [Tooltip("Animator for the player")]
         public Animator animator;
 
@@ -68,6 +71,9 @@ namespace playerChar
         
         [Tooltip("The delay in seconds before stamina begins to regenerate after sprinting.")]
         public float StaminaRegenerationDelay = 2f;
+
+        [Tooltip("The percentage threshold at which the stamina audio will play.")]
+        [SerializeField, Range(0, 1)] private float staminaAudioThreshold = 0.3f;
 
         [Header("Rotation")] [Tooltip("Rotation speed for moving the camera")]
         public float RotationSpeed = 2f;
@@ -208,6 +214,7 @@ namespace playerChar
             MouseSensitivity = PlayerPrefs.GetFloat("mouseSensitivity");
 
             CurrentStamina = MaxStamina;
+            UpdateStaminaEffects();
         }
 
         void Start()
@@ -239,12 +246,14 @@ namespace playerChar
 
             if (!CanMove)
             {
+                UpdateStaminaEffects();
                 return;
             }
 
             if (IsHiding)
             {
                 RegenerateStamina();
+                UpdateStaminaEffects();
                 return;
             }
 
@@ -272,6 +281,9 @@ namespace playerChar
             UpdateCharacterHeight(false);
 
             HandleMovement();
+
+            // Update stamina-driven effects after movement may have changed stamina
+            UpdateStaminaEffects();
 
             UpdateAnimator();
         }
@@ -575,6 +587,41 @@ namespace playerChar
             }
         }
 
+        private void UpdateStaminaEffects()
+        {
+            float staminaPercentage = MaxStamina > 0f ? (CurrentStamina / MaxStamina) : 0f;
+
+            // Update visual effect
+            if (EffectsManager.Instance != null)
+            {
+                EffectsManager.Instance.UpdateStaminaEffect(staminaPercentage);
+            }
+
+            // Update audio effect
+            if (staminaAudioSource != null && staminaAudioSource.clip != null)
+            {
+                if (staminaPercentage <= staminaAudioThreshold)
+                {
+                    if (!staminaAudioSource.isPlaying)
+                    {
+                        staminaAudioSource.loop = true;
+                        staminaAudioSource.Play();
+                    }
+
+                    // As stamina decreases towards 0, volume increases towards 1.
+                    float volume = 1.0f - (staminaPercentage / Mathf.Max(0.0001f, staminaAudioThreshold));
+                    staminaAudioSource.volume = Mathf.Clamp01(volume);
+                }
+                else
+                {
+                    if (staminaAudioSource.isPlaying)
+                    {
+                        staminaAudioSource.Stop();
+                    }
+                }
+            }
+        }
+
         private void OnTriggerStay(Collider other)
         {
             // Make sure we are grounded and moving to trigger the sound
@@ -647,7 +694,12 @@ namespace playerChar
             }
         }
 
-        // returns false if there was an obstruction
+        /// <summary>
+        /// Sets the crouching state of the player and checks for obstructions.
+        /// </summary>
+        /// <param name="crouched">The new crouching state.</param>
+        /// <param name="ignoreObstructions">Whether to ignore obstructions.</param>
+        /// <returns>True if the crouching state was set successfully, false otherwise.</returns>
         bool SetCrouchingState(bool crouched, bool ignoreObstructions)
         {
             // set appropriate heights
@@ -787,6 +839,7 @@ namespace playerChar
 
             // Reset stats
             CurrentStamina = MaxStamina;
+            UpdateStaminaEffects();
 
             // Re-sync with the current game state to ensure movement is correctly enabled/disabled
             HandleGameStateChanged(GameStateManager.Instance.CurrentState);

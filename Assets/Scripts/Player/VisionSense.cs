@@ -11,26 +11,28 @@ public class VisionSense : SenseBase
     [Header("Effect Settings")]
     [Tooltip("How long the effect should last in seconds")]
     [SerializeField] private float effectDuration = 2.5f;
-    [SerializeField] private float FadeInTime = 0.5f;
-    [SerializeField] private float FadeOutTime = 0.5f;
+    [SerializeField] private float effectFadeTime = 0.5f;
 
-    [Tooltip("The Gaussian Start to use for clear vision.")]
-    [Range(0f, 50f)]
-    public float clearStart = 20f;
+    // [Tooltip("The Gaussian Start to use for clear vision.")]
+    // [Range(0f, 50f)]
+    // public float clearStart = 20f;
 
-    [Tooltip("The Gaussian End to use for clear vision.")]
-    [Range(0f, 50f)]
-    public float clearEnd = 50f;
+    // [Tooltip("The Gaussian End to use for clear vision.")]
+    // [Range(0f, 50f)]
+    // public float clearEnd = 50f;
  
-    [Tooltip("The Gaussian Max Radius to use for clear vision.")]
-    [Range(0.5f, 1.5f)]
-    public float clearMaxRadius = 0.5f;
+    // [Tooltip("The Gaussian Max Radius to use for clear vision.")]
+    // [Range(0.5f, 1.5f)]
+    // public float clearMaxRadius = 0.5f;
 
-    [Tooltip("The maximum intensity of the vignette (0 to 1).")]
+    [Tooltip("The maximum intensity of the vignette outer ring (-2 to 1).")]
+    [Range(-2, 1)]
+    public float vignetteOuterRing = 0f;
+    [Tooltip("The maximum intensity of the vignette inner ring (0 to 1).")]
     [Range(0, 1)]
-    public float vignetteIntensity = 0.15f;
-    [Tooltip("The post exposure to use for the effect.")]
-    public float postExposureIntensity = 1.2f;
+    public float vignetteInnerRing = 0f;
+    [Tooltip("The brightness to add to the original brightness.")]
+    public float adjustPostBrightnessIntensity = 1.5f;
 
     [Header("Highlight Settings")]
     [SerializeField] private float highlightDistance = 20f;
@@ -79,9 +81,10 @@ public class VisionSense : SenseBase
         // Trigger the effect via the EffectsManager
         if (effectsManager != null)
         {
-            effectsManager.TriggerVisionSense(effectDuration, FadeInTime, clearStart, clearEnd, clearMaxRadius);
-            effectsManager.PulseVignette(FadeInTime, effectDuration, FadeOutTime, vignetteIntensity);
-            effectsManager.TriggerPostExposureAdjustment(effectDuration, FadeInTime, postExposureIntensity);
+            effectsManager.TriggerBlur(effectDuration, effectFadeTime, 0);
+            effectsManager.PulseVignette(effectFadeTime, effectDuration, vignetteOuterRing, vignetteInnerRing);
+            effectsManager.TriggerPostBrightnessAdjustment(effectDuration, effectFadeTime, adjustPostBrightnessIntensity);
+            effectsManager.ToggleFilmGrain(effectDuration, effectFadeTime, false);
         }
 
         Vector3 playerPosition = transform.position;

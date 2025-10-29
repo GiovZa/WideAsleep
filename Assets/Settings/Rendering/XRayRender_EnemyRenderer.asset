@@ -122,8 +122,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   stripBeautifyTonemappingACES: 0
-  stripBeautifyTonemappingACESFitted: 0
-  stripBeautifyTonemappingAGX: 0
+  stripBeautifyTonemappingACESFitted: 1
+  stripBeautifyTonemappingAGX: 1
   stripBeautifySharpen: 0
   stripBeautifySharpenExclusionMask: 1
   stripBeautifyDithering: 0
@@ -144,7 +144,7 @@ MonoBehaviour:
   stripBeautifyNightVision: 1
   stripBeautifyThermalVision: 1
   stripBeautifyFrame: 1
-  stripBeautifyFilmGrain: 1
+  stripBeautifyFilmGrain: 0
   stripUnityFilmGrain: 0
   stripUnityDithering: 0
   stripUnityTonemapping: 0

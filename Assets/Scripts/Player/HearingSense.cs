@@ -3,6 +3,7 @@ using UnityEngine;
 using playerChar;
 using UnityEngine.InputSystem;
 using System;
+using UnityEngine.XR;
 
 public class HearingSense : SenseBase
 {
@@ -15,15 +16,17 @@ public class HearingSense : SenseBase
     public float revealTime = 2f;
 
     [Header("Visual Effects Settings")]
-    [SerializeField] private float vignetteFadeInTime = 0.5f;
+    [SerializeField] private float vignetteFadeTime = 0.5f;
     [SerializeField] private float vignetteStayTime = 2.0f;
-    [SerializeField] private float vignetteFadeOutTime = 0.5f;
-    [SerializeField] [Range(0, 1)] private float vignetteMaxIntensity = 0.6f;
-    [SerializeField] [Range(-100,100)] private int setSaturation = -60;
+    [SerializeField] [Range(-2, 1)] private float vignetteOuterRing = 0.5f;
+    [SerializeField] [Range(0, 1)] private float vignetteInnerRing = 1f;
+    [SerializeField] [Range(-2f, 2f)] private float adjustSaturation = -1.2f;
 
     [Header("Sound Effects Settings")]
     [SerializeField] private float soundEffectsFadeTime = 0.5f;
     [SerializeField] [Range(0, 1)] private float targetBGMVolumePercent = 0.4f; // set to the percentage of the original volume
+    private float orignialLowPassFreq;
+    [SerializeField] private float targetLowPassFreq = 10000f;
     
     private List<SoundEmitterHint> soundEmitters = new List<SoundEmitterHint>();
     private List<SwitchLayer> switchableObjects = new List<SwitchLayer>();
@@ -84,6 +87,8 @@ public class HearingSense : SenseBase
 
         // Initially hide emitters by default
         SetEmittersVisible(false);
+
+        orignialLowPassFreq = SoundMixerManager.Instance.GetMixerParameterValue("masterLowpassFreq");
     }
 
     void CacheSoundEmitters()
@@ -106,14 +111,14 @@ public class HearingSense : SenseBase
         // Trigger screen visual effects
         if (effectsManager != null)
         {
-            effectsManager.PulseVignette(vignetteFadeInTime, vignetteStayTime, vignetteFadeOutTime, vignetteMaxIntensity);
-            effectsManager.TriggerBlackAndWhite(revealTime, vignetteFadeInTime, setSaturation); 
+            effectsManager.PulseVignette(vignetteFadeTime, vignetteStayTime, vignetteOuterRing, vignetteInnerRing);
+            effectsManager.TriggerSaturationAdjustment(revealTime, vignetteFadeTime, adjustSaturation); 
         }
 
         // Trigger sound effects change
         if (SoundMixerManager.Instance != null)
         {
-            SoundMixerManager.Instance.FadeMixerParameter("masterLowpassFreq", 10000f, soundEffectsFadeTime);
+            SoundMixerManager.Instance.FadeMixerParameter("masterLowpassFreq", targetLowPassFreq, soundEffectsFadeTime);
         }
         
         // Get the position of the player at the moment of activation
@@ -168,7 +173,7 @@ public class HearingSense : SenseBase
         // Trigger sound effects change
         if (SoundMixerManager.Instance != null)
         {
-            SoundMixerManager.Instance.FadeMixerParameter("masterLowpassFreq", 2000f, soundEffectsFadeTime);
+            SoundMixerManager.Instance.FadeMixerParameter("masterLowpassFreq", orignialLowPassFreq, soundEffectsFadeTime);
         }
 
         // Deactivate effects on all emitters that were activated by this pulse

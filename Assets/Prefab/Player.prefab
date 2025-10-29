@@ -190,7 +190,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerCamera: {fileID: 6806078760192323123}
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 9092502506809099772}
+  staminaAudioSource: {fileID: 1541215886696021745}
   animator: {fileID: 1061959602896706362}
   modelTransform: {fileID: 2997868946966037931}
   GravityDownForce: 12
@@ -209,6 +210,7 @@ MonoBehaviour:
   StaminaDrainRate: 35
   StaminaRegenerationRate: 20
   StaminaRegenerationDelay: 1
+  staminaAudioThreshold: 0.3
   RotationSpeed: 2
   AimingRotationMultiplier: 0.4
   MouseSensitivity: 4
@@ -396,13 +398,14 @@ MonoBehaviour:
   normalVolume: 4
   maxDistance: 30
   revealTime: 3
-  vignetteFadeInTime: 0.5
-  vignetteStayTime: 2
-  vignetteFadeOutTime: 0.5
-  vignetteMaxIntensity: 0.6
+  vignetteFadeTime: 0.5
+  vignetteStayTime: 3
+  vignetteOuterRing: 0.75
+  vignetteInnerRing: 1
   setSaturation: -60
   soundEffectsFadeTime: 0.5
   targetBGMVolumePercent: 0.4
+  targetLowPassFreq: 10000
 --- !u!114 &536183665020882965
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -417,13 +420,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cooldownDuration: 3
   effectDuration: 2.5
-  FadeInTime: 0.5
-  FadeOutTime: 0.5
-  clearStart: 20
-  clearEnd: 50
-  clearMaxRadius: 0.5
-  vignetteIntensity: 0.15
-  postExposureIntensity: 1.2
+  effectFadeTime: 0.5
+  vignetteOuterRing: 0
+  vignetteInnerRing: 0
+  adjustPostBrightnessIntensity: 0.7
   highlightDistance: 20
   obstructionMask:
     serializedVersion: 2
@@ -470,7 +470,7 @@ GameObject:
   - component: {fileID: 5198911793723392681}
   m_Layer: 0
   m_Name: Heartbeat Audio Source
-  m_TagString: StaminaAudioSource
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -766,7 +766,7 @@ GameObject:
   - component: {fileID: 1541215886696021745}
   m_Layer: 0
   m_Name: Stamina Audio Source
-  m_TagString: StaminaAudioSource
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

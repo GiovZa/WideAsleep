@@ -621,7 +621,6 @@ MonoBehaviour:
   senseActiveColor: {r: 1, g: 1, b: 1, a: 1}
   detectionIcon: {fileID: 5346431284063424356}
   throwableCountText: {fileID: 3016496876059861605}
-  staminaAudioThreshold: 0.3
 --- !u!1 &2954825567534629096
 GameObject:
   m_ObjectHideFlags: 0
@@ -1064,8 +1063,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc5976cbbb228654cbff2f7c8afaa9d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxStaminaTemperatureShift: -40
   staminaEffectSmoothTime: 0.2
+  maxStaminaTintColorShift: 0.4
+  baseChromaticAberrationIntensity: 0
+  targetChromaticAberrationIntensity: 0
+  maxChromaticAberrationShift: 0.05
 --- !u!1 &3474689032304454853
 GameObject:
   m_ObjectHideFlags: 0

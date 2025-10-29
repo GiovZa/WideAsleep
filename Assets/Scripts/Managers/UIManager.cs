@@ -46,9 +46,7 @@ public class UIManager : MonoBehaviour
 
     [Header("Inventory")]
     [SerializeField] private TextMeshProUGUI throwableCountText;
-
-    [Header("Stamina")]
-    [SerializeField, Range(0, 1)] private float staminaAudioThreshold = 0.3f;
+    
     
     private PlayerCharacterController playerChar;
     private PlayerInteraction playerInteraction;
@@ -56,7 +54,6 @@ public class UIManager : MonoBehaviour
     private HearingSense hearingSense;
     private PlayerWarningSystem playerWarningSystem;
     private CustomInput m_Input;
-    private AudioSource staminaAudioSource;
     private Stack<IGenericUI> uiStack = new Stack<IGenericUI>();
 
     public event Action OnHUDEnabled;
@@ -110,21 +107,6 @@ public class UIManager : MonoBehaviour
         // Subscribe to events here to ensure other singletons have been initialized in their Awake() methods.
         Inventory.Instance.OnThrowableCountChanged += UpdateThrowableCountUI;
 
-        // Find the stamina audio source by tag
-        GameObject staminaAudioObject = GameObject.FindWithTag("StaminaAudioSource");
-        if (staminaAudioObject != null)
-        {
-            staminaAudioSource = staminaAudioObject.GetComponent<AudioSource>();
-            if (staminaAudioSource == null)
-            {
-                Debug.LogError("[UIManager] GameObject with tag 'StaminaAudioSource' is missing an AudioSource component.");
-            }
-        }
-        else
-        {
-            Debug.LogWarning("[UIManager] Could not find GameObject with tag 'StaminaAudioSource'. Stamina audio will not play.");
-        }
-
         if (visionCooldownImage != null) visionOriginalColor = visionCooldownImage.color;
         if (hearingCooldownImage != null) hearingOriginalColor = hearingCooldownImage.color;
         if (detectionIcon != null) detectionIcon.enabled = false;
@@ -140,7 +122,6 @@ public class UIManager : MonoBehaviour
             hearingSense = playerChar.GetComponent<HearingSense>();
             playerWarningSystem = playerChar.GetComponent<PlayerWarningSystem>();
             
-            UpdateStaminaEffects(playerChar.CurrentStamina / playerChar.MaxStamina);
             EnableHUD();
 
             // When the player spawns, update the UI with the current throwable count.
@@ -182,9 +163,6 @@ public class UIManager : MonoBehaviour
 
         if (playerChar != null)
         {
-            float staminaPercentage = playerChar.CurrentStamina / playerChar.MaxStamina;
-            UpdateStaminaEffects(staminaPercentage);
-
             UpdateSensesUI();
             UpdateCrosshair();
             UpdateWarningUI();
@@ -331,40 +309,7 @@ public class UIManager : MonoBehaviour
     {
         // This method is no longer needed as CallPauseMenu and ExitPauseMenu handle the stack.
         // Keeping it for now, but it might be removed if not used elsewhere.
-    }
-
-    private void UpdateStaminaEffects(float staminaPercentage)
-    {
-        // Update visual effect
-        if (EffectsManager.Instance != null)
-        {
-            EffectsManager.Instance.UpdateStaminaEffect(staminaPercentage);
-        }
-
-        // Update audio effect
-        if (staminaAudioSource != null && staminaAudioSource.clip != null)
-        {
-            if (staminaPercentage <= staminaAudioThreshold)
-            {
-                if (!staminaAudioSource.isPlaying)
-                {
-                    staminaAudioSource.loop = true;
-                    staminaAudioSource.Play();
-                }
-
-                // As stamina decreases towards 0, volume increases towards 1.
-                float volume = 1.0f - (staminaPercentage / staminaAudioThreshold);
-                staminaAudioSource.volume = Mathf.Clamp01(volume);
-            }
-            else
-            {
-                if (staminaAudioSource.isPlaying)
-                {
-                    staminaAudioSource.Stop();
-                }
-            }
-        }
-    }
+    }    
 
     // --- New UI Stack Management ---
 

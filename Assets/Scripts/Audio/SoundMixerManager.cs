@@ -28,6 +28,19 @@ public class SoundMixerManager : MonoBehaviour
     {
         audioMixer.SetFloat("SFX", Mathf.Log10(level) * 20f);
     }
+
+    public float GetMixerParameterValue(string parameterName)
+    {
+        if (audioMixer.GetFloat(parameterName, out float value))
+        {
+            return value;
+        }
+        else
+        {
+            Debug.LogError($"Mixer parameter {parameterName} not found");
+            return 0f;
+        }
+    }
     
     /// <summary>
     /// Starts a coroutine to fade a mixer parameter from its current value to a target value over a given duration.

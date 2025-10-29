@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using System.Collections;
+using Beautify.Universal;
 
 /// <summary>
 /// Manages post-processing and other visual effects.
@@ -11,26 +12,31 @@ public class EffectsManager : MonoBehaviour
     public static EffectsManager Instance { get; private set; }
 
     private Volume postProcessVolume;
-    private Vignette vignette;
-    private DepthOfField depthOfField;
-    private Coroutine visionSenseCoroutine;
+    private Coroutine blurCoroutine;
+    private Coroutine vignetteCoroutine;
+    private Coroutine postBrightnessCoroutine;
+    private Coroutine saturationAdjustmentCoroutine;
+    private Coroutine filmGrainCoroutine;
     private ColorAdjustments colorAdjustments;
-    private WhiteBalance whiteBalance;
 
     [Header("Effect Settings")]
     // [Tooltip("The maximum *additional* intensity of the chromatic aberration effect for the stamina feedback.")]
     // [Range(0, 1)]
     // public float maxStaminaChromaticAberration = 0.75f;
 
-    [Tooltip("The maximum temperature shift (towards blue) for the stamina feedback.")]
-    [Range(-100, 0)]
-    public float maxStaminaTemperatureShift = -40f;
-
     [Tooltip("How quickly the stamina effect fades in and out.")]
     public float staminaEffectSmoothTime = 0.5f;
-    private float baseTemperature;
-    private float targetTemperature;
-    private float temperatureVelocity;
+    private Color baseTintColor;
+    private Color targetTintColor;
+    private float staminaEffectVelocity;
+    [Tooltip("The maximum tint color shift (towards blue) for the stamina feedback.")]
+    [Range(-1,1)]
+    public float maxStaminaTintColorShift = 0.25f;
+    [SerializeField] private float baseChromaticAberrationIntensity;
+    [SerializeField] private float targetChromaticAberrationIntensity;
+    [Tooltip("The maximum chromatic aberration intensity shift for the stamina feedback.")]
+    [Range(-0.1f,0.1f)]
+    public float maxChromaticAberrationShift = 0.04f;
 
     private void Awake()
     {
@@ -58,29 +64,12 @@ public class EffectsManager : MonoBehaviour
         if (postProcessVolume != null)
         {
             // Try to get the screen effects from the volume's profile
-            postProcessVolume.profile.TryGet(out vignette);
-            postProcessVolume.profile.TryGet(out depthOfField);
             postProcessVolume.profile.TryGet(out colorAdjustments);
-            // postProcessVolume.profile.TryGet(out chromaticAberration);
-            postProcessVolume.profile.TryGet(out whiteBalance);
         }
         else
         {
             // Nullify references if no volume is found
-            vignette = null;
-            depthOfField = null;
             colorAdjustments = null;
-            whiteBalance = null;
-        }
-
-        if (vignette == null)
-        {
-            Debug.LogWarning("Vignette not found on a Post Process Volume in the scene. The vignette effect will not work.");
-        }
-
-        if (depthOfField == null)
-        {
-            Debug.LogWarning("DepthOfField not found on a Post Process Volume in the scene. The vision sense effect will not work.");
         }
 
         if (colorAdjustments == null)
@@ -88,34 +77,54 @@ public class EffectsManager : MonoBehaviour
             Debug.LogWarning("ColorAdjustments not found on a Post Process Volume in the scene. The black and white effect will not work.");
         }
 
-        if (whiteBalance != null)
+        if (BeautifySettings.settings.tintColor != null)
         {
-            baseTemperature = whiteBalance.temperature.value;
-            targetTemperature = baseTemperature;
+            baseTintColor = BeautifySettings.settings.tintColor.value;
+            targetTintColor = baseTintColor;
         }
         else
         {
-            Debug.LogWarning("WhiteBalance not found on a Post Process Volume in the scene. The stamina temperature effect will not work.");
+            Debug.LogWarning("TintColor not found on a Post Process Volume in the scene. The stamina tint color effect will not work.");
+        }
+
+        if (BeautifySettings.settings.chromaticAberrationIntensity != null)
+        {
+            baseChromaticAberrationIntensity = BeautifySettings.settings.chromaticAberrationIntensity.value;
+            targetChromaticAberrationIntensity = baseChromaticAberrationIntensity;
+        }
+        else
+        {
+            Debug.LogWarning("ChromaticAberrationIntensity not found on a Post Process Volume in the scene. The stamina chromatic aberration effect will not work.");
         }
     }
 
     private void Update()
     {
-        if (whiteBalance != null)
+        if (BeautifySettings.settings.tintColor != null)
         {
-            float currentTemperature = whiteBalance.temperature.value;
-            float newTemperature = Mathf.SmoothDamp(currentTemperature, targetTemperature, ref temperatureVelocity, staminaEffectSmoothTime);
-            whiteBalance.temperature.Override(newTemperature);
+            float currentTintColorAlpha = BeautifySettings.settings.tintColor.value.a;
+            float newTintColorAlpha = Mathf.SmoothDamp(currentTintColorAlpha, targetTintColor.a, ref staminaEffectVelocity, staminaEffectSmoothTime);
+            BeautifySettings.settings.tintColor.Override(new Color(baseTintColor.r, baseTintColor.g, baseTintColor.b, newTintColorAlpha));
+        }
+
+        if (BeautifySettings.settings.chromaticAberrationIntensity != null)
+        {
+            BeautifySettings.settings.chromaticAberrationIntensity.Override(targetChromaticAberrationIntensity);
         }
     }
 
     public void UpdateStaminaEffect(float staminaPercentage)
     {
-        if (whiteBalance != null)
+        if (baseTintColor != null)
         {
-            // Invert the percentage: low stamina = colder temperature
-            float temperatureDelta = (1.0f - staminaPercentage) * maxStaminaTemperatureShift;
-            targetTemperature = baseTemperature + temperatureDelta;
+            float tintColorAlphaDelta = (1.0f - staminaPercentage) * maxStaminaTintColorShift;
+            targetTintColor.a = baseTintColor.a + tintColorAlphaDelta;
+        }
+
+        if (BeautifySettings.settings.chromaticAberrationIntensity != null)
+        {
+            float chromaticAberrationIntensityDelta = (1.0f - staminaPercentage) * maxChromaticAberrationShift;
+            targetChromaticAberrationIntensity = baseChromaticAberrationIntensity + chromaticAberrationIntensityDelta;
         }
     }
 
@@ -123,151 +132,125 @@ public class EffectsManager : MonoBehaviour
     /// <summary>
     /// Triggers a vignette pulse effect.
     /// </summary>
-    /// <param name="duration">Time in seconds for the vignette to pulse.</param>
-    /// <param name="setIntensity">The intensity of the vignette (0 to 1).</param>
-    /// <param name="fadeInTime">Time in seconds for the vignette to fade in.</param>
+    /// <param name="setOuterRing">The outer ring of the vignette (-2 to 1).</param>
+    /// <param name="setInnerRing">The inner ring of the vignette (0 to 1).</param>
+    /// <param name="fadeTime">Time in seconds for the vignette to fade in and out.</param>
     /// <param name="stayTime">Time in seconds for the vignette to stay at max intensity.</param>
-    /// <param name="fadeOutTime">Time in seconds for the vignette to fade out.</param>
-    public void PulseVignette(float fadeInTime, float stayTime, float fadeOutTime, float setIntensity)
+    public void PulseVignette(float fadeTime, float stayTime, float setOuterRing, float setInnerRing)
     {
-        if (vignette != null)
+        if (BeautifySettings.settings.vignettingOuterRing != null && BeautifySettings.settings.vignettingInnerRing != null && vignetteCoroutine == null)
         {
-            StartCoroutine(VignetteCoroutine(fadeInTime, stayTime, fadeOutTime, setIntensity));
+            vignetteCoroutine = StartCoroutine(VignetteCoroutine(fadeTime, stayTime, setOuterRing, setInnerRing));
         }
     }
 
-    private IEnumerator VignetteCoroutine(float fadeInTime, float stayTime, float fadeOutTime, float setIntensity)
+    private IEnumerator VignetteCoroutine(float fadeTime, float stayTime, float setOuterRing, float setInnerRing)
     {
         // Store original intensity
-        float originalIntensity = vignette.intensity.value;
+        float originalOuterRing = BeautifySettings.settings.vignettingOuterRing.value;
+        float originalInnerRing = BeautifySettings.settings.vignettingInnerRing.value;
 
         // Fade in
         float elapsedTime = 0f;
-        while (elapsedTime < fadeInTime)
+        while (elapsedTime < fadeTime)
         {
-            float intensity = Mathf.Lerp(originalIntensity, setIntensity, elapsedTime / fadeInTime);
-            vignette.intensity.Override(intensity);
+            float outerRing = Mathf.Lerp(originalOuterRing, setOuterRing, elapsedTime / fadeTime);
+            float innerRing = Mathf.Lerp(originalInnerRing, setInnerRing, elapsedTime / fadeTime);
+            BeautifySettings.settings.vignettingOuterRing.Override(outerRing);
+            BeautifySettings.settings.vignettingInnerRing.Override(innerRing);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-        vignette.intensity.Override(setIntensity);
+        BeautifySettings.settings.vignettingOuterRing.Override(setOuterRing);
+        BeautifySettings.settings.vignettingInnerRing.Override(setInnerRing);
 
         // Stay at max intensity
         yield return new WaitForSeconds(stayTime);
 
         // Fade out
         elapsedTime = 0f;
-        while (elapsedTime < fadeOutTime)
+        while (elapsedTime < fadeTime)
         {
-            float intensity = Mathf.Lerp(setIntensity, originalIntensity, elapsedTime / fadeOutTime);
-            vignette.intensity.Override(intensity);
+            float outerRing = Mathf.Lerp(setOuterRing, originalOuterRing, elapsedTime / fadeTime);
+            float innerRing = Mathf.Lerp(setInnerRing, originalInnerRing, elapsedTime / fadeTime);
+            BeautifySettings.settings.vignettingOuterRing.Override(outerRing);
+            BeautifySettings.settings.vignettingInnerRing.Override(innerRing);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
         // Reset intensity
-        vignette.intensity.Override(originalIntensity);
+        BeautifySettings.settings.vignettingOuterRing.Override(originalOuterRing);
+        BeautifySettings.settings.vignettingInnerRing.Override(originalInnerRing);
+
+        vignetteCoroutine = null;
     }
     #endregion
-    
-    #region Blurry Vision Effect
-    /// <summary>
-    /// Temporarily adjusts Depth of Field to make the scene clear.
-    /// </summary>
-    /// <param name="duration">How long the effect should last in seconds.</param>
-    /// <param name="fadeTime">How long the fade in and fade out should last in seconds.</param>
-    /// <param name="targetFocalLength">The focal length to use for clear vision (lower is clearer).</param>
-    /// <param name="targetAperture">The aperture to use for clear vision (higher is clearer).</param>
-    /// <param name="targetFocusDistance">The focus distance to use for clear vision (lower is closer).</param>
-    public void TriggerVisionSense(float duration, float fadeTime, float targetStart, float targetEnd, float targetMaxRadius)
+
+    #region Blink and Blur Effect
+    public void TriggerBlur(float duration, float fadeTime, float targetBlurIntensity)
     {
-        if (depthOfField != null && visionSenseCoroutine == null)
+        if (BeautifySettings.settings.blurIntensity != null && blurCoroutine == null)
         {
-            visionSenseCoroutine = StartCoroutine(VisionSenseCoroutine(duration, fadeTime, targetStart, targetEnd, targetMaxRadius));
+            BeautifySettings.Blink(0.3f);
+            blurCoroutine = StartCoroutine(BlurCoroutine(duration, fadeTime, targetBlurIntensity));
         }
     }
 
-    private IEnumerator VisionSenseCoroutine(float duration, float fadeTime, float targetStart, float targetEnd, float targetMaxRadius)
+    IEnumerator BlurCoroutine(float duration, float fadeTime, float targetBlurIntensity)
     {
-        // Store original values
-        bool wasActive = depthOfField.active;
-        float originalStart = depthOfField.gaussianStart.value;
-        float originalEnd = depthOfField.gaussianEnd.value;
-        float originalMaxRadius = depthOfField.gaussianMaxRadius.value;
+        //Store original blur intensity
+        float originalBlurIntensity = BeautifySettings.settings.blurIntensity.value;
         
-        // set fade in and out times
-        float fadeInTime = fadeTime;
-        float fadeOutTime = fadeTime;
-        
-        // Fade in - transition to clear vision
+        //Fade in, transition to target blur intensity
         float elapsedTime = 0f;
-        while (elapsedTime < fadeInTime)
+        while (elapsedTime < fadeTime)
         {
-            float t = elapsedTime / fadeInTime;
-            float currentStart = Mathf.Lerp(originalStart, targetStart, t);
-            float currentEnd = Mathf.Lerp(originalEnd, targetEnd, t);
-            float currentMaxRadius = Mathf.Lerp(originalMaxRadius, targetMaxRadius, t);
-            
-            depthOfField.gaussianStart.Override(currentStart);
-            depthOfField.gaussianEnd.Override(currentEnd);
-            depthOfField.gaussianMaxRadius.Override(currentMaxRadius);
-            
+            float blurIntensity = Mathf.Lerp(originalBlurIntensity, targetBlurIntensity, elapsedTime / fadeTime);
+            BeautifySettings.settings.blurIntensity.Override(blurIntensity);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
+        BeautifySettings.settings.blurIntensity.Override(targetBlurIntensity);
         
-        // Set final clear values
-        depthOfField.gaussianStart.Override(targetStart);
-        depthOfField.gaussianEnd.Override(targetEnd);
-        depthOfField.gaussianMaxRadius.Override(targetMaxRadius);
-        // Hold at clear vision
+        //Hold at target blur intensity
         yield return new WaitForSeconds(duration);
         
-        // Fade out - transition back to original
+        //Fade out, transition to original blur intensity
         elapsedTime = 0f;
-        while (elapsedTime < fadeOutTime)
+        while (elapsedTime < fadeTime)
         {
-            float t = elapsedTime / fadeOutTime;
-            float currentStart = Mathf.Lerp(targetStart, originalStart, t);
-            float currentEnd = Mathf.Lerp(targetEnd, originalEnd, t);
-            float currentMaxRadius = Mathf.Lerp(targetMaxRadius, originalMaxRadius, t);
-            
-            depthOfField.gaussianStart.Override(currentStart);
-            depthOfField.gaussianEnd.Override(currentEnd);
-            depthOfField.gaussianMaxRadius.Override(currentMaxRadius);
+            float blurIntensity = Mathf.Lerp(targetBlurIntensity, originalBlurIntensity, elapsedTime / fadeTime);
+            BeautifySettings.settings.blurIntensity.Override(blurIntensity);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
+        BeautifySettings.settings.blurIntensity.Override(originalBlurIntensity);
 
-        // Restore the previous state
-        depthOfField.gaussianStart.Override(originalStart);
-        depthOfField.gaussianEnd.Override(originalEnd);
-        depthOfField.gaussianMaxRadius.Override(originalMaxRadius);
-        depthOfField.active = wasActive;
-
-        visionSenseCoroutine = null;
+        blurCoroutine = null;
     }
     #endregion
 
-    #region Black and White Effect
+    #region Saturation Adjustment
     /// <summary>
-    /// Triggers a black and white screen effect.
+    /// Triggers a saturation adjustment.
     /// </summary>
     /// <param name="duration">How long the effect should last in seconds.</param>
     /// <param name="fadeTime">How long the fade in and fade out should last in seconds.</param>
-    /// <param name="setSaturation">The saturation to use for the black and white effect (0 is black and white, 1 is original).</param>
-    public void TriggerBlackAndWhite(float duration, float fadeTime, float setSaturation)
+    /// <param name="changeSaturation">The saturation value to change to the original saturation.</param>
+    public void TriggerSaturationAdjustment(float duration, float fadeTime, float changeSaturation)
     {
-        if (colorAdjustments != null)
+        if (BeautifySettings.settings.saturate != null && saturationAdjustmentCoroutine == null)
         {
-            StartCoroutine(BlackAndWhiteCoroutine(duration, fadeTime, setSaturation));
+            saturationAdjustmentCoroutine = StartCoroutine(SaturationAdjustmentCoroutine(duration, fadeTime, changeSaturation));
         }
     }
 
-    private IEnumerator BlackAndWhiteCoroutine(float duration, float fadeTime, float setSaturation)
+    private IEnumerator SaturationAdjustmentCoroutine(float duration, float fadeTime, float changeSaturation)
     {
-        // Store original saturation
-        float originalSaturation = colorAdjustments.saturation.value;
+        // Store original and target saturation values
+        float originalSaturation = BeautifySettings.settings.saturate.value;
+        float targetSaturation = originalSaturation + changeSaturation;
 
         // set fade in and out times
         float fadeInTime = fadeTime;
@@ -277,48 +260,49 @@ public class EffectsManager : MonoBehaviour
         float elapsedTime = 0f;
         while (elapsedTime < fadeInTime)
         {
-            float saturation = Mathf.Lerp(originalSaturation, setSaturation, elapsedTime / fadeInTime);
-            colorAdjustments.saturation.Override(saturation);
+            float saturation = Mathf.Lerp(originalSaturation, targetSaturation, elapsedTime / fadeInTime);
+            BeautifySettings.settings.saturate.Override(saturation);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-        colorAdjustments.saturation.Override(setSaturation);
+        BeautifySettings.settings.saturate.Override(targetSaturation);
 
-        // Hold at black and white
+        // Hold at saturation
         yield return new WaitForSeconds(duration);
 
         // Fade out
         elapsedTime = 0f;
         while (elapsedTime < fadeOutTime)
         {
-            float saturation = Mathf.Lerp(setSaturation, originalSaturation, elapsedTime / fadeOutTime);
-            colorAdjustments.saturation.Override(saturation);
+            float saturation = Mathf.Lerp(targetSaturation, originalSaturation, elapsedTime / fadeOutTime);
+            BeautifySettings.settings.saturate.Override(saturation);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-        colorAdjustments.saturation.Override(originalSaturation);
+        BeautifySettings.settings.saturate.Override(originalSaturation);
     }
     #endregion
 
-    #region Post Exposure Adjustment
+    #region Post Brightness Adjustment
     /// <summary>
-    /// Triggers a post exposure adjustment.
+    /// Triggers a post brightness adjustment.
     /// </summary>
     /// <param name="duration">How long the effect should last in seconds.</param>
     /// <param name="fadeTime">How long the fade in and fade out should last in seconds.</param>
-    /// <param name="setPostExposure">The post exposure to use for the effect.</param>
-    public void TriggerPostExposureAdjustment(float duration, float fadeTime, float setPostExposure)
+    /// <param name="changePostBrightness">The post brightness value to change to the original brightness.</param>
+    public void TriggerPostBrightnessAdjustment(float duration, float fadeTime, float changePostBrightness)
     {
-        if (colorAdjustments != null)
+        if (BeautifySettings.settings.brightness != null && postBrightnessCoroutine == null)
         {
-            StartCoroutine(PostExposureAdjustmentCoroutine(duration, fadeTime, setPostExposure));
+            postBrightnessCoroutine = StartCoroutine(PostBrightnessAdjustmentCoroutine(duration, fadeTime, changePostBrightness));
         }
     }
 
-    private IEnumerator PostExposureAdjustmentCoroutine(float duration, float fadeTime, float setPostExposure)
+    private IEnumerator PostBrightnessAdjustmentCoroutine(float duration, float fadeTime, float changePostBrightness)
     {
-        // Store original post exposure
-        float originalPostExposure = colorAdjustments.postExposure.value;
+        // Store original and target brightness values
+        float originalBrightness = BeautifySettings.settings.brightness.value;
+        float targetBrightness = originalBrightness + changePostBrightness;
         
         // set fade in and out times
         float fadeInTime = fadeTime;
@@ -328,30 +312,65 @@ public class EffectsManager : MonoBehaviour
         float elapsedTime = 0f;
         while (elapsedTime < fadeInTime)
         {
-            float postExposure = Mathf.Lerp(originalPostExposure, setPostExposure, elapsedTime / fadeInTime);
-            colorAdjustments.postExposure.Override(postExposure);
+            float brightness = Mathf.Lerp(originalBrightness, targetBrightness, elapsedTime / fadeInTime);
+            BeautifySettings.settings.brightness.Override(brightness);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-        colorAdjustments.postExposure.Override(setPostExposure);
+        BeautifySettings.settings.brightness.Override(targetBrightness);
 
-        // Hold at post exposure
+        // Hold at brightness
         yield return new WaitForSeconds(duration);
 
         // Fade out
         elapsedTime = 0f;
         while (elapsedTime < fadeOutTime)
         {
-            float postExposure = Mathf.Lerp(setPostExposure, originalPostExposure, elapsedTime / fadeOutTime);
-            colorAdjustments.postExposure.Override(postExposure);
+            float brightness = Mathf.Lerp(targetBrightness, originalBrightness, elapsedTime / fadeOutTime);
+            BeautifySettings.settings.brightness.Override(brightness);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-        colorAdjustments.postExposure.Override(originalPostExposure);
+        BeautifySettings.settings.brightness.Override(originalBrightness);
+
+        postBrightnessCoroutine = null;
     }
     #endregion
 
-    #region Stun Effect
+    #region Film Grain Adjustment
+    /// <summary>
+    /// Toggles the film grain effect.
+    /// </summary>
+    /// <param name="duration">How long the effect should last in seconds.</param>
+    /// <param name="fadeTime">This is temporarily used to extend the effect duration.</param>
+    /// <param name="enableFilmGrain">Whether to enable or disable the film grain effect.</param>
+    public void ToggleFilmGrain(float duration, float fadeTime, bool enableFilmGrain)
+    {
+        if (BeautifySettings.settings.filmGrainEnabled != null && filmGrainCoroutine == null)
+        {
+            filmGrainCoroutine = StartCoroutine(FilmGrainCoroutine(duration, fadeTime, enableFilmGrain));
+        }
+    }
+
+    private IEnumerator FilmGrainCoroutine(float duration, float fadeTime, bool enableFilmGrain)
+    {
+        // Store original film grain enabled value
+        bool originalFilmGrainEnabled = BeautifySettings.settings.filmGrainEnabled.value;
+        
+        if (originalFilmGrainEnabled == enableFilmGrain)
+        {
+            yield break;
+        }
+
+        BeautifySettings.settings.filmGrainEnabled.Override(enableFilmGrain);
+        yield return new WaitForSeconds(duration + fadeTime);
+        BeautifySettings.settings.filmGrainEnabled.Override(!enableFilmGrain);
+        
+        filmGrainCoroutine = null;
+    }
+    #endregion
+
+    #region Stun Effect, TODO: Refactor into BeautifySettings
     /// <summary>
     /// The effect when player get stunned by SCREAM's scream.
     /// </summary>
