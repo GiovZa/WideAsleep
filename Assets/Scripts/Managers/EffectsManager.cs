@@ -132,38 +132,43 @@ public class EffectsManager : MonoBehaviour
     /// <summary>
     /// Triggers a vignette pulse effect.
     /// </summary>
-    /// <param name="setOuterRing">The outer ring of the vignette (-2 to 1).</param>
-    /// <param name="setInnerRing">The inner ring of the vignette (0 to 1).</param>
     /// <param name="fadeTime">Time in seconds for the vignette to fade in and out.</param>
     /// <param name="stayTime">Time in seconds for the vignette to stay at max intensity.</param>
-    public void PulseVignette(float fadeTime, float stayTime, float setOuterRing, float setInnerRing)
+    /// <param name="setOuterRing">The outer ring of the vignette (-2 to 1).</param>
+    /// <param name="setInnerRing">The inner ring of the vignette (0 to 1).</param>
+    /// <param name="setFade">The fade of the vignette (0 to 1).</param>
+    public void PulseVignette(float fadeTime, float stayTime, float setOuterRing, float setInnerRing,float setFade)
     {
         if (BeautifySettings.settings.vignettingOuterRing != null && BeautifySettings.settings.vignettingInnerRing != null && vignetteCoroutine == null)
         {
-            vignetteCoroutine = StartCoroutine(VignetteCoroutine(fadeTime, stayTime, setOuterRing, setInnerRing));
+            vignetteCoroutine = StartCoroutine(VignetteCoroutine(fadeTime, stayTime, setOuterRing, setInnerRing, setFade));
         }
     }
 
-    private IEnumerator VignetteCoroutine(float fadeTime, float stayTime, float setOuterRing, float setInnerRing)
+    private IEnumerator VignetteCoroutine(float fadeTime, float stayTime, float setOuterRing, float setInnerRing, float setFade)
     {
         // Store original intensity
         float originalOuterRing = BeautifySettings.settings.vignettingOuterRing.value;
         float originalInnerRing = BeautifySettings.settings.vignettingInnerRing.value;
-
+        float originalFade = BeautifySettings.settings.vignettingFade.value;
+        
         // Fade in
         float elapsedTime = 0f;
         while (elapsedTime < fadeTime)
         {
             float outerRing = Mathf.Lerp(originalOuterRing, setOuterRing, elapsedTime / fadeTime);
             float innerRing = Mathf.Lerp(originalInnerRing, setInnerRing, elapsedTime / fadeTime);
+            float fade = Mathf.Lerp(originalFade, setFade, elapsedTime / fadeTime);
             BeautifySettings.settings.vignettingOuterRing.Override(outerRing);
             BeautifySettings.settings.vignettingInnerRing.Override(innerRing);
+            BeautifySettings.settings.vignettingFade.Override(fade);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
         BeautifySettings.settings.vignettingOuterRing.Override(setOuterRing);
         BeautifySettings.settings.vignettingInnerRing.Override(setInnerRing);
-
+        BeautifySettings.settings.vignettingFade.Override(setFade);
+        
         // Stay at max intensity
         yield return new WaitForSeconds(stayTime);
 
@@ -173,8 +178,10 @@ public class EffectsManager : MonoBehaviour
         {
             float outerRing = Mathf.Lerp(setOuterRing, originalOuterRing, elapsedTime / fadeTime);
             float innerRing = Mathf.Lerp(setInnerRing, originalInnerRing, elapsedTime / fadeTime);
+            float fade = Mathf.Lerp(setFade, originalFade, elapsedTime / fadeTime);
             BeautifySettings.settings.vignettingOuterRing.Override(outerRing);
             BeautifySettings.settings.vignettingInnerRing.Override(innerRing);
+            BeautifySettings.settings.vignettingFade.Override(fade);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
@@ -182,7 +189,8 @@ public class EffectsManager : MonoBehaviour
         // Reset intensity
         BeautifySettings.settings.vignettingOuterRing.Override(originalOuterRing);
         BeautifySettings.settings.vignettingInnerRing.Override(originalInnerRing);
-
+        BeautifySettings.settings.vignettingFade.Override(originalFade);
+        
         vignetteCoroutine = null;
     }
     #endregion

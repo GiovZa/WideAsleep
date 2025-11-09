@@ -5,6 +5,7 @@ using UnityEngine;
 public class TEST_ActorObject : MonoBehaviour
 {
     Animator animator;
+    OcclusionPortal occlusionPortal;
     [SerializeField] TEST_Trigger[] triggers;
     [HideInInspector]
     public int sequenceTriggered { get; set; } = 0;
@@ -12,6 +13,7 @@ public class TEST_ActorObject : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
+        occlusionPortal = GetComponent<OcclusionPortal>();
         for (int i = 0; i < triggers.Length; i++)
         {
             triggers[i].sequenceNumber = i;
@@ -21,8 +23,19 @@ public class TEST_ActorObject : MonoBehaviour
     public void Trigger()
     {
         if (sequenceTriggered >= triggers.Length) return;
+        
         Debug.Log("Triggering " + gameObject.name);
         animator.SetTrigger("Trigger");
+
+        if (occlusionPortal.open == true)
+        {
+            occlusionPortal.open = false;
+        }
+        else
+        {
+            occlusionPortal.open = true;
+        }
+        
         sequenceTriggered++;
     }
 }

@@ -28,9 +28,15 @@ public class VisionSense : SenseBase
     [Tooltip("The maximum intensity of the vignette outer ring (-2 to 1).")]
     [Range(-2, 1)]
     public float vignetteOuterRing = 0f;
+
     [Tooltip("The maximum intensity of the vignette inner ring (0 to 1).")]
     [Range(0, 1)]
     public float vignetteInnerRing = 0f;
+
+    [Tooltip("The fade of the vignette (0 to 1).")]
+    [Range(0, 1)]
+    public float vignetteSetFade = 0.1f;
+
     [Tooltip("The brightness to add to the original brightness.")]
     public float adjustPostBrightnessIntensity = 1.5f;
 
@@ -82,7 +88,7 @@ public class VisionSense : SenseBase
         if (effectsManager != null)
         {
             effectsManager.TriggerBlur(effectDuration, effectFadeTime, 0);
-            effectsManager.PulseVignette(effectFadeTime, effectDuration, vignetteOuterRing, vignetteInnerRing);
+            effectsManager.PulseVignette(effectFadeTime, effectDuration, vignetteOuterRing, vignetteInnerRing, vignetteSetFade);
             effectsManager.TriggerPostBrightnessAdjustment(effectDuration, effectFadeTime, adjustPostBrightnessIntensity);
             effectsManager.ToggleFilmGrain(effectDuration, effectFadeTime, false);
         }

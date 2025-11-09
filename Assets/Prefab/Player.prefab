@@ -400,9 +400,10 @@ MonoBehaviour:
   revealTime: 3
   vignetteFadeTime: 0.5
   vignetteStayTime: 3
-  vignetteOuterRing: 0.75
+  vignetteOuterRing: 0.5
   vignetteInnerRing: 1
-  setSaturation: -60
+  vignetteSetFade: 0.25
+  adjustSaturation: -1.2
   soundEffectsFadeTime: 0.5
   targetBGMVolumePercent: 0.4
   targetLowPassFreq: 10000
@@ -423,6 +424,7 @@ MonoBehaviour:
   effectFadeTime: 0.5
   vignetteOuterRing: 0
   vignetteInnerRing: 0
+  vignetteSetFade: 0.1
   adjustPostBrightnessIntensity: 0.7
   highlightDistance: 20
   obstructionMask:

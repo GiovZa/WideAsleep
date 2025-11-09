@@ -20,6 +20,7 @@ public class HearingSense : SenseBase
     [SerializeField] private float vignetteStayTime = 2.0f;
     [SerializeField] [Range(-2, 1)] private float vignetteOuterRing = 0.5f;
     [SerializeField] [Range(0, 1)] private float vignetteInnerRing = 1f;
+    [SerializeField] [Range(0, 1)] private float vignetteSetFade = 0.25f;
     [SerializeField] [Range(-2f, 2f)] private float adjustSaturation = -1.2f;
 
     [Header("Sound Effects Settings")]
@@ -111,7 +112,7 @@ public class HearingSense : SenseBase
         // Trigger screen visual effects
         if (effectsManager != null)
         {
-            effectsManager.PulseVignette(vignetteFadeTime, vignetteStayTime, vignetteOuterRing, vignetteInnerRing);
+            effectsManager.PulseVignette(vignetteFadeTime, vignetteStayTime, vignetteOuterRing, vignetteInnerRing, vignetteSetFade);
             effectsManager.TriggerSaturationAdjustment(revealTime, vignetteFadeTime, adjustSaturation); 
         }
 
