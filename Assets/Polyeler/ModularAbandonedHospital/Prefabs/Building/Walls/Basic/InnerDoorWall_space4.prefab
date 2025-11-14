@@ -87,11 +87,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 572846560319143853}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f486a8a5505b1fd43a1bc66a0a0b0fdf, type: 3}
+  m_Script: {fileID: 11500000, guid: 1fc617af1f63a2c4b80719b59eb50540, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  message: 
+  onInteraction:
+    m_PersistentCalls:
+      m_Calls: []
+  graphUpdateScene: {fileID: 0}
   IsOpenAtStart: 0
   IsLocked: 0
+  openSfx: {fileID: 0}
+  closeSfx: {fileID: 0}
+  lockedSfx: {fileID: 0}
+  SfxRadius: 3
 --- !u!1 &1116833279576343206
 GameObject:
   m_ObjectHideFlags: 0

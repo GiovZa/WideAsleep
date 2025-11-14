@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System;
 
 public class ObjectThrower : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class ObjectThrower : MonoBehaviour
     [Header("Throwing")]
     public float throwForce = 20f;
     private CustomInput m_Input;
+
+    public static event Action<bool> OnThrowTriggered;
 
     private void Awake()
     {
@@ -47,6 +50,11 @@ public class ObjectThrower : MonoBehaviour
             return;
         }
 
+        if (GameStateManager.Instance.CurrentState != GameState.Gameplay)
+        {
+            return;
+        }
+
         // Attempt to use a throwable from the inventory.
         if (Inventory.Instance.UseThrowable())
         {
@@ -60,6 +68,8 @@ public class ObjectThrower : MonoBehaviour
                 
                 // Throw the object in the new direction.
                 rb.AddForce(throwDirection * throwForce, ForceMode.VelocityChange);
+
+                OnThrowTriggered?.Invoke(true);
             }
             else
             {

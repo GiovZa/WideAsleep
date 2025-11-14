@@ -210,8 +210,8 @@ namespace playerChar
             SetCrouchingState(false, true);
             UpdateCharacterHeight(true);
 
-            // Load saved sensitivity on initialize
-            MouseSensitivity = PlayerPrefs.GetFloat("mouseSensitivity");
+            // Load saved sensitivity on initialize (use default 4.0f if not set)
+            MouseSensitivity = PlayerPrefs.GetFloat("mouseSensitivity", 4.0f);
 
             CurrentStamina = MaxStamina;
             UpdateStaminaEffects();

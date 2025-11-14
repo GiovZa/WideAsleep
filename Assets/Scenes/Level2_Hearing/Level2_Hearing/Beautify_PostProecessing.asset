@@ -50,7 +50,7 @@ MonoBehaviour:
     m_Value: 0
   hideInSceneView:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   debugOutput:
     m_OverrideState: 0
     m_Value: 0
@@ -108,10 +108,10 @@ MonoBehaviour:
       m_Bits: 0
   antialiasStrength:
     m_OverrideState: 0
-    m_Value: 0
+    m_Value: 9.96
   antialiasDepthThreshold:
     m_OverrideState: 0
-    m_Value: 0.000001
+    m_Value: 0.000255
   antialiasSpread:
     m_OverrideState: 0
     m_Value: 3

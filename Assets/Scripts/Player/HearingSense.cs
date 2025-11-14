@@ -15,8 +15,8 @@ public class HearingSense : SenseBase
 
     public float revealTime = 2f;
 
-    [Header("Visual Effects Settings")]
-    [SerializeField] private float vignetteFadeTime = 0.5f;
+    [Header("Screen Effect Settings")]
+    [SerializeField] private float fadeTime = 0.5f;
     [SerializeField] private float vignetteStayTime = 2.0f;
     [SerializeField] [Range(-2, 1)] private float vignetteOuterRing = 0.5f;
     [SerializeField] [Range(0, 1)] private float vignetteInnerRing = 1f;
@@ -24,7 +24,6 @@ public class HearingSense : SenseBase
     [SerializeField] [Range(-2f, 2f)] private float adjustSaturation = -1.2f;
 
     [Header("Sound Effects Settings")]
-    [SerializeField] private float soundEffectsFadeTime = 0.5f;
     [SerializeField] [Range(0, 1)] private float targetBGMVolumePercent = 0.4f; // set to the percentage of the original volume
     private float orignialLowPassFreq;
     [SerializeField] private float targetLowPassFreq = 10000f;
@@ -41,9 +40,6 @@ public class HearingSense : SenseBase
 
     protected override float EffectDuration => revealTime;
     protected override InputAction ActivationAction => m_Input.Player.HearingSense;
-    public static event Action<float, float> OnHearingSenseActivated; // targetVolume, fadeDuration
-    public static event Action<float> OnHearingSenseDeactivated; // fadeDuration
-
 
     protected override void OnEnable()
     {
@@ -106,20 +102,21 @@ public class HearingSense : SenseBase
 
     protected override void ActivateSense()
     {
-        OnHearingSenseActivated?.Invoke(targetBGMVolumePercent, soundEffectsFadeTime);
+        EventCenter.Broadcast<float, float>(EventDefine.HEARING_SENSE_ACTIVATED, targetBGMVolumePercent, fadeTime);
+        
         isSenseActive = true;
 
         // Trigger screen visual effects
         if (effectsManager != null)
         {
-            effectsManager.PulseVignette(vignetteFadeTime, vignetteStayTime, vignetteOuterRing, vignetteInnerRing, vignetteSetFade);
-            effectsManager.TriggerSaturationAdjustment(revealTime, vignetteFadeTime, adjustSaturation); 
+            effectsManager.PulseVignette(fadeTime, vignetteStayTime, vignetteOuterRing, vignetteInnerRing, vignetteSetFade);
+            effectsManager.TriggerSaturationAdjustment(revealTime, fadeTime, adjustSaturation); 
         }
 
         // Trigger sound effects change
         if (SoundMixerManager.Instance != null)
         {
-            SoundMixerManager.Instance.FadeMixerParameter("masterLowpassFreq", targetLowPassFreq, soundEffectsFadeTime);
+            SoundMixerManager.Instance.FadeMixerParameter("masterLowpassFreq", targetLowPassFreq, fadeTime);
         }
         
         // Get the position of the player at the moment of activation
@@ -169,12 +166,12 @@ public class HearingSense : SenseBase
         yield return new WaitForSeconds(delay);
 
         isSenseActive = false;
-        OnHearingSenseDeactivated?.Invoke(soundEffectsFadeTime);
+        EventCenter.Broadcast<float>(EventDefine.HEARING_SENSE_DEACTIVATED, fadeTime);
 
         // Trigger sound effects change
         if (SoundMixerManager.Instance != null)
         {
-            SoundMixerManager.Instance.FadeMixerParameter("masterLowpassFreq", orignialLowPassFreq, soundEffectsFadeTime);
+            SoundMixerManager.Instance.FadeMixerParameter("masterLowpassFreq", orignialLowPassFreq, fadeTime);
         }
 
         // Deactivate effects on all emitters that were activated by this pulse

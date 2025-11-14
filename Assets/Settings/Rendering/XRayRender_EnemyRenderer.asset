@@ -124,17 +124,17 @@ MonoBehaviour:
   stripBeautifyTonemappingACES: 0
   stripBeautifyTonemappingACESFitted: 1
   stripBeautifyTonemappingAGX: 1
-  stripBeautifySharpen: 0
+  stripBeautifySharpen: 1
   stripBeautifySharpenExclusionMask: 1
   stripBeautifyDithering: 0
-  stripBeautifyEdgeAA: 0
-  stripBeautifyLUT: 0
+  stripBeautifyEdgeAA: 1
+  stripBeautifyLUT: 1
   stripBeautifyLUT3D: 1
   stripBeautifyColorTweaks: 0
   stripBeautifyBloom: 0
   stripBeautifyLensDirt: 0
   stripBeautifyChromaticAberration: 0
-  stripBeautifyDoF: 0
+  stripBeautifyDoF: 1
   stripBeautifyDoFTransparentSupport: 1
   stripBeautifyEyeAdaptation: 1
   stripBeautifyPurkinje: 1

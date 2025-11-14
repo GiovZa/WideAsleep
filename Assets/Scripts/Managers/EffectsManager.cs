@@ -32,8 +32,8 @@ public class EffectsManager : MonoBehaviour
     [Tooltip("The maximum tint color shift (towards blue) for the stamina feedback.")]
     [Range(-1,1)]
     public float maxStaminaTintColorShift = 0.25f;
-    [SerializeField] private float baseChromaticAberrationIntensity;
-    [SerializeField] private float targetChromaticAberrationIntensity;
+    private float baseChromaticAberrationIntensity;
+    private float targetChromaticAberrationIntensity;
     [Tooltip("The maximum chromatic aberration intensity shift for the stamina feedback.")]
     [Range(-0.1f,0.1f)]
     public float maxChromaticAberrationShift = 0.04f;
@@ -58,8 +58,38 @@ public class EffectsManager : MonoBehaviour
 
     public void InitializeForNewScene()
     {
+        // Stop any running coroutines and reset references to prevent stale coroutine references
+        // This is critical when scenes reload (e.g., on respawn) to ensure new effects can start
+        if (blurCoroutine != null)
+        {
+            StopCoroutine(blurCoroutine);
+            blurCoroutine = null;
+        }
+        if (vignetteCoroutine != null)
+        {
+            StopCoroutine(vignetteCoroutine);
+            vignetteCoroutine = null;
+        }
+        if (postBrightnessCoroutine != null)
+        {
+            StopCoroutine(postBrightnessCoroutine);
+            postBrightnessCoroutine = null;
+        }
+        if (saturationAdjustmentCoroutine != null)
+        {
+            StopCoroutine(saturationAdjustmentCoroutine);
+            saturationAdjustmentCoroutine = null;
+        }
+        if (filmGrainCoroutine != null)
+        {
+            StopCoroutine(filmGrainCoroutine);
+            filmGrainCoroutine = null;
+        }
+
         // Find the post-processing volume in the scene
         postProcessVolume = FindObjectOfType<Volume>();
+        
+        if (BeautifySettings.settings == null) return;
 
         if (postProcessVolume != null)
         {
@@ -100,6 +130,8 @@ public class EffectsManager : MonoBehaviour
 
     private void Update()
     {
+        if (BeautifySettings.settings == null) return;
+
         if (BeautifySettings.settings.tintColor != null)
         {
             float currentTintColorAlpha = BeautifySettings.settings.tintColor.value.a;

@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using playerChar;
+using System;
 
 /// <summary>
 /// Manages the player's "Vision Sense" ability, which clarifies the screen by disabling Depth of Field.
@@ -84,7 +85,9 @@ public class VisionSense : SenseBase
 
     protected override void ActivateSense()
     {
-        // Trigger the effect via the EffectsManager
+        EventCenter.Broadcast(EventDefine.VISION_SENSE_TRIGGERED);
+        
+        // Trigger screen effect via the EffectsManager
         if (effectsManager != null)
         {
             effectsManager.TriggerBlur(effectDuration, effectFadeTime, 0);

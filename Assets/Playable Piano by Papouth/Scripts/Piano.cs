@@ -46,9 +46,6 @@ public class Piano : Interactable
     };
 
     private bool isPuzzleSolved = false;
-    public static event Action<float, float> OnPianoActivated; // targetVolumePercent, fadeDuration
-    public static event Action<float> OnPianoDeactivated; // fadeDuration
-
     #endregion
 
 
@@ -120,7 +117,7 @@ public class Piano : Interactable
         playerInteraction.SetInteracting(true);
         UIManager.Instance.DisableHUD();
 
-        OnPianoActivated?.Invoke(0.1f, 0.5f);
+        EventCenter.Broadcast<float, float>(EventDefine.PIANO_ACTIVATED, 0.1f, 0.5f);
     }
 
     private void DeactivatePiano()
@@ -153,7 +150,7 @@ public class Piano : Interactable
 
         Debug.Log("[Piano] Piano deactivated!");
 
-        OnPianoDeactivated?.Invoke(0.5f);
+        EventCenter.Broadcast<float>(EventDefine.PIANO_DEACTIVATED, 0.5f);
     }
 
     private void Update()

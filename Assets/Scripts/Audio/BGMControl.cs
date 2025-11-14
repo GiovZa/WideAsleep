@@ -16,18 +16,18 @@ public class BGMControl : MonoBehaviour
 
     void OnEnable()
     {
-        HearingSense.OnHearingSenseActivated += HandleBGMVolumeChange;
-        HearingSense.OnHearingSenseDeactivated += HandleBGMVolumeBack;
-        Piano.OnPianoActivated += HandleBGMVolumeChange;
-        Piano.OnPianoDeactivated += HandleBGMVolumeBack;
+        EventCenter.AddListener<float, float>(EventDefine.HEARING_SENSE_ACTIVATED, HandleBGMVolumeChange);
+        EventCenter.AddListener<float>(EventDefine.HEARING_SENSE_DEACTIVATED, HandleBGMVolumeBack);
+        EventCenter.AddListener<float, float>(EventDefine.PIANO_ACTIVATED, HandleBGMVolumeChange);
+        EventCenter.AddListener<float>(EventDefine.PIANO_DEACTIVATED, HandleBGMVolumeBack);
     }
 
     void OnDisable()
     {
-        HearingSense.OnHearingSenseActivated -= HandleBGMVolumeChange;
-        HearingSense.OnHearingSenseDeactivated -= HandleBGMVolumeBack;
-        Piano.OnPianoActivated -= HandleBGMVolumeChange;
-        Piano.OnPianoDeactivated -= HandleBGMVolumeBack;
+        EventCenter.RemoveListener<float, float>(EventDefine.HEARING_SENSE_ACTIVATED, HandleBGMVolumeChange);
+        EventCenter.RemoveListener<float>(EventDefine.HEARING_SENSE_DEACTIVATED, HandleBGMVolumeBack);
+        EventCenter.RemoveListener<float, float>(EventDefine.PIANO_ACTIVATED, HandleBGMVolumeChange);
+        EventCenter.RemoveListener<float>(EventDefine.PIANO_DEACTIVATED, HandleBGMVolumeBack);
     }
 
     void HandleBGMVolumeChange(float targetVolumePercent, float fadeDuration)

@@ -187,38 +187,76 @@ public class QuickOutline : MonoBehaviour {
         continue;
       }
 
+      var mesh = meshFilter.sharedMesh;
+      if (mesh == null || mesh.vertexCount == 0) {
+        continue;
+      }
+
       // Retrieve or generate smooth normals
-      var index = bakeKeys.IndexOf(meshFilter.sharedMesh);
-      var smoothNormals = (index >= 0) ? bakeValues[index].data : SmoothNormals(meshFilter.sharedMesh);
+      var index = bakeKeys.IndexOf(mesh);
+      var smoothNormals = (index >= 0) ? bakeValues[index].data : SmoothNormals(mesh);
+
+      // Validate that smooth normals match vertex count before setting UVs
+      // This prevents errors when meshes are modified or corrupted
+      if (smoothNormals == null || smoothNormals.Count != mesh.vertexCount) {
+        // Regenerate smooth normals if there's a mismatch
+        smoothNormals = SmoothNormals(mesh);
+        
+        // If still mismatched, skip this mesh
+        if (smoothNormals == null || smoothNormals.Count != mesh.vertexCount) {
+          Debug.LogWarning($"QuickOutline: Smooth normals count ({smoothNormals?.Count ?? 0}) doesn't match vertex count ({mesh.vertexCount}) for mesh '{mesh.name}'. Skipping UV3 assignment.");
+          continue;
+        }
+      }
 
       // Store smooth normals in UV3
-      meshFilter.sharedMesh.SetUVs(3, smoothNormals);
+      mesh.SetUVs(3, smoothNormals);
 
       // Combine submeshes
       var renderer = meshFilter.GetComponent<Renderer>();
 
       if (renderer != null) {
-        CombineSubmeshes(meshFilter.sharedMesh, renderer.sharedMaterials);
+        CombineSubmeshes(mesh, renderer.sharedMaterials);
       }
     }
 
     // Clear UV3 on skinned mesh renderers
     foreach (var skinnedMeshRenderer in GetComponentsInChildren<SkinnedMeshRenderer>()) {
 
-      // Skip if UV3 has already been reset
-      if (!registeredMeshes.Add(skinnedMeshRenderer.sharedMesh)) {
+      var mesh = skinnedMeshRenderer.sharedMesh;
+      if (mesh == null || mesh.vertexCount == 0) {
         continue;
       }
 
-      // Clear UV3
-      skinnedMeshRenderer.sharedMesh.uv4 = new Vector2[skinnedMeshRenderer.sharedMesh.vertexCount];
+      // Skip if UV3 has already been reset
+      if (!registeredMeshes.Add(mesh)) {
+        continue;
+      }
+
+      // Clear UV3 - ensure array size matches vertex count
+      try {
+        mesh.uv4 = new Vector2[mesh.vertexCount];
+      }
+      catch (System.Exception e) {
+        Debug.LogWarning($"QuickOutline: Failed to set uv4 for skinned mesh '{mesh.name}': {e.Message}");
+        continue;
+      }
 
       // Combine submeshes
-      CombineSubmeshes(skinnedMeshRenderer.sharedMesh, skinnedMeshRenderer.sharedMaterials);
+      CombineSubmeshes(mesh, skinnedMeshRenderer.sharedMaterials);
     }
   }
 
   List<Vector3> SmoothNormals(Mesh mesh) {
+    if (mesh == null || mesh.vertexCount == 0) {
+      return new List<Vector3>();
+    }
+
+    // Validate that mesh has normals matching vertex count
+    if (mesh.normals == null || mesh.normals.Length != mesh.vertexCount) {
+      Debug.LogWarning($"QuickOutline: Mesh '{mesh.name}' has invalid normals (count: {mesh.normals?.Length ?? 0}, expected: {mesh.vertexCount}). Cannot generate smooth normals.");
+      return new List<Vector3>();
+    }
 
     // Group vertices by location
     var groups = mesh.vertices.Select((vertex, index) => new KeyValuePair<Vector3, int>(vertex, index)).GroupBy(pair => pair.Key);
