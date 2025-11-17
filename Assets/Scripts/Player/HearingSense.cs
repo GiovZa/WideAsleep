@@ -109,7 +109,7 @@ public class HearingSense : SenseBase
         // Trigger screen visual effects
         if (effectsManager != null)
         {
-            effectsManager.PulseVignette(fadeTime, vignetteStayTime, vignetteOuterRing, vignetteInnerRing, vignetteSetFade);
+            effectsManager.TriggerVignetteEffect(fadeTime, vignetteStayTime, vignetteOuterRing, vignetteInnerRing, vignetteSetFade);
             effectsManager.TriggerSaturationAdjustment(revealTime, fadeTime, adjustSaturation); 
         }
 

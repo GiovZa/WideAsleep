@@ -11,13 +11,13 @@ public class EffectsManager : MonoBehaviour
 {
     public static EffectsManager Instance { get; private set; }
 
-    private Volume postProcessVolume;
+    #region Parameters
     private Coroutine blurCoroutine;
     private Coroutine vignetteCoroutine;
     private Coroutine postBrightnessCoroutine;
     private Coroutine saturationAdjustmentCoroutine;
     private Coroutine filmGrainCoroutine;
-    private ColorAdjustments colorAdjustments;
+    private ColorAdjustments colorAdjustments = null;
 
     [Header("Effect Settings")]
     // [Tooltip("The maximum *additional* intensity of the chromatic aberration effect for the stamina feedback.")]
@@ -40,7 +40,9 @@ public class EffectsManager : MonoBehaviour
     [Tooltip("The maximum chromatic aberration intensity shift for the stamina feedback.")]
     [Range(-0.1f,0.1f)]
     public float maxChromaticAberrationShift = 0.04f;
+    #endregion
 
+    #region Unity Lifecycle
     private void Awake()
     {
         if (Instance == null)
@@ -58,6 +60,21 @@ public class EffectsManager : MonoBehaviour
     {
         InitializeForNewScene();
     }
+
+    private void Update()
+    {
+        if (BeautifySettings.settings == null) return;
+
+        if (BeautifySettings.settings.tintColor != null)
+        {
+            float currentTintColorAlpha = BeautifySettings.settings.tintColor.value.a;
+            float newTintColorAlpha = Mathf.SmoothDamp(currentTintColorAlpha, targetTintColor.a, ref staminaEffectVelocity, staminaEffectSmoothTime);
+            BeautifySettings.settings.tintColor.Override(new Color(baseTintColor.r, baseTintColor.g, baseTintColor.b, newTintColorAlpha));
+        }
+
+        BeautifySettings.settings.chromaticAberrationIntensity?.Override(targetChromaticAberrationIntensity);
+    }
+    #endregion
 
     public void InitializeForNewScene()
     {
@@ -88,27 +105,8 @@ public class EffectsManager : MonoBehaviour
             StopCoroutine(filmGrainCoroutine);
             filmGrainCoroutine = null;
         }
-
-        // Find the post-processing volume in the scene
-        postProcessVolume = FindObjectOfType<Volume>();
         
         if (BeautifySettings.settings == null) return;
-
-        if (postProcessVolume != null)
-        {
-            // Try to get the screen effects from the volume's profile
-            postProcessVolume.profile.TryGet(out colorAdjustments);
-        }
-        else
-        {
-            // Nullify references if no volume is found
-            colorAdjustments = null;
-        }
-
-        if (colorAdjustments == null)
-        {
-            Debug.LogWarning("ColorAdjustments not found on a Post Process Volume in the scene. The black and white effect will not work.");
-        }
 
         // Initialize base tint color: use serialized value if set, otherwise read from BeautifySettings
         if (BeautifySettings.settings.tintColor != null)
@@ -149,6 +147,7 @@ public class EffectsManager : MonoBehaviour
         }
     }
 
+    #region Stamina Effect set and update
     /// <summary>
     /// Sets the base tint color and chromatic aberration intensity for the current scene.
     /// Call this if you need to override the serialized values or set them programmatically.
@@ -178,23 +177,6 @@ public class EffectsManager : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        if (BeautifySettings.settings == null) return;
-
-        if (BeautifySettings.settings.tintColor != null)
-        {
-            float currentTintColorAlpha = BeautifySettings.settings.tintColor.value.a;
-            float newTintColorAlpha = Mathf.SmoothDamp(currentTintColorAlpha, targetTintColor.a, ref staminaEffectVelocity, staminaEffectSmoothTime);
-            BeautifySettings.settings.tintColor.Override(new Color(baseTintColor.r, baseTintColor.g, baseTintColor.b, newTintColorAlpha));
-        }
-
-        if (BeautifySettings.settings.chromaticAberrationIntensity != null)
-        {
-            BeautifySettings.settings.chromaticAberrationIntensity.Override(targetChromaticAberrationIntensity);
-        }
-    }
-
     public void UpdateStaminaEffect(float staminaPercentage)
     {
         if (baseTintColor != null)
@@ -209,6 +191,14 @@ public class EffectsManager : MonoBehaviour
             targetChromaticAberrationIntensity = baseChromaticAberrationIntensity + chromaticAberrationIntensityDelta;
         }
     }
+    #endregion
+
+    #region Blink Effect
+    public void TriggerBlink(float duration)
+    {
+        BeautifySettings.Blink(duration);
+    }
+    #endregion
 
     #region Vignette Effect
     /// <summary>
@@ -219,7 +209,7 @@ public class EffectsManager : MonoBehaviour
     /// <param name="setOuterRing">The outer ring of the vignette (-2 to 1).</param>
     /// <param name="setInnerRing">The inner ring of the vignette (0 to 1).</param>
     /// <param name="setFade">The fade of the vignette (0 to 1).</param>
-    public void PulseVignette(float fadeTime, float stayTime, float setOuterRing, float setInnerRing,float setFade)
+    public void TriggerVignetteEffect(float fadeTime, float stayTime, float setOuterRing, float setInnerRing,float setFade)
     {
         if (BeautifySettings.settings.vignettingOuterRing != null && BeautifySettings.settings.vignettingInnerRing != null && vignetteCoroutine == null)
         {
@@ -277,12 +267,11 @@ public class EffectsManager : MonoBehaviour
     }
     #endregion
 
-    #region Blink and Blur Effect
+    #region Blur Effect
     public void TriggerBlur(float duration, float fadeTime, float targetBlurIntensity)
     {
         if (BeautifySettings.settings.blurIntensity != null && blurCoroutine == null)
         {
-            BeautifySettings.Blink(0.3f);
             blurCoroutine = StartCoroutine(BlurCoroutine(duration, fadeTime, targetBlurIntensity));
         }
     }

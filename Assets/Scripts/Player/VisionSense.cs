@@ -90,8 +90,9 @@ public class VisionSense : SenseBase
         // Trigger screen effect via the EffectsManager
         if (effectsManager != null)
         {
+            effectsManager.TriggerBlink(0.3f);
             effectsManager.TriggerBlur(effectDuration, effectFadeTime, 0);
-            effectsManager.PulseVignette(effectFadeTime, effectDuration, vignetteOuterRing, vignetteInnerRing, vignetteSetFade);
+            effectsManager.TriggerVignetteEffect(effectFadeTime, effectDuration, vignetteOuterRing, vignetteInnerRing, vignetteSetFade);
             effectsManager.TriggerPostBrightnessAdjustment(effectDuration, effectFadeTime, adjustPostBrightnessIntensity);
             effectsManager.ToggleFilmGrain(effectDuration, effectFadeTime, false);
         }

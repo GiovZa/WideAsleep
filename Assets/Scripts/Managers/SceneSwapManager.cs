@@ -82,6 +82,13 @@ public class SceneSwapManager : MonoBehaviour
         canvasGroup.DOFade(0, fadeTime);
     }
 
+    public IEnumerator QuickFade(float fadeWaitTime)
+    {
+        FadeOut();
+        yield return new WaitForSeconds(fadeWaitTime);
+        FadeIn();
+    }
+
     private IEnumerator FadeAndLoadInt(int sceneIndexToLoad)
     {
         FadeOut();

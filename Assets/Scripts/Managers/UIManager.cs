@@ -99,6 +99,8 @@ public class UIManager : MonoBehaviour
         if (SceneSwapManager.Instance.MenuSceneNames.Contains(scene.name))
         {
             HandlePlayerDestroyed();
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
     }
 
