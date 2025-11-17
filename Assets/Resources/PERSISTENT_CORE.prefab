@@ -1077,9 +1077,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   staminaEffectSmoothTime: 0.2
+  baseTintColor: {r: 0.14117648, g: 0.29411766, b: 0.8, a: 0.5019608}
   maxStaminaTintColorShift: 0.4
-  baseChromaticAberrationIntensity: 0
-  targetChromaticAberrationIntensity: 0
+  baseChromaticAberrationIntensity: 0.03
   maxChromaticAberrationShift: 0.05
 --- !u!1 &3474689032304454853
 GameObject:

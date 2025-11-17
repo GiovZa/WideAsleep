@@ -24,15 +24,18 @@ public class EffectsManager : MonoBehaviour
     // [Range(0, 1)]
     // public float maxStaminaChromaticAberration = 0.75f;
 
+    [Header("Stamina Effect Settings")]
     [Tooltip("How quickly the stamina effect fades in and out.")]
     public float staminaEffectSmoothTime = 0.5f;
-    private Color baseTintColor;
+    [Tooltip("Base tint color for stamina effects. If left as black (0,0,0,0), will be read from BeautifySettings on first load.")]
+    [SerializeField] private Color baseTintColor; // The base tint color of the stamina effect when game starts; Change the beautify settings and this value together.
     private Color targetTintColor;
     private float staminaEffectVelocity;
     [Tooltip("The maximum tint color shift (towards blue) for the stamina feedback.")]
     [Range(-1,1)]
     public float maxStaminaTintColorShift = 0.25f;
-    private float baseChromaticAberrationIntensity;
+    [Tooltip("Base chromatic aberration intensity. If set to -1, will be read from BeautifySettings on first load.")]
+    [SerializeField] private float baseChromaticAberrationIntensity = -1f; // Use -1 as sentinel value to detect if unset
     private float targetChromaticAberrationIntensity;
     [Tooltip("The maximum chromatic aberration intensity shift for the stamina feedback.")]
     [Range(-0.1f,0.1f)]
@@ -107,24 +110,71 @@ public class EffectsManager : MonoBehaviour
             Debug.LogWarning("ColorAdjustments not found on a Post Process Volume in the scene. The black and white effect will not work.");
         }
 
+        // Initialize base tint color: use serialized value if set, otherwise read from BeautifySettings
         if (BeautifySettings.settings.tintColor != null)
         {
-            baseTintColor = BeautifySettings.settings.tintColor.value;
+            // Check if baseTintColor is unset (black/transparent) - if so, read from BeautifySettings
+            // Otherwise, use the serialized value as the source of truth
+            if (baseTintColor == Color.clear || baseTintColor == new Color(0, 0, 0, 0))
+            {
+                // First time initialization: read from BeautifySettings
+                baseTintColor = BeautifySettings.settings.tintColor.value;
+            }
+            // Always reset target and BeautifySettings to base value to prevent lingering effects
             targetTintColor = baseTintColor;
+            BeautifySettings.settings.tintColor.Override(baseTintColor);
+            staminaEffectVelocity = 0f; // Reset SmoothDamp velocity
         }
         else
         {
             Debug.LogWarning("TintColor not found on a Post Process Volume in the scene. The stamina tint color effect will not work.");
         }
 
+        // Initialize base chromatic aberration: use serialized value if set (not -1), otherwise read from BeautifySettings
         if (BeautifySettings.settings.chromaticAberrationIntensity != null)
         {
-            baseChromaticAberrationIntensity = BeautifySettings.settings.chromaticAberrationIntensity.value;
+            // Check if baseChromaticAberrationIntensity is unset (-1 sentinel value)
+            if (baseChromaticAberrationIntensity < 0f)
+            {
+                // First time initialization: read from BeautifySettings
+                baseChromaticAberrationIntensity = BeautifySettings.settings.chromaticAberrationIntensity.value;
+            }
+            // Always reset target and BeautifySettings to base value to prevent lingering effects
             targetChromaticAberrationIntensity = baseChromaticAberrationIntensity;
+            BeautifySettings.settings.chromaticAberrationIntensity.Override(baseChromaticAberrationIntensity);
         }
         else
         {
             Debug.LogWarning("ChromaticAberrationIntensity not found on a Post Process Volume in the scene. The stamina chromatic aberration effect will not work.");
+        }
+    }
+
+    /// <summary>
+    /// Sets the base tint color and chromatic aberration intensity for the current scene.
+    /// Call this if you need to override the serialized values or set them programmatically.
+    /// </summary>
+    /// <param name="tintColor">Base tint color to use</param>
+    /// <param name="chromaticAberrationIntensity">Base chromatic aberration intensity to use</param>
+    public void SetBaseStaminaEffectValues(Color tintColor, float chromaticAberrationIntensity)
+    {
+        baseTintColor = tintColor;
+        baseChromaticAberrationIntensity = chromaticAberrationIntensity;
+        
+        // Immediately apply the new base values
+        if (BeautifySettings.settings != null)
+        {
+            if (BeautifySettings.settings.tintColor != null)
+            {
+                targetTintColor = baseTintColor;
+                BeautifySettings.settings.tintColor.Override(baseTintColor);
+                staminaEffectVelocity = 0f;
+            }
+            
+            if (BeautifySettings.settings.chromaticAberrationIntensity != null)
+            {
+                targetChromaticAberrationIntensity = baseChromaticAberrationIntensity;
+                BeautifySettings.settings.chromaticAberrationIntensity.Override(baseChromaticAberrationIntensity);
+            }
         }
     }
 

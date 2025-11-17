@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7364930455127284211}
   - component: {fileID: 7131434770807435645}
+  - component: {fileID: 2825302514218062248}
   m_Layer: 0
   m_Name: Post Processing Volume
   m_TagString: Untagged
@@ -48,4 +49,18 @@ MonoBehaviour:
   priority: 0
   blendDistance: 0
   weight: 1
-  sharedProfile: {fileID: 11400000, guid: 19d86221ce3f07b4cab77aec5e036682, type: 2}
+  sharedProfile: {fileID: 11400000, guid: 97cad0b9ac366604db8695b3a0d84902, type: 2}
+--- !u!114 &2825302514218062248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 583181835624988238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b900b6d691ae49f8a12753b63b449e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sun: {fileID: 0}
+  depthOfFieldTarget: {fileID: 0}
